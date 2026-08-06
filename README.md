@@ -28,11 +28,16 @@ Webflow / N8N / Google Apps Script / React / Next.js / Node.js / type-safe TypeS
 ```sh
 # app
 npm ci
+cp .env.example .env.local   # then fill in the four vars below
 npm run dev            # http://localhost:3000
 
 # N8N (on the Oracle VM — see docker-compose.yml)
 docker compose up -d
 ```
+
+## Environment variables
+
+Defined (empty) in `.env.example` — copy to `.env.local` and fill: `N8N_BASE_URL`, `N8N_API_KEY`, `WEBHOOK_TOKEN`, `EXECUTIONS_AUTH_TOKEN`.
 
 ## Repo layout
 

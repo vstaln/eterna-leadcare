@@ -1,25 +1,44 @@
-# secrets
-.env
-.env.local
-.env.*.local
-*.pem
-*id_rsa*
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# deps / build
-node_modules/
-.next/
-out/
-dist/
-build/
-*.tsbuildinfo
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
 
-# next
-next-env.d.ts
+# testing
+/coverage
 
-# logs & os
-*.log
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
 .DS_Store
+*.pem
 
-# n8n local data (when running dev instance locally)
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+dist/
 n8n_data/
 .worktrees/
