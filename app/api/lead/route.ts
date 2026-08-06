@@ -46,7 +46,8 @@ export async function POST(req: NextRequest) {
   await createExecution(executionId, "received", "queued");
 
   try {
-    const res = await fetch(`${env.N8N_BASE_URL}${env.N8N_WEBHOOK_PATH}`, {
+    const url = `${env.N8N_BASE_URL.replace(/\/+$/, "")}/${env.N8N_WEBHOOK_PATH.replace(/^\/+/, "")}`;
+    const res = await fetch(url, {
       method: "POST",
       headers: {
         "content-type": "application/json",
