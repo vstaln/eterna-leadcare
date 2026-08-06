@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (body.website) {
-    return NextResponse.json({ ok: false, error: "invalid" }, { status: 400 });
+    return NextResponse.json({ ok: true }, { status: 200 });
   }
 
   const name = typeof body.name === "string" ? body.name.trim().slice(0, 120) : "";
