@@ -45,12 +45,12 @@ DoD (controller): compose up, healthz 200 via ssh, 5678 reachable from phone, di
 
 ## Task 2: Apps Script — log endpoint (code + setup checklist)
 
-Goal: single `doPost` endpoint appending [DEMO] rows, token-gated; user-deployable in ~5 browser minutes.
+Goal: single token-gated GET endpoint (doGet with query params — Apps Script anonymous deployments reject POST; documented) appending [DEMO] rows, token-gated; user-deployable in ~5 browser minutes.
 
 Files: docs/apps-script-setup.md (full script + checklist + example-row markdown table), no other repo code.
 
 Requirements:
-1. Script: `doPost(e)`: require `e.parameter.token` === PropertiesService.getScriptProperties().getProperty("APPS_SCRIPT_TOKEN") (401 otherwise); require action=log; append row [DEMO, ts, executionId, name, email, company, domain, registrar, created, updated, status, nameservers] to spreadsheet "ET-48 OPS — leads" tab "DEMO leads"; return {ok:true, row}. Set the token property during deploy (checklist step).
+1. Script: `doGet(e)` (anonymous-safe; POST is blocked for "Anyone" deployments — a real Apps Script constraint, documented): require `e.parameter.token` === PropertiesService.getScriptProperties().getProperty("APPS_SCRIPT_TOKEN") (401 otherwise); require action=log; append row [DEMO, ts, executionId, name, email, company, domain, registrar, created, updated, status, nameservers] to spreadsheet "ET-48 OPS — leads" tab "DEMO leads"; return {ok:true, row}. Set the token property during deploy (checklist step).
 2. Doc contains: script, step-by-step deploy (Extensions → Apps Script, paste, deploy web app: Execute as me, Access anyone), token setup, **curl examples with `Content-Type: text/plain`** (JSON content-type triggers Apps Script's 302-reject) incl. a failing-token example, and a rendered example row table (visible without sheet access).
 3. Verification (user-gated): phone curl to deployed URL with token → {ok:true}; row appears in sheet (user confirms or shares URL).
 
@@ -80,7 +80,7 @@ Goal: the workflow that makes the pipeline real.
 Files: docs/n8n-workflow.json (export), docs/n8n-workflow.md (notes + ASCII diagram: webhook → verify-hmac → enrich → log → 200).
 
 Requirements:
-1. Workflow "ET-48 lead pipeline": Webhook node POST /webhook/lead (respond: 200) → Code node "verify-hmac": recompute hmacHex(WEBHOOK_TOKEN, `${body.executionId}.${header.X-Nonce}.${header.X-Ts}`), timing-safe, reject 401; freshness ≤5 min. (Webhook node exposes headers to Code node in n8n community — verify in the import test; if headers aren't exposed, fallback: sign over body fields only and document — adapt, don't block.) → HTTP node GET `https://rdap.org/domain/<domain-from-email>` (public, no secrets) → Code node "map": pick registrar/created/updated/status/nameservers → HTTP node POST `${APPS_SCRIPT_URL}?action=log` body {token: APPS_SCRIPT_TOKEN, executionId, name, email, company, domain, enrich...} with `Content-Type: text/plain` (Apps Script quirk) → Respond 200 {ok:true, executionId}. Error path: log error node (console) + 200 with {ok:false, error} (no retry loops this slice).
+1. Workflow "ET-48 lead pipeline": Webhook node POST /webhook/lead (respond: 200) → Code node "verify-hmac": recompute hmacHex(WEBHOOK_TOKEN, `${body.executionId}.${header.X-Nonce}.${header.X-Ts}`), timing-safe, reject 401; freshness ≤5 min. (Webhook node exposes headers to Code node in n8n community — verify in the import test; if headers aren't exposed, fallback: sign over body fields only and document — adapt, don't block.) → HTTP node GET `https://rdap.org/domain/<domain-from-email>` (public, no secrets) → Code node "map": pick registrar/created/updated/status/nameservers → HTTP node POST `${APPS_SCRIPT_URL}?action=log` body {token: APPS_SCRIPT_TOKEN, executionId, name, email, company, domain, enrich...} (GET — anonymous-safe) → Respond 200 {ok:true, executionId}. Error path: log error node (console) + 200 with {ok:false, error} (no retry loops this slice).
 2. Box env (/opt/eterna/.env, not repo): WEBHOOK_TOKEN, APPS_SCRIPT_URL, APPS_SCRIPT_TOKEN — same values as phone/script properties. compose passes them to the container.
 3. Import (headless, phone): `docker exec <c> n8n import:workflow --input=/home/node/workflow.json` (volume-mount the export) + `n8n update:workflow --id=<id> --active=true`; record workflow id in AI_LOG.
 4. Verification (controller-core): phone curl POST 5678/webhook/lead WITH valid HMAC headers → 200 {ok:true}; without/with-wrong HMAC → 401. (Apps Script URL may be absent pre-deploy → expect 500-on-log path; curl a second time AFTER user deploys to confirm sheet row — user-gated.)

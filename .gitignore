@@ -46,3 +46,7 @@ next-env.d.ts
 dist/
 n8n_data/
 .worktrees/
+data/
+
+# SDD plan workspaces (ledgers, briefs, review packages)
+.superpowers/
