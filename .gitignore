@@ -1,0 +1,24 @@
+# secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*id_rsa*
+
+# deps / build
+node_modules/
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+
+# next
+next-env.d.ts
+
+# logs & os
+*.log
+.DS_Store
+
+# n8n local data (when running dev instance locally)
+n8n_data/
