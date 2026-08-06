@@ -8,12 +8,12 @@ Built in 48 hours, $0/month free tier, with Cursor + OpenCode. Every step's stor
 
 - Main app: https://eterna.vstal.in
 - Live Ops dashboard (real executions): https://eterna.vstal.in/ops
-- Behind the Scenes (git log + CI + AI_LOG + $0 cost): /behind-the-scenes
-- Webflow no-code landing: https://eterna-ops.webflow.io
+- Behind the Scenes (git log + CI + AI_LOG + $0 cost): /behind-the-scenes — planned (nav renders it "soon" until it ships)
+- Webflow one-pager: planned — user-gated browser step, not yet built, see docs/webflow-migration.md
 
 ## What it proves
 
-The command center's /ops page is the honest report card: every row comes from the real execution store, nothing is simulated. Each light on the panel carries its own source and state — unreadable instruments show N/R flags, not green lights. The 200-degraded path is part of the demo, showing what exists before the user-gated Apps Script deploy and how the pipeline upgrades honestly. Open the LEDGER for exactly what is pending and why, then watch the LOG fill with real rows. Here "live" means real data, honestly labeled.
+The command center's /ops page is the honest report card: every LOG row is rendered from the real execution store; every other datum is a labeled env reading — nothing is simulated. Each light on the panel carries its own source and state — unreadable instruments show N/R flags, not green lights. The 200-degraded path is part of the demo, showing what exists before the user-gated Apps Script deploy and how the pipeline upgrades honestly. Open the LEDGER for exactly what is pending and why, then watch the LOG fill with real rows. Here "live" means real data, honestly labeled.
 
 Stack proven: Webflow / N8N / Google Apps Script / React / Next.js / Node.js / type-safe TypeScript / Docker / CI/CD / GCP Cloud Run / Oracle Cloud · Git / version control / Cursor + OpenCode AI workflow / k3s stretch. Mapping table in `ARCHITECTURE.md`.
 
@@ -91,4 +91,4 @@ On the box, `/opt/eterna/.env` (outside the repo, passed to the n8n container) h
 
 ## Cost
 
-$0/month. Itemized on /behind-the-scenes.
+$0/month. Itemized on /behind-the-scenes (planned — see Live links).

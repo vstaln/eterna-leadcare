@@ -149,8 +149,9 @@ export default async function OpsPage() {
       <section id="signal" className="mx-auto max-w-6xl px-6 py-16">
         <SectionHeading eyebrow="SIGNAL // pipeline status" title="Is it real?" />
         <div className="mb-6 border border-border bg-surface px-4 py-3 font-mono text-xs leading-relaxed text-muted">
-          <span className="text-text">REALITY KEY</span> — every row on this
-          page is rendered from the real execution store; nothing is simulated.
+          <span className="text-text">REALITY KEY</span> — every LOG row is
+          rendered from the real execution store; every other datum is a
+          labeled env reading — nothing is simulated.
         </div>
         <ul className="divide-y divide-border border border-border bg-surface">
           {stages.map((stage) => (
@@ -221,7 +222,7 @@ export default async function OpsPage() {
               <p className="font-mono text-sm">
                 <span className="text-text">APPS SCRIPT DEPLOY</span>
                 {env.APPS_SCRIPT_URL ? (
-                  <span className="ml-2 text-ok">DONE</span>
+                  <span className="ml-2 text-ok">CONFIGURED</span>
                 ) : (
                   <>
                     <span className="ml-2 text-warn">PENDING</span>
@@ -244,7 +245,7 @@ export default async function OpsPage() {
               <p className="font-mono text-sm">
                 <span className="text-text">N8N OWNER API KEY</span>
                 {env.N8N_API_KEY ? (
-                  <span className="ml-2 text-ok">DONE</span>
+                  <span className="ml-2 text-ok">CONFIGURED</span>
                 ) : (
                   <>
                     <span className="ml-2 text-warn">PENDING</span>
