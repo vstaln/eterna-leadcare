@@ -16,7 +16,7 @@ export default function Hero() {
         <div className="mt-10 flex flex-wrap items-center gap-4">
           <a
             href="#pipeline"
-            className="bg-ok text-base px-6 py-3 text-sm font-semibold transition-[filter] duration-150 hover:brightness-110"
+            className="bg-ok px-6 py-3 text-sm font-semibold transition-[filter] duration-150 hover:brightness-110"
           >
             See the pipeline
           </a>

@@ -4,7 +4,7 @@ import SectionHeading from "@/components/section-heading";
 
 export default function Home() {
   return (
-    <main>
+    <div>
       <Hero />
       <section id="pipeline" className="mx-auto max-w-6xl px-6 py-20">
         <SectionHeading
@@ -13,6 +13,6 @@ export default function Home() {
         />
         <PipelineDiagram />
       </section>
-    </main>
+    </div>
   );
 }
