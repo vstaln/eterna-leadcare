@@ -24,6 +24,7 @@ type Stage = {
 
 function stageStates(): Stage[] {
   const n8nConfigured = Boolean(env.N8N_BASE_URL && env.WEBHOOK_TOKEN);
+  const hmacEnabled = Boolean(env.WEBHOOK_TOKEN);
   const appsScriptConfigured = Boolean(env.APPS_SCRIPT_URL);
   return [
     {
@@ -37,10 +38,12 @@ function stageStates(): Stage[] {
     {
       num: "02",
       name: "HMAC GATE",
-      state: "ENABLED",
-      led: "ok",
+      state: hmacEnabled ? "ENABLED" : "PENDING",
+      led: hmacEnabled ? "ok" : "err",
       source: "env",
-      note: "sha256 + 5-min freshness — WEBHOOK_TOKEN present; every dispatch is signed",
+      note: hmacEnabled
+        ? "sha256 + 5-min freshness — WEBHOOK_TOKEN present; every dispatch is signed"
+        : "WEBHOOK_TOKEN missing — dispatches cannot be signed; /api/lead returns 503",
     },
     {
       num: "03",
@@ -50,7 +53,7 @@ function stageStates(): Stage[] {
       source: "env",
       note: n8nConfigured
         ? "N8N_BASE_URL + WEBHOOK_TOKEN present; never live-verified from this device — no public status endpoint"
-        : "N8N_BASE_URL missing — lead intake is offline",
+        : "N8N_BASE_URL/WEBHOOK_TOKEN missing — lead intake is offline",
     },
     {
       num: "04",
@@ -341,8 +344,8 @@ export default async function OpsPage() {
         <p className="mt-3 font-mono text-xs text-muted">
           LAST FAILURE —{" "}
           {lastFailure
-            ? `${lastFailure.id.slice(0, 8)} ${relativeAge(lastFailure.created_at, now)}: ${lastFailure.error ?? "n/a"}`
-            : "none in retained window"}
+            ? `${lastFailure.id.slice(0, 8)} ${relativeAge(lastFailure.created_at, now)}: ${(lastFailure.error ?? "n/a").slice(0, 48)}`
+            : "none in last 10"}
         </p>
         <p className="mt-1 font-mono text-xs text-muted">
           RENDERED {nowIso} — data as of last store write; relative ages
