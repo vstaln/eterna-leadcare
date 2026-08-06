@@ -139,7 +139,8 @@ export default async function OpsPage() {
             Operations Dashboard
           </h1>
           <p className="mt-6 max-w-xl text-balance text-base leading-relaxed text-muted">
-            Every row on this page comes from the real execution store. Each
+            Every LOG row is rendered from the real execution store; every
+            other datum is a labeled env reading — nothing is simulated. Each
             instrument shows its own state and source — unreadable ones drop
             N/R flags, never green lights.
           </p>
