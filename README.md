@@ -15,7 +15,7 @@ Built in 48 hours, $0/month free tier, with Cursor + OpenCode. Every step's stor
 
 The command center's /ops page is the honest report card: every LOG row is rendered from the real execution store; every other datum is a labeled env reading — nothing is simulated. Each light on the panel carries its own source and state — unreadable instruments show N/R flags, not green lights. The 200-degraded path is part of the demo, showing what exists before the user-gated Apps Script deploy and how the pipeline upgrades honestly. Open the LEDGER for exactly what is pending and why, then watch the LOG fill with real rows. Here "live" means real data, honestly labeled.
 
-Stack proven: Webflow / N8N / Google Apps Script / React / Next.js / Node.js / type-safe TypeScript / Docker / CI/CD / GCP Cloud Run / Oracle Cloud · Git / version control / Cursor + OpenCode AI workflow / k3s stretch. Mapping table in `ARCHITECTURE.md`.
+Stack proven: N8N / Google Apps Script / React / Next.js / Node.js / type-safe TypeScript / Docker / CI/CD / GCP Cloud Run / Oracle Cloud · Git / version control / Cursor + OpenCode AI workflow / k3s stretch. Webflow: planned migration, not yet built (docs/webflow-migration.md). Mapping table in `ARCHITECTURE.md`.
 
 ## Pipeline (shipped state — P1 home · P2 pipeline-core · P3 ops dashboard)
 
@@ -38,7 +38,7 @@ N8N listens on TCP 5678 on the Oracle box, currently bound to localhost (127.0.0
 - Next.js 16 (App Router, TypeScript, Tailwind) — deployed via GitHub Actions → GHCR → GCP Cloud Run (free tier; Vercel fallback documented)
 - N8N (community, self-hosted) — Docker Compose on the Oracle box (`oracle-old`, x86_64, Ubuntu 24.04)
 - Google Apps Script + Google Sheets — RDAP/domain enrichment + lead audit trail
-- Webflow free plan — no-code landing proof
+- Webflow free plan — no-code landing (planned; docs/webflow-migration.md)
 - CI/CD: `deploy.yml` on push to `main`
 
 ## Quickstart

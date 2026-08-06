@@ -105,8 +105,8 @@ function clock() {
 }
 
 export default async function OpsPage() {
-  const rows = await listExecutions(10);
   const ring = await listExecutions(100);
+  const rows = ring.slice(0, 10);
   const { now, iso: nowIso } = clock();
 
   const totals = {
