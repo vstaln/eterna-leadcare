@@ -1,18 +1,25 @@
 const REQUIRED = [
   "N8N_BASE_URL",
-  "N8N_API_KEY",
   "WEBHOOK_TOKEN",
   "EXECUTIONS_AUTH_TOKEN",
 ] as const;
 
+const OPTIONAL = ["N8N_API_KEY", "APPS_SCRIPT_URL", "N8N_WEBHOOK_PATH"] as const;
+
 export const NODE_ENV = process.env.NODE_ENV ?? "development";
 
 function readEnv() {
-  const values: Record<(typeof REQUIRED)[number], string> = {
+  const values: Record<(typeof REQUIRED)[number], string> & {
+    N8N_API_KEY: string;
+    APPS_SCRIPT_URL: string;
+    N8N_WEBHOOK_PATH: string;
+  } = {
     N8N_BASE_URL: process.env.N8N_BASE_URL ?? "",
-    N8N_API_KEY: process.env.N8N_API_KEY ?? "",
     WEBHOOK_TOKEN: process.env.WEBHOOK_TOKEN ?? "",
     EXECUTIONS_AUTH_TOKEN: process.env.EXECUTIONS_AUTH_TOKEN ?? "",
+    N8N_API_KEY: process.env.N8N_API_KEY ?? "",
+    APPS_SCRIPT_URL: process.env.APPS_SCRIPT_URL ?? "",
+    N8N_WEBHOOK_PATH: process.env.N8N_WEBHOOK_PATH ?? "/webhook/lead",
   };
   return values;
 }
