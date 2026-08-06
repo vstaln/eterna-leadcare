@@ -2,7 +2,7 @@ export default function LiveBadge() {
   return (
     <span className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted">
       <span className="led-live" aria-hidden="true" />
-      System: build
+      <span className="hidden sm:inline">System: build</span>
     </span>
   );
 }

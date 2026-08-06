@@ -11,8 +11,8 @@ const links = [
 export default function Nav() {
   return (
     <header className="fixed top-0 z-50 w-full border-b border-border bg-base/80 backdrop-blur">
-      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-        <ul className="flex items-center gap-4 sm:gap-6">
+      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
+        <ul className="flex items-center gap-2.5 sm:gap-6">
           {links.map((link) =>
             link.href === "/" ? (
               <li key={link.href}>
