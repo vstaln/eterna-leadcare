@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div>
       <Hero />
-      <section id="pipeline" className="mx-auto max-w-6xl px-6 py-20">
+      <section id="pipeline" className="mx-auto max-w-6xl px-6 py-16">
         <SectionHeading
           eyebrow="The Pipeline"
           title="Lead to report card in one flow"
