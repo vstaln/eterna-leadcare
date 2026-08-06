@@ -2,7 +2,7 @@
 
 ## Status
 
-**Phase 2 of ET-48 v2 — pipeline-core (this slice).** The real pipeline ships: visitor lead form → `/api/lead` (HMAC-signed proxy) → self-hosted N8N on the Oracle box (`oracle-old`, x86_64, Ubuntu 24.04, Docker Compose, sqlite) → RDAP enrichment → Apps Script log → `[DEMO]` Sheets audit trail → report card. Telegram notify, stage callbacks, Postgres, and public deploy are LATER phases (P3/P5).
+**Phase 3 of ET-48 v2 — ops dashboard (this slice).** The real pipeline ships: visitor lead form → `/api/lead` (HMAC-signed proxy) → self-hosted N8N on the Oracle box (`oracle-old`, x86_64, Ubuntu 24.04, Docker Compose, sqlite) → RDAP enrichment → Apps Script log → `[DEMO]` Sheets audit trail → report card. Telegram notify, stage callbacks, Postgres, and public deploy are LATER phases (P5).
 
 ## Branch B — front door (phone-only operator decision)
 
@@ -14,10 +14,10 @@ The operator runs this build phone-only (Termux, no GUI browser, no local Docker
 Browser → Next.js API (/api/lead, HMAC-SHA256 over executionId.nonce.ts, 5-min freshness)
         → N8N webhook (path configurable via `N8N_WEBHOOK_PATH`; default `/webhook/lead` for the local stub, the real value is set in `.env.local` — verify HMAC → RDAP enrich → token-gated Apps Script log)
         → [DEMO] row in Sheets → Respond 200 → execution store (data/executions.json, gitignored)
-        → frontend polls /api/executions (authed) + /api/executions/public (PII-stripped mirror)
+        → frontend reads the execution store (authed `/api/executions` + `/api/executions/public` PII-stripped mirror)
 ```
 
-Callbacks, Postgres, and Telegram are P3/P5.
+Callbacks, Postgres, and Telegram are P5.
 
 ## Security
 
