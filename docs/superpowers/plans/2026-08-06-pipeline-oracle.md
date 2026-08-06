@@ -1,109 +1,110 @@
-# Plan: Pipeline Core — Eterna Ops Command Center (P2, ET-48 v2)
+# Plan: Pipeline Core — Eterna Ops Command Center (P2, ET-48 v2) — v2 (post-critique)
 
 Plan file: docs/superpowers/plans/2026-08-06-pipeline-oracle.md
 Branch: feat/pipeline-core · Worktree: .worktrees/pipeline-core · Window: ~8h slice
 Process: subagent-driven development + PR flow (push branch → PR → CI green → merge)
+Critique round 1: 3 independent critics → v2 incorporates all consensus fixes.
 
 ## Overview
 
-Build the real pipeline behind the front door: visitor lead form → hardened Next.js proxy → self-hosted N8N on the existing Oracle box (`oracle-old`, x86_64, Ubuntu 24.04, Docker) → Google Apps Script enrichment + Sheets logging → report card, with execution-stage tracking the dashboard (P3) will poll. Phase 2 of ET-48 v2; deploy (P5) and the animated live dashboard (P3) are LATER plans.
+Build the real pipeline behind the front door: visitor lead form → hardened Next.js proxy → self-hosted N8N on the existing Oracle box (`oracle-old`, x86_64, Ubuntu 24.04, Docker) → N8N does RDAP enrichment directly → Google Apps Script logs to Sheets ([DEMO] prefix) → report card, with execution records in a gitignored local store. Phase 2 of ET-48 v2; deploy (P5), the animated dashboard (P3), stage callbacks, and Telegram are LATER plans.
 
-## Infrastructure decision (changed from ET-48 v2 assumptions)
+## Architecture decisions (v2 — changed from ET-48 v2 assumptions, after critique)
 
-- N8N + Postgres run on `oracle-old` (168.110.203.180, x86_64) via Docker Compose — NOT a new Oracle Always-Free ARM VM. x86 changes nothing for N8N/Caddy. ARCHITECTURE.md updated to match.
-- N8N is exposed on the box's public IP:5678 (n8n login enabled + workflow-level HMAC verification). Hardening (Cloudflare proxy, IP allowlisting) is a later phase; documented in ARCHITECTURE.md.
-- Apps Script cannot be deployed from this phone (needs the user's Google account) — the plan delivers the script + a 5-minute browser setup checklist; the pipeline goes live the moment the user pastes the deployed URL.
+1. **No Postgres this slice.** N8N runs with its default sqlite on the box; the app's execution records live in a gitignored JSON file store (`data/executions.json`, atomic writes, 100-row cap). Rationale: zero exposed DB ports (5432 stays firewalled), zero native deps (`pg` removed), still honest — a real audit trail the /ops page will read. P5 (deploy) migrates to Postgres on the box when the app is publicly hosted. Documented in ARCHITECTURE.md.
+2. **HMAC over canonical fields, not raw bodies.** No JSON-canonicalization footgun: `/api/lead` sends headers `X-Nonce`, `X-Ts`, `X-HMAC` where HMAC = HMAC-SHA256(WEBHOOK_TOKEN, `${executionId}.${nonce}.${ts}`); n8n Code node recomputes the same string from the JSON body. Timing-safe compare. 5-minute freshness window; replay within the window is an ACCEPTED, DOCUMENTED demo tradeoff (n8n could dedupe by executionId — a "check executions seen set" node is optional; skip unless time allows).
+3. **Apps Script is a single `log` endpoint.** RDAP enrichment is done by n8n's HTTP node (public data, no secrets — Apps Script doesn't proxy RDAP). The script appends a [DEMO] row and REQUIRES a shared token (`APPS_SCRIPT_TOKEN` in Script Properties) in the POST body — the "anyone with link" capability URL is thus bounded; token never in repo.
+4. **Port exposure is minimal and labeled.** Only TCP 5678 opens to the internet (n8n login + workflow HMAC). 5432 closed. This tradeoff is explicitly labeled in README (not just ARCHITECTURE). Cloudflare proxy + IP allowlisting = P5 hardening.
+5. **n8n import is headless.** `docker exec <container> n8n import:workflow --input=...` + `n8n update:workflow --id=... --active=true` run from the phone over SSH — no browser needed for import/activation.
+6. **User browser checklist (explicit, gated):** (a) OCI security list: open TCP 5678; (b) n8n first-login owner account + API key; (c) Apps Script deploy. These gate only the "user-gated DoD" below, never the controller-core DoD.
 
-## Global Constraints (binding — reviewers check against these)
+## Global Constraints (binding)
 
-1. Environment: Termux phone-only controller; `oracle-old` = ubuntu@168.110.203.180 (key ~/.ssh/oracle-old.key). All phone commands headless, non-interactive; Docker exists ONLY on the box, never locally.
-2. Stack (locked): existing Next.js 16 app deps + NEW dep `pg` (plan ruling: needed for Postgres executions; nothing else). N8N community (Docker) + Postgres 16 (Docker) on the box. Apps Script vanilla (no deps).
-3. Secrets: never commit values. Generate `WEBHOOK_TOKEN` + `EXECUTIONS_AUTH_TOKEN` with `openssl rand -hex 32`, keep in phone `.env.local` (gitignored) AND box `.env` (in the compose dir, gitignored, outside repo). .env.example stays empty. HMAC-SHA256 on every webhook payload (nonce + timestamp, timing-safe compare). No secret in any browser-visible payload.
-4. Honesty rule (extends §7): everything shown to visitors is real or explicitly labeled. The demo pipeline is REAL (real webhook, real N8N, real Apps Script enrichment via RDAP). "Telegram notify" is NOT included in this slice (needs a bot token) — it appears only as an honest "pending" label if mentioned anywhere. Execution rows show stage, never fake data. A [DEMO] prefix in Sheets tabs marks demo records.
-5. Repo rules (unchanged): conventional commits + AI-pairing tag; work only in the worktree; PR flow: every slice merges via PR with CI green (gitleaks must stay green — box .env must never touch the repo).
-6. App behavior: `/api/*` routes typed, strict TS, no `any`; build/lint/typecheck green; existing pages unchanged except where a task says so.
-7. Files may only live under: app/, components/, lib/, public/, docs/, .github/, plus root config files. The N8N workflow export + Apps Script code live in `docs/` (importable artifacts are docs).
-8. oracle-old disk is 88% full (5.7G free) — plan a `docker system prune`/image audit step in Task 1; N8N image is ~1.5G.
+1. Environment: Termux phone-only controller; `oracle-old` = ubuntu@168.110.203.180 (key ~/.ssh/oracle-old.key). Headless, non-interactive on the phone; Docker exists ONLY on the box. Box disk ~88% full (5.7G free) — audit before pulling images; target ≥3G free after compose.
+2. Stack (locked): existing Next.js 16 deps; NO new deps this slice (JSON store replaces pg — critique ruling). N8N community (Docker, sqlite, pinned image tag recorded in AI_LOG) on the box. Apps Script vanilla.
+3. Secrets: never committed. Generate `WEBHOOK_TOKEN`, `EXECUTIONS_AUTH_TOKEN` via `openssl rand -hex 32`; phone `.env.local` (gitignored) and box `/opt/eterna/.env` (outside repo). `.env.example` stays empty (existing 4 vars; `N8N_API_KEY` becomes OPTIONAL — REQUIRED list = N8N_BASE_URL, WEBHOOK_TOKEN, EXECUTIONS_AUTH_TOKEN; documented in lib/env.ts comments? No comments — in README env table).
+4. Honesty: real data only, or explicitly labeled. "Telegram notify" appears ONLY as "pending" labels. `[DEMO]` prefix in Sheets. Public endpoints strip PII (no names/emails/payloads).
+5. Repo rules: conventional commits + AI-pairing tag; worktree only; PR flow with CI green (gitleaks included) before merge; no code comments; TS strict.
+6. Files may live under: app/, components/, lib/, public/, docs/, .github/, root configs. `data/` is runtime state: gitignored (add to .gitignore in Task 3).
+7. DoD split (v2): **Controller-core DoD** (must pass without user): phone curl → n8n 200 with HMAC; execution row in JSON store (received→dispatched on 200); authed /api/executions works; public mirror renders; build/lint/typecheck green; CI green; merged via PR. **User-gated DoD** (passes once user completes browser checklist): workflow actually imported+active, [DEMO] sheet row exists (verified by phone curl to the log endpoint with the shared token), enrichment data in the sheet. The slice PR is honest about which DoD is met.
 
-## Task 1: Provision oracle-old — Docker Compose (Postgres + N8N) + connectivity
+## Task 1: Provision oracle-old — N8N (sqlite) + connectivity + firewall checklist
 
-Goal: N8N + Postgres running on the box, reachable from the phone, secured with n8n login.
+Goal: N8N running on the box, reachable from the phone, owner login + API key set (user step), 5678 open (user step via OCI console).
 
-Files: none in repo (box-side: /opt/eterna/docker-compose.yml, .env — documented in docs/).
-
-Requirements:
-1. SSH audit + free disk: `df -h /`, `docker system df`, prune unused images/volumes if needed (target ≥ 8G free).
-2. Create /opt/eterna/{compose.yml, .env}; postgres:16-alpine + n8nio/n8n (latest community). n8n uses the Postgres DB (external, not sqlite): env DB_TYPE=postgresdb, DB_POSTGRESDB_*, N8N_USER_MANAGEMENT_JWT_SECRET, N8N_BASIC_AUTH_ACTIVE=true + user/pass (box .env only).
-3. `docker compose up -d`; wait for healthy; verify: `curl -s http://localhost:5678/healthz` = ok (from the box).
-4. Firewall: open TCP 5678 from 0.0.0.0 (Oracle security list + ufw if active). Verify from the phone: `curl -sI http://168.110.203.180:5678` returns n8n HTML.
-5. Create n8n login (via API with BASIC_AUTH or documented in first browser login) — actual UI login is user's browser step: checklist item. Create an N8N **API key** (Workflow > Settings > API key... actually: n8n > user settings > API keys) — user step, paste into phone .env.local as N8N_API_KEY.
-6. Verification from phone: compose ps (via ssh), healthz 200, public 5678 reachable.
-
-DoD: box runs postgres+n8n, reachable, disk cleaned, .env on box never committed.
-
-## Task 2: Apps Script — RDAP enrichment + Sheets logging (code + setup checklist)
-
-Goal: a single Apps Script project exposing two endpoints: `doPost('enrich')` (RDAP lookup → JSON) and `doPost('log')` (append to Sheet, [DEMO] prefix). Deployable in ~5 browser minutes by the user.
-
-Files: docs/apps-script-setup.md (code + step-by-step), no code in repo besides the doc (single-file script embedded in the doc).
+Files: none in repo (box: /opt/eterna/{compose.yml, .env}; documented in docs/). Pin image tag; record exact tag in AI_LOG.
 
 Requirements:
-1. Script: `doPost(e)` reads action from path; enrich: fetch `https://rdap.org/domain/<domain>` (or registry fallback), return {domain, registrar, created, updated, status, nameservers} as JSON; log: append [DEMO] row to spreadsheet "ET-48 OPS — leads" (tab "DEMO leads"), return row id. No secrets in script (execution as user, access: anyone with link — honest tradeoff documented; RDAP data is public info).
-2. Setup checklist doc: create project → paste code → deploy web app (Execute as: me; Access: anyone) → copy URL → save to phone .env.local APPS_SCRIPT_URL.
-3. Verification: README of the doc includes curl examples against the deployed URL; user confirms one test call (or reports the URL and we test from the phone).
+1. Disk audit first: `df -h /`, `docker system df`, `du -sh /var/lib/docker/*` (find the 88%); prune ONLY unused images/volumes with explicit filters; never remove containers other than ours; record before/after in AI_LOG. Target ≥3G free.
+2. /opt/eterna/compose.yml: n8nio/n8n:<pinned tag> (community), volumes for ~/.n8n, env: N8N_ENCRYPTION_KEY (generated), N8N_USER_MANAGEMENT_JWT_SECRET (generated), N8N_TASK_RUNNERS_ENABLED=false (small box, honesty: keep simple), GENERIC_TIMEZONE=Asia/Jakarta. sqlite (default) — no DB service.
+3. `docker compose up -d`; from the box: `curl -s localhost:5678/healthz` = ok.
+4. User checklist item A (OCI console): security list inbound TCP 5678. Verify from phone: `curl -sI http://168.110.203.180:5678` → 200/302 (n8n responds).
+5. User checklist item B: open n8n in browser, create owner account, generate an API key (Settings → API keys) — paste into phone .env.local as N8N_API_KEY (optional this slice; required P5).
 
-DoD: doc complete with code + checklist; env var documented; pipeline unblocks when user deploys.
+DoD (controller): compose up, healthz 200 via ssh, 5678 reachable from phone, disk audited + logged.
 
-## Task 3: Next.js — pg dependency, executions store, /api/lead proxy (HMAC), /api/executions + /api/execution-status
+## Task 2: Apps Script — log endpoint (code + setup checklist)
+
+Goal: single `doPost` endpoint appending [DEMO] rows, token-gated; user-deployable in ~5 browser minutes.
+
+Files: docs/apps-script-setup.md (full script + checklist + example-row markdown table), no other repo code.
+
+Requirements:
+1. Script: `doPost(e)`: require `e.parameter.token` === PropertiesService.getScriptProperties().getProperty("APPS_SCRIPT_TOKEN") (401 otherwise); require action=log; append row [DEMO, ts, executionId, name, email, company, domain, registrar, created, updated, status, nameservers] to spreadsheet "ET-48 OPS — leads" tab "DEMO leads"; return {ok:true, row}. Set the token property during deploy (checklist step).
+2. Doc contains: script, step-by-step deploy (Extensions → Apps Script, paste, deploy web app: Execute as me, Access anyone), token setup, **curl examples with `Content-Type: text/plain`** (JSON content-type triggers Apps Script's 302-reject) incl. a failing-token example, and a rendered example row table (visible without sheet access).
+3. Verification (user-gated): phone curl to deployed URL with token → {ok:true}; row appears in sheet (user confirms or shares URL).
+
+DoD: doc complete; endpoint verified once user deploys (user-gated).
+
+## Task 3: Next.js — JSON store, /api/lead proxy (HMAC), /api/executions + public mirror
 
 Goal: hardened ingestion + real execution records.
 
-Files: package.json (+pg), lib/db.ts, lib/crypto.ts, lib/env.ts (wire validateEnv), app/api/lead/route.ts, app/api/executions/route.ts, app/api/execution-status/route.ts, app/api/health/route.ts (no change), .env.local (local, gitignored).
+Files: lib/store.ts (new), lib/crypto.ts (new), lib/env.ts (REQUIRED = N8N_BASE_URL, WEBHOOK_TOKEN, EXECUTIONS_AUTH_TOKEN; N8N_API_KEY + APPS_SCRIPT_URL optional), app/api/lead/route.ts (new), app/api/executions/route.ts (new), app/api/executions/public/route.ts (new), .gitignore (add data/), .env.local (local, gitignored).
 
 Requirements:
-1. Ruling: add `pg` dependency. `npm i pg` + `npm i -D @types/pg`. lockfile committed.
-2. lib/db.ts: pg Pool; `ensureSchema()` runs at module init (CREATE TABLE IF NOT EXISTS executions: id uuid PK, status text, stage text, payload jsonb, error text, created_at timestamptz, updated_at timestamptz). Connection string from env (DATABASE_URL — new var, add to .env.example empty + README). Pool created lazily; routes must not crash when DB is down (500 with honest message).
-3. lib/crypto.ts: hmac(payload, token) → hex; verify with timingSafeEqual; nonce+timestamp window (≤5min) — all in /api/lead (inbound) and /api/execution-status (inbound from n8n).
-4. POST /api/lead: JSON {name, email, company?, message, nonce, ts}; validate (email regex, lengths), honeypot field `website` must be empty; id = crypto.randomUUID(); insert execution row (status received); HMAC-sign {executionId, ...} with WEBHOOK_TOKEN; POST to `${N8N_BASE_URL}/webhook/lead` (fetch, 10s timeout, non-2xx → row status failed + honest error); return {ok:true, executionId}. Never echo secrets.
-5. GET /api/executions: Bearer EXECUTIONS_AUTH_TOKEN; SELECT whitelisted columns only (id, status, stage, created_at, updated_at), LIMIT 50 newest first. 401 on bad/missing token.
-6. POST /api/execution-status: Bearer EXECUTIONS_AUTH_TOKEN + HMAC header verified against WEBHOOK_TOKEN; body {executionId, status, stage, error?}; upsert stage/status; 200 ok. (n8n calls this per stage.)
-7. lib/env.ts: add APPS_SCRIPT_URL + DATABASE_URL to REQUIRED; validateEnv() wired (production throws; dev returns empties — routes guard on empties with honest 503).
-8. Verification: build/lint/typecheck green; curl tests: lead → row created; executions → 401 without token, 200 with; execution-status → stage updated. Postgres reachable from phone? (No: app on phone dev server; DATABASE_URL should target the box's postgres port 5432 — open 5432 from phone IP? Simpler: tunnel via ssh -L for dev, or run pg port open to world with password auth — decide: open 5432 with strong password + note hardening; document in ARCHITECTURE.) Choose: expose 5432 with md5/scram password auth (strong random password) — honest demo tradeoff, hardening later.
+1. lib/store.ts: JSON file store at data/executions.json (gitignored); `listExecutions(limit)`, `createExecution(row)`, `updateExecution(id, patch)`; atomic write (tmp file + rename); 100-row cap (drop oldest); lazy load; module import safe (no I/O at import — CI build must not need the file).
+2. lib/crypto.ts: `hmacHex(secret, message)`, `verifyHmac(secret, message, provided)` with `crypto.timingSafeEqual`; `nowMin()`/window helper (5 min).
+3. POST /api/lead: validate {name, email, company?, message} (email regex, length caps), honeypot `website` must be empty; executionId = crypto.randomUUID(); createExecution(status=received, stage="queued"); HMAC = hmacHex(WEBHOOK_TOKEN, `${executionId}.${nonce}.${ts}`) with fresh nonce/ts; POST `${N8N_BASE_URL}/webhook/lead` JSON {executionId, name, email, company, message} + headers X-Nonce/X-Ts/X-HMAC; 10s timeout; 2xx → updateExecution(status=dispatched, stage="dispatched"), return {ok:true, executionId}; non-2xx → status=failed + honest error, return 502 {ok:false, error:"pipeline unavailable"}. If env empty (dev without .env.local): honest 503 {ok:false, error:"pipeline not configured"}.
+4. GET /api/executions: Bearer EXECUTIONS_AUTH_TOKEN (401 otherwise); whitelist: id, status, stage, created_at, updated_at (no payload); LIMIT 50 newest first.
+5. GET /api/executions/public: NO auth; last 10 rows: id (first 8 chars), status, stage, created_at; NO names/emails/company/payload. Honest public telemetry for the demo/README.
+6. lib/env.ts: REQUIRED shrinks to 3 (documented in README env table); validateEnv still prod-throws.
+7. Verification: build/lint/typecheck green; curl: /api/lead → row created (status received then dispatched when n8n answers 2xx — with real workflow absent, expect failed until Task 4; use a stub? NO — honest: verify received+failed path first, dispatched path lands with Task 4); /api/executions 401/200; /api/executions/public 200 without auth; store file created under data/ and NOT tracked by git (git check-ignore).
 
-DoD: real ingestion works end-to-end to DB; all endpoints verified with curl; secrets in .env.local only.
+DoD: all endpoints verified; store gitignored; build green.
 
-## Task 4: N8N workflow — HMAC verify → enrich → log → callback
+## Task 4: N8N workflow — HMAC verify → enrich (RDAP) → log → 200 (headless import)
 
 Goal: the workflow that makes the pipeline real.
 
-Files: docs/n8n-workflow.json (export, importable), docs/ — workflow notes. Box: workflow imported by user OR via API (n8n API key + workflows API if available in community — checklist if not).
+Files: docs/n8n-workflow.json (export), docs/n8n-workflow.md (notes + ASCII diagram: webhook → verify-hmac → enrich → log → 200).
 
 Requirements:
-1. Workflow "ET-48 lead pipeline": Webhook node (POST /webhook/lead) → Code node "verify-hmac" (recompute HMAC over raw payload with WEBHOOK_TOKEN, timing-safe; reject 401) → HTTP node → `${APPS_SCRIPT_URL}?action=enrich` (domain from email) → Code node "stage" (set stage=enriching, callback via HTTP to `${N8N_BASE_URL_EXTERNAL?}`... NOTE: callback goes to the NEXT.JS app — dev mode: phone. Use an env var WEBHOOK_CALLBACK_URL set on the box to the phone's LAN URL during dev? Phone reachable from box? Yes if same network — box is public IP; phone behind NAT → box cannot reach phone. HONEST PROBLEM: n8n callback → Next.js only works when Next.js is deployed publicly (P5). For this slice: skip live stage-callbacks; stage column updates via direct phone→DB (Task 3 step 6 exists for P5) — REDUCE scope: Task 4 does HMAC→enrich→log→respond 200; stage updates happen on the next deploy phase. Mark execution-status route as "wired for P5". This keeps honesty: no fake callbacks.)
-2. Workflow response: 200 {ok:true, executionId} echo.
-3. Import: user browser step (Import from file) — checklist; or API import if community supports (verify; if not, manual). Verification from phone: curl POST the box's webhook with a signed payload → 200; Apps Script URL set on box env (user pasted after Task 2); sheet gets a [DEMO] row — USER confirms or shares URL; we verify via phone curl to the Apps Script log endpoint? Apps Script "anyone with link" allows POST → we can verify ourselves from the phone. Good.
-4. Box env vars: APPS_SCRIPT_URL, WEBHOOK_TOKEN (same as phone).
+1. Workflow "ET-48 lead pipeline": Webhook node POST /webhook/lead (respond: 200) → Code node "verify-hmac": recompute hmacHex(WEBHOOK_TOKEN, `${body.executionId}.${header.X-Nonce}.${header.X-Ts}`), timing-safe, reject 401; freshness ≤5 min. (Webhook node exposes headers to Code node in n8n community — verify in the import test; if headers aren't exposed, fallback: sign over body fields only and document — adapt, don't block.) → HTTP node GET `https://rdap.org/domain/<domain-from-email>` (public, no secrets) → Code node "map": pick registrar/created/updated/status/nameservers → HTTP node POST `${APPS_SCRIPT_URL}?action=log` body {token: APPS_SCRIPT_TOKEN, executionId, name, email, company, domain, enrich...} with `Content-Type: text/plain` (Apps Script quirk) → Respond 200 {ok:true, executionId}. Error path: log error node (console) + 200 with {ok:false, error} (no retry loops this slice).
+2. Box env (/opt/eterna/.env, not repo): WEBHOOK_TOKEN, APPS_SCRIPT_URL, APPS_SCRIPT_TOKEN — same values as phone/script properties. compose passes them to the container.
+3. Import (headless, phone): `docker exec <c> n8n import:workflow --input=/home/node/workflow.json` (volume-mount the export) + `n8n update:workflow --id=<id> --active=true`; record workflow id in AI_LOG.
+4. Verification (controller-core): phone curl POST 5678/webhook/lead WITH valid HMAC headers → 200 {ok:true}; without/with-wrong HMAC → 401. (Apps Script URL may be absent pre-deploy → expect 500-on-log path; curl a second time AFTER user deploys to confirm sheet row — user-gated.)
+5. Verification (user-gated): sheet row appears (phone curl to log endpoint with token; user confirms).
 
-DoD: end-to-end: phone curl → box n8n → enrich → [DEMO] sheet row → 200. Workflow file committed.
+DoD: workflow imported+active on the box (controller verifies via `n8n list:workflow`), HMAC 401/200 behavior proven, [DEMO] row confirmed when user deploys.
 
 ## Task 5: Docs + AI_LOG
 
-Files: ARCHITECTURE.md (x86 note, real endpoints, hardening notes), README.md (env vars section: DATABASE_URL, APPS_SCRIPT_URL; pipeline quickstart), docs/apps-script-setup.md (from Task 2 — verify), AI_LOG.md S003.
+Files: ARCHITECTURE.md, README.md, AI_LOG.md (S003).
 
 Requirements:
-1. ARCHITECTURE.md: replace "Ampere A1 ARM64" with oracle-old x86_64; data-flow diagram updated (webhook → n8n → apps script → sheets; callbacks deferred to P5); security notes section (HMAC, nonce window, bearer tokens, DB password auth, port exposure + hardening roadmap).
-2. README: env table complete (8 vars), quickstart gains "pipeline" section.
-3. AI_LOG S003: this slice, incl. honest blockers (Apps Script needs user's browser; callbacks deferred; Telegram pending).
-4. Verification: no dangling refs; all docs' referenced files exist.
+1. ARCHITECTURE.md: oracle-old x86_64 replaces "Ampere A1 ARM64"; data flow updated (lead → HMAC proxy → n8n sqlite → RDAP → Apps Script log → [DEMO] sheet; callbacks/Postgres/Telegram = P3/P5); security notes (HMAC canonical fields + freshness, bearer tokens, token-gated Apps Script, 5678-only exposure + hardening roadmap); P5 migration note (Postgres + stage callbacks).
+2. README: SCRUB front-matter claims — replace "Telegram notify → live report card" with slice-accurate copy ("Telegram: pending"); add "what this slice proves" 3 bullets (real EMPWR-pattern pipeline: form → HMAC-verified webhook → self-hosted N8N → RDAP enrichment → Apps Script audit trail); business-value paragraph (RDAP = lead qualification, Sheets = client compliance audit trail — the EMPWR pattern); env tables split PHONE vs BOX with counts correct (phone 4: N8N_BASE_URL, WEBHOOK_TOKEN, EXECUTIONS_AUTH_TOKEN, N8N_API_KEY-optional; box: WEBHOOK_TOKEN, APPS_SCRIPT_URL, APPS_SCRIPT_TOKEN, N8N_ENCRYPTION_KEY, N8N_USER_MANAGEMENT_JWT_SECRET); port-exposure labeled tradeoff (5678 public, 5432 closed).
+3. AI_LOG S003: this slice incl. adaptations (sqlite+JSON store decision, HMAC canonical-fields fix, headless import, disk audit numbers, pinned n8n tag).
+4. Verification: no dangling refs; grep README for "Telegram" shows only "pending" context.
 
-DoD: docs accurate; AI_LOG S003 present.
+DoD: docs accurate + honest; AI_LOG S003 present.
 
-## Task 6: Final branch review (controller-run) + PR
+## Task 6: Final branch review + PR merge
 
-Controller: build+lint+typecheck, git log check, whole-branch review dispatch, fix cycle, then push branch → open PR → CI green → merge (fast-forward via GitHub UI/API). PR body: summary + verification evidence + honest "not yet" list.
+Controller: build/lint/typecheck, conventional-commit check, whole-branch review dispatch, fix cycle, push → PR → CI green → merge (GitHub UI/API). PR body: summary, verification evidence (curl transcripts), honest not-yet list (user-gated items, P3/P5 deferrals).
 
-## Definition of Done (whole plan)
+## Definition of Done (split, per Global Constraint 7)
 
-- Real lead → [DEMO] sheet row path works from the phone (curl), with HMAC verified by n8n.
-- Execution rows in Postgres; /api/executions authed.
-- Docs + AI_LOG updated; secrets never committed; CI green incl. gitleaks; merged via PR.
+- Controller-core: lead → HMAC-verified n8n 200; JSON store rows (received/dispatched/failed); authed + public execution endpoints; build/lint/typecheck + CI green; merged via PR with the honest not-yet list.
+- User-gated: n8n owner login + API key set; workflow active; [DEMO] sheet row verified.
