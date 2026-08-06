@@ -81,6 +81,7 @@ On the box, `/opt/eterna/.env` (outside the repo, passed to the n8n container) h
 - `AI_LOG.md` — per-session Cursor/OpenCode prompt log.
 - `docs/design-tokens.md` — design tokens + art direction (source of truth for the UI layer).
 - `docs/n8n-workflow.json` — "ET-48 lead pipeline" workflow export (HMAC verify → RDAP enrich → Apps Script log → respond).
+- `docs/n8n-workflow.md` — workflow notes + response contract + ASCII diagram.
 - `docs/apps-script-setup.md` — Apps Script log endpoint: script, deploy checklist, token setup, curl examples.
 
 ## Cost

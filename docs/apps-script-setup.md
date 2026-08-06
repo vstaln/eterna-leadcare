@@ -81,12 +81,12 @@ function json_(code, obj) {
 ## 5. Verify from the phone (works after deploy)
 
 ```sh
-# with token (200):
-curl -s "https://script.google.com/macros/s/<YOUR_ID>/exec?action=log&token=<TOKEN>&executionId=test-001&name=Vstalin&email=vstal@vstal.in&domain=vstal.in"
+# with token (200) — note Content-Type: text/plain; a JSON content-type triggers Apps Script's 302-reject:
+curl -s -H 'Content-Type: text/plain' "https://script.google.com/macros/s/<YOUR_ID>/exec?action=log&token=<TOKEN>&executionId=test-001&name=Vstalin&email=vstal@vstal.in&domain=vstal.in"
 # → {"ok":true,"row":"appended"}
 
 # wrong token (401):
-curl -s "https://script.google.com/macros/s/<YOUR_ID>/exec?action=log&token=wrong"
+curl -s -H 'Content-Type: text/plain' "https://script.google.com/macros/s/<YOUR_ID>/exec?action=log&token=wrong"
 # → {"ok":false,"error":"unauthorized"}
 ```
 

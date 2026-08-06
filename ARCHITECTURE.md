@@ -12,7 +12,7 @@ The operator runs this build phone-only (Termux, no GUI browser, no local Docker
 
 ```
 Browser → Next.js API (/api/lead, HMAC-SHA256 over executionId.nonce.ts, 5-min freshness)
-        → N8N webhook /webhook/lead (verify HMAC → RDAP enrich → token-gated Apps Script log)
+        → N8N webhook (path configurable via `N8N_WEBHOOK_PATH`; default `/webhook/lead` for the local stub, the real value is set in `.env.local` — verify HMAC → RDAP enrich → token-gated Apps Script log)
         → [DEMO] row in Sheets → Respond 200 → execution store (data/executions.json, gitignored)
         → frontend polls /api/executions (authed) + /api/executions/public (PII-stripped mirror)
 ```
@@ -42,3 +42,4 @@ Lands here when the build reaches the packet phase (maps the JD's six priorities
 
 - Build plan: `docs/superpowers/plans/2026-08-06-scaffold-foundation.md`
 - Design tokens & art direction: `docs/design-tokens.md`
+- Lead pipeline workflow notes + diagram: `docs/n8n-workflow.md`
