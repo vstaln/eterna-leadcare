@@ -30,6 +30,9 @@ Webflow / N8N / Google Apps Script / React / Next.js / Node.js / type-safe TypeS
 npm ci
 cp .env.example .env.local   # then fill in the four vars below
 npm run dev            # http://localhost:3000
+npm run build
+npm run lint
+npm run typecheck
 
 # N8N (on the Oracle VM — see docker-compose.yml)
 docker compose up -d
@@ -41,7 +44,9 @@ Defined (empty) in `.env.example` — copy to `.env.local` and fill: `N8N_BASE_U
 
 ## Repo layout
 
-symlink to `ARCHITECTURE.md` for the data-flow diagram, decision log, security notes, and runbook. `AI_LOG.md` is the per-session Cursor/OpenCode prompt log.
+- `ARCHITECTURE.md` — data-flow diagram, decision log, security notes, runbook.
+- `AI_LOG.md` — per-session Cursor/OpenCode prompt log.
+- `docs/design-tokens.md` — design tokens + art direction (source of truth for the UI layer).
 
 ## Cost
 

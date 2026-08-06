@@ -10,6 +10,14 @@ Append-only. One entry per work block (~2-4h). Format: goal → real prompt snip
 - Changed: repo vstaln/eterna-ops-command-center (created, protected), README.md, .gitignore, .gitmessage, this file.
 - Verified: `git branch --show-current` → main; API returned protection settings (enforce_admins enabled, linear_history enabled, force_pushes/deletions disabled).
 
+## S002 — Scaffold & foundation slice (OpenCode, ~6-8h across a phone-only Termux box)
+
+- Goal: scaffold the Next.js 16 app (Branch B front door), design-token layer, app shell (nav/hero/static pipeline), health endpoint + env stub, CI, docs.
+- Prompt: "Execute plan docs/superpowers/plans/2026-08-06-scaffold-foundation.md via subagent-driven development; do single-node tasks inline with a critique review round per task; verify honestly before claiming done."
+- Changed: scaffold (package.json, app/, components/, lib/, public/, configs), docs/design-tokens.md, .github/workflows/ci.yml, app/api/health, lib/env.ts, .env.example, README quickstart, ARCHITECTURE.md status, this entry. Branch feat/scaffold-nextjs, 7 commits.
+- Adaptations (logged honestly): (1) Turbopack has no native bindings on android/arm64 — build AND dev pinned to `--webpack` (works everywhere, deterministic; CI on ubuntu runs the same). (2) Node CLI shebangs (`#!/usr/bin/env`) fail on this Termux — no /usr/bin; workarounds: explicit `node <realpath>` invocation, LD_PRELOAD=libtermux-exec.so for npm scripts. (3) Scaffold .gitignore `.env*` would have silently dropped .env.example — restored repo's explicit env patterns during review. (4) create-next-app's dev script flagged --turbopack; adapted per plan.
+- Verification: `npm run build` 0, `npm run lint` 0, `npx tsc --noEmit` 0 on every task; env prod-throw executed directly (Node 26 native type stripping); CI yaml parsed (js-yaml); prerendered HTML spot-checked for honesty labels ("STATIC PREVIEW", "soon" tags, "SYSTEM: BUILD"). Task reviews: 3 (task 1), 1 (task 2), 1 (task 3), 1 (task 4) — task 1 needed two fix rounds, all others approved first pass.
+
 ## Template
 
 ### S00N — <short title> (<tool>, ~<time>)
