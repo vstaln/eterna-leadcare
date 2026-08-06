@@ -17,7 +17,7 @@ Webflow / N8N / Google Apps Script / React / Next.js / Node.js / type-safe TypeS
 
 ## Stack
 
-- Next.js 14 (App Router, TypeScript, Tailwind) — deployed via GitHub Actions → GHCR → GCP Cloud Run (free tier; Vercel fallback documented)
+- Next.js 16 (App Router, TypeScript, Tailwind) — deployed via GitHub Actions → GHCR → GCP Cloud Run (free tier; Vercel fallback documented)
 - N8N (community, self-hosted) — Docker Compose on Oracle Cloud Always Free Ampere A1 ARM64 VM, Caddy TLS
 - Google Apps Script + Google Sheets — RDAP/domain enrichment + lead audit trail
 - Webflow free plan — no-code landing proof
