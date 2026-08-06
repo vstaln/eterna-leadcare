@@ -76,7 +76,7 @@
       ],
       "parameters": {
         "method": "GET",
-        "url": "=https://rdap.org/domain/{{ $json.email.split('@')[1] }}",
+        "url": "=https://rdap.org/domain/{{ ($json.email || '').split('@')[1] || '' }}",
         "options": {
           "timeout": 10000,
           "response": {
@@ -85,7 +85,8 @@
             }
           }
         }
-      }
+      },
+      "onError": "continueRegularOutput"
     },
     {
       "id": "n-map-log",
@@ -97,7 +98,7 @@
         -120
       ],
       "parameters": {
-        "jsCode": "const lead = $('Lead').first().json;\nconst b = (lead.body && typeof lead.body === 'object') ? lead.body : lead;\nconst rdap = $input.first().json;\nconst events = rdap.events || [];\nconst created = (events.find(e => e.eventAction === 'registration') || {}).eventDate || '';\nconst updated = (events.find(e => e.eventAction === 'last changed') || {}).eventDate || '';\nreturn { json: {\n  executionId: b.executionId,\n  name: b.name,\n  email: b.email,\n  company: b.company || '',\n  domain: b.email.split('@')[1] || '',\n  registrar: (rdap.registrar || {}).ldhName || '',\n  created,\n  updated,\n  status: (rdap.status || []).join(', '),\n  nameservers: (rdap.nameservers || []).map(ns => ns.ldhName || '').join(', ')\n} };"
+        "jsCode": "const lead = $('Lead').first().json;\nconst b = (lead.body && typeof lead.body === 'object') ? lead.body : lead;\nconst rdap = $input.first().json;\nconst events = rdap.events || [];\nconst created = (events.find(e => e.eventAction === 'registration') || {}).eventDate || '';\nconst updated = (events.find(e => e.eventAction === 'last changed') || {}).eventDate || '';\nreturn { json: {\n  executionId: b.executionId,\n  name: b.name,\n  email: b.email,\n  company: b.company || '',\n  domain: (b.email || '').split('@')[1] || '',\n  registrar: (rdap.registrar || {}).ldhName || '',\n  created,\n  updated,\n  status: (rdap.status || []).join(', '),\n  nameservers: (rdap.nameservers || []).map(ns => ns.ldhName || '').join(', ')\n} };"
       }
     },
     {
@@ -178,7 +179,25 @@
           }
         }
       },
-      "onError": "continueRegularOutput"
+      "onError": "continueErrorOutput"
+    },
+    {
+      "id": "n-respond-degraded",
+      "name": "Respond Degraded",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1320,
+        80
+      ],
+      "webhookId": "lead-webhook-01",
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: false, error: $json.error || 'log failed' }) }}",
+        "options": {
+          "responseCode": 200
+        }
+      }
     },
     {
       "id": "n-respond-ok",
@@ -283,6 +302,13 @@
         [
           {
             "node": "Respond 200",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond Degraded",
             "type": "main",
             "index": 0
           }
