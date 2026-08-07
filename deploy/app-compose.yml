@@ -1,0 +1,20 @@
+# Eterna Ops Command Center - production compose (Oracle box, behind host nginx)
+# Deploy: docker compose -f deploy/app-compose.yml up -d --build
+services:
+  app:
+    build: .
+    image: eterna-app:latest
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3101:3101"
+    environment:
+      - N8N_BASE_URL=${N8N_BASE_URL}
+      - WEBHOOK_TOKEN=${WEBHOOK_TOKEN}
+      - EXECUTIONS_AUTH_TOKEN=${EXECUTIONS_AUTH_TOKEN}
+      - N8N_WEBHOOK_PATH=${N8N_WEBHOOK_PATH}
+      - N8N_API_KEY=${N8N_API_KEY}
+      - APPS_SCRIPT_URL=${APPS_SCRIPT_URL}
+    volumes:
+      - ./data:/app/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
