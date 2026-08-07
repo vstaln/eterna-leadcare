@@ -7,11 +7,11 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://eterna.vstal.in"),
   title: "Eterna Ops Command Center",
   description:
-    "A live automation showcase — EMPWR-pattern webhook pipeline from lead form to report card, built honestly and open.",
+    "A live automation showcase: EMPWR-pattern webhook pipeline from lead form to report card, built honestly and open.",
   openGraph: {
     title: "Eterna Ops Command Center",
     description:
-      "A live automation showcase — EMPWR-pattern webhook pipeline from lead form to report card, built honestly and open.",
+      "A live automation showcase: EMPWR-pattern webhook pipeline from lead form to report card, built honestly and open.",
     url: "https://eterna.vstal.in",
     siteName: "Eterna Ops Command Center",
     locale: "en_US",
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     card: "summary",
     title: "Eterna Ops Command Center",
     description:
-      "A live automation showcase — EMPWR-pattern webhook pipeline from lead form to report card, built honestly and open.",
+      "A live automation showcase: EMPWR-pattern webhook pipeline from lead form to report card, built honestly and open.",
   },
 };
 
