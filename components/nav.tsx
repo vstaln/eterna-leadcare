@@ -9,7 +9,7 @@ const links = [
   { label: "Home", href: "/", live: true, icon: House },
   { label: "Live", href: "/live", live: false, icon: Clock },
   { label: "Ops", href: "/ops", live: true, icon: Gauge },
-  { label: "Behind the Scenes", href: "/behind-the-scenes", live: false, icon: Eye },
+  { label: "Behind the Scenes", href: "/behind-the-scenes", live: true, icon: Eye },
 ];
 
 export default function Nav() {
