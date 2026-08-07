@@ -18,31 +18,32 @@ export default async function Hero() {
           <div>
             <p className="mb-6 flex items-center gap-1.5 font-mono text-xs uppercase tracking-widest text-muted">
               <TerminalWindow className="h-4 w-4 text-live" aria-hidden="true" />
-              APPLICATION DOSSIER // ETERNA INDONESIA
+              ETERNA LEADCARE // PRODUCT DEMO
             </p>
             <HeroHeadline />
             <p className="mt-6 measure text-balance text-base leading-relaxed text-muted">
-              My application for Eterna Indonesia, with live, working automation as evidence. I
-              build web experiences, connect systems, and ship faster with AI tools.
+              Eterna LeadCare is a simple add-on for any client website: block the spam, save
+              who they are, log the lead — then watch every step on a live dashboard, with a
+              tracking number on every lead.
             </p>
             <div className="mt-10 flex flex-wrap items-center gap-4">
               <a
-                href="#about"
+                href="#demo"
                 className="inline-flex items-center gap-2 bg-ok px-6 py-3 text-sm font-semibold text-zinc-950 transition hover:brightness-110 focus-visible:outline-2 focus-visible:outline-live"
               >
-                <span>About my application</span>
+                <span>See it happen</span>
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </a>
               <TourTrigger />
               <a
-                href="#demo"
+                href="#contact"
                 className="inline-flex items-center gap-2 border border-border px-6 py-3 text-sm font-medium text-text transition hover:border-live focus-visible:outline-2 focus-visible:outline-live"
               >
-                See the live automation
+                Try it
               </a>
             </div>
             <p className="mt-5 text-xs text-muted">
-              Fully remote · Full time · U.S.-based client · Rp13M–Rp18M
+              Every lead arrives. Every lead is tracked. Every lead arrives with proof.
             </p>
           </div>
           <PanelTilt className="min-h-[22rem] lg:min-h-0">

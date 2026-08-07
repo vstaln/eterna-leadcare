@@ -10,7 +10,7 @@ export default async function HeroDataPanel() {
     <div className="w-full border border-border bg-surface font-mono tabular-nums">
       <div className="flex items-center gap-2 border-b border-border px-4 py-2 text-xs text-muted">
         <TerminalWindow className="h-4 w-4 text-ok" aria-hidden="true" />
-        <span>vstal@eterna:~/ops $ tail -n 5 executions.json</span>
+        <span>leadcare@eterna:~/ops $ tail -n 5 executions.json</span>
       </div>
       {rows.length === 0 ? (
         <p className="px-4 py-8 text-center text-xs leading-relaxed text-muted">

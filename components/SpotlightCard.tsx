@@ -24,6 +24,9 @@ const SpotlightCard: React.FC<SpotlightCardProps> = ({
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
   const [opacity, setOpacity] = useState<number>(0);
+  const [pointerFine] = useState<boolean>(
+    () => typeof window !== 'undefined' && window.matchMedia('(pointer: fine)').matches
+  );
 
   const handlePointerEnterOrMove: React.MouseEventHandler<HTMLDivElement> = e => {
     if (divRef.current && !isFocused) {
@@ -41,17 +44,20 @@ const SpotlightCard: React.FC<SpotlightCardProps> = ({
   return (
     <div
       ref={divRef}
-      onMouseEnter={handlePointerEnterOrMove}
-      onMouseMove={handlePointerEnterOrMove}
+      onMouseEnter={pointerFine ? handlePointerEnterOrMove : undefined}
+      onMouseMove={pointerFine ? handlePointerEnterOrMove : undefined}
       onMouseLeave={handlePointerLeaveOrBlur}
       onBlur={handlePointerLeaveOrBlur}
-      className={`relative rounded-3xl border border-neutral-800 bg-neutral-900 overflow-hidden p-8 ${className}`}
+      className={`relative border border-border bg-surface overflow-hidden p-8 ${className}`}
     >
       <div
-        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 ease-in-out"
+        className="pointer-events-none absolute inset-0 opacity-0"
         style={{
           opacity,
-          background: `radial-gradient(circle at ${position.x}px ${position.y}px, ${spotlightColor}, transparent 80%)`
+          background: `radial-gradient(circle at ${position.x}px ${position.y}px, ${spotlightColor}, transparent 80%)`,
+          transition: `opacity ${
+            opacity > 0 ? 'var(--duration-quick)' : 'var(--duration-fast)'
+          } var(--ease-smooth-out)`
         }}
       />
       {children}

@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
 import { useDialKit } from "dialkit";
 import SplitText from "@/components/SplitText";
@@ -7,24 +7,24 @@ import SplitText from "@/components/SplitText";
 export function HeroHeadline() {
   const reduced = useReducedMotion();
   const dial = useDialKit("SplitText", {
-    delay: [25, 0, 500],
-    duration: [1.15, 0.1, 3],
-    distance: [32, 0, 120],
+    delay: [40, 0, 200],
+    duration: [0.5, 0.1, 1],
+    distance: [12, 0, 60],
   });
   if (reduced) {
     return (
       <h1 className="max-w-3xl text-balance text-[clamp(2.5rem,6vw,4.5rem)] font-semibold leading-[1.05] tracking-tighter text-text">
-        I am applying for the Lead Automation &amp; Web Engineer role.
+        Every lead, checked, logged, shown live.
       </h1>
     );
   }
   return (
     <SplitText
-      text="I am applying for the Lead Automation & Web Engineer role."
+      text="Every lead, checked, logged, shown live."
       tag="h1"
       textAlign="left"
       className="max-w-3xl text-balance text-[clamp(2.5rem,6vw,4.5rem)] font-semibold leading-[1.05] tracking-tighter text-text"
-      splitType="words, chars"
+      splitType="words"
       delay={dial.delay}
       duration={dial.duration}
       from={{ opacity: 0, y: dial.distance }}
@@ -43,6 +43,9 @@ export function PanelTilt({
 }) {
   const reduced = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
+  const [pointerFine] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(pointer: fine)").matches
+  );
   const rotateX = useSpring(useMotionValue(0), { damping: 25, stiffness: 160, mass: 1 });
   const rotateY = useSpring(useMotionValue(0), { damping: 25, stiffness: 160, mass: 1 });
 
@@ -51,13 +54,14 @@ export function PanelTilt({
   }
 
   function onMove(event: React.MouseEvent<HTMLDivElement>) {
+    if (!pointerFine) return;
     const el = ref.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
     const px = (event.clientX - rect.left) / rect.width - 0.5;
     const py = (event.clientY - rect.top) / rect.height - 0.5;
-    rotateX.set(-py * 5);
-    rotateY.set(px * 5);
+    rotateX.set(-py * 2.5);
+    rotateY.set(px * 2.5);
   }
 
   function onLeave() {
@@ -68,8 +72,8 @@ export function PanelTilt({
   return (
     <motion.div
       ref={ref}
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
+      onMouseMove={pointerFine ? onMove : undefined}
+      onMouseLeave={pointerFine ? onLeave : undefined}
       style={{ rotateX, rotateY, transformPerspective: 900 }}
       className={className}
     >

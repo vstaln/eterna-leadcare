@@ -4,8 +4,8 @@ import SectionHeading from "@/components/section-heading";
 const REPO = "https://github.com/vstaln/eterna-ops-command-center";
 
 export const metadata: Metadata = {
-  title: "Behind the Scenes — Eterna Ops Command Center",
-  description: "Git log, CI, and the $0 cost of the Eterna ops showcase.",
+  title: "Behind the Scenes — How Eterna LeadCare was built",
+  description: "Git log, CI, and the $0 cost behind the Eterna LeadCare build.",
 };
 
 const rows = [
@@ -38,7 +38,8 @@ export default function BehindTheScenes() {
           title="Git, CI, and the $0 bill."
         />
         <p className="mt-4 max-w-2xl font-mono text-sm leading-relaxed text-muted">
-          Built in 48 hours, phone-only (Termux), at $0/month free tier.
+          How Eterna LeadCare was built — in the open, honestly, and at $0/month. Every commit,
+          build, and session is documented below.
         </p>
       </section>
 

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./motion-tokens.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -176,6 +177,47 @@
 
 @media (prefers-reduced-motion: reduce) {
   .led-live {
+    animation: none;
+  }
+}
+
+@keyframes success-check {
+  from {
+    transform: scale(0.5);
+    filter: blur(var(--blur-large));
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    filter: blur(0);
+    opacity: 1;
+  }
+}
+
+.success-check {
+  animation: success-check var(--duration-very-slow) var(--ease-smooth-out) both;
+  will-change: transform, opacity;
+}
+
+@keyframes number-pop {
+  from {
+    opacity: 0;
+    transform: translateY(var(--distance-medium));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.number-pop {
+  animation: number-pop var(--duration-very-slow) var(--ease-smooth-out) both;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .success-check,
+  .number-pop {
     animation: none;
   }
 }

@@ -7,9 +7,9 @@ const steps = [
   {
     element: "#hero",
     popover: {
-      title: "This is my application",
+      title: "This is Eterna LeadCare",
       description:
-        "I am Vstalin, and I am applying for Eterna Indonesia's Lead Automation & Web Engineer role.",
+        "A lead-handling add-on for client websites: every form submission is checked, logged, and tracked live. This panel shows real data.",
     },
   },
   {
@@ -17,39 +17,39 @@ const steps = [
     popover: {
       title: "Live data, not mockups",
       description:
-        "This panel is real data from the live automation pipeline — every execution, state, and timestamp is genuine.",
+        "The panel renders the real execution store — every lead, stage, state, and timestamp is genuine.",
     },
   },
   {
     element: "#about",
     popover: {
-      title: "About me",
+      title: "What LeadCare does",
       description:
-        "Who I am and the three skill areas I would bring: web engineering, automation, and cloud + AI.",
+        "Lead capture with a honeypot shield, signed dispatch through a workflow, and live reporting on the ops dashboard.",
     },
   },
   {
     element: "#role",
     popover: {
-      title: "The role I am applying for",
+      title: "Why you can trust it",
       description:
-        "The exact role and terms I am applying for: fully remote, full-time, U.S.-based client, Rp13M–Rp18M.",
+        "A real store, named failures — N/R, PENDING, DEGRADED — and an open build you can inspect yourself.",
     },
   },
   {
     element: "#fit",
     popover: {
-      title: "Why I am a strong fit",
+      title: "Every state is honest",
       description:
-        "Each responsibility in the job description mapped to something I can point at as evidence.",
+        "A lead either arrived, was blocked by the honeypot, or is still pending — and the dashboard names it, never fakes it.",
     },
   },
   {
     element: "#demo",
     popover: {
-      title: "My automation, live",
+      title: "The pipeline, live",
       description:
-        "A working automation pipeline: intake, verification, dispatch, storage, and a report card. Every step is visible.",
+        "Every recorded lead follows a visible path through intake, verification, dispatch, and storage — named stages, real states.",
     },
   },
   {
@@ -57,15 +57,15 @@ const steps = [
     popover: {
       title: "The ops dashboard",
       description:
-        "This opens the live report card of every submission — real states, honest failures, nothing simulated.",
+        "The live report card of every submission — real states, honest failures, nothing simulated.",
     },
   },
   {
     element: "#contact",
     popover: {
-      title: "Contact me",
+      title: "Try it",
       description:
-        "If you are on the hiring team, you can reach me here. It runs through the same pipeline this site demonstrates.",
+        "Send a test lead — it travels the same path a real one would: checked, logged, and tracked live on the ops dashboard.",
     },
   },
 ];

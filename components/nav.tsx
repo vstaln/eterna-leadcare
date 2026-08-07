@@ -55,7 +55,7 @@ export default function Nav() {
             className="hidden items-center gap-1.5 bg-ok px-4 py-2 text-sm font-semibold text-zinc-950 transition hover:brightness-110 focus-visible:outline-2 focus-visible:outline-live sm:inline-flex"
           >
             <PaperPlaneTilt className="h-4 w-4" aria-hidden="true" />
-            <span>Contact me</span>
+            <span>Contact us</span>
           </Link>
           <LiveBadge />
         </div>

@@ -5,38 +5,25 @@ import SectionHeading from "@/components/section-heading";
 import SpotlightCard from "@/components/SpotlightCard";
 import AnimatedContent from "@/components/AnimatedContent";
 export const dynamic = "force-dynamic";
-const officialUrl = "https://www.eternaindonesia.com/jobs/lead-automation-web-engineer";
-const roleFacts = [
-  ["Role", "Lead Automation & Web Engineer"],
-  ["Salary", "Rp13.000.000 – Rp18.000.000"],
-  ["Employment", "Full time · Fully remote"],
-  ["Client", "U.S.-based client"],
-];
 const aboutCards = [
-  ["Web engineering", "Next.js, React, TypeScript, responsive UI, accessibility, and performance."],
-  ["Automation", "Signed webhook intake, N8N-style orchestration, API integrations, and auditable execution states."],
-  ["Cloud & AI", "Docker on Oracle Cloud, production delivery, Git workflows, and daily work with Cursor and Claude Code."],
+  ["Lead capture", "A typed intake API on this site. Every submission is checked by a honeypot shield that catches bots and records each blocked attempt — nothing silent, nothing hidden."],
+  ["Automation", "Accepted leads are dispatched onward through a signed workflow — exactly the N8N-style orchestration Eterna runs for clients — with every state recorded."],
+  ["Live reporting", "The ops dashboard renders the real execution store: per-day chart, named stages, and a tracking number on every lead. No simulated lights."],
 ];
-const fit = [
-  ["Build stunning, high-performance websites, primarily in Webflow", "I ship fast, polished web apps with Next.js and React today, and I am ready to bring that standard to Webflow."],
-  ["Design intelligent workflows with N8N and Google Apps Script", "This site runs the pattern live: intake, HMAC verification, dispatch, storage, and a report card."],
-  ["Manage cloud hosting and lead initiatives on Google Cloud / AWS", "I deploy and operate this production site myself with Docker on Oracle Cloud."],
-  ["Use AI-enhanced systems to accelerate development", "I build with AI tools daily and treat them as force multipliers; this codebase is the evidence."],
-  ["Translate business needs into automated solutions", "This very page explains an automation pipeline in plain English for a non-technical reader."],
-  ["Explore new tools and present innovative solutions", "I am a self-directed learner; Behind the Scenes documents exactly how this site was built."],
+const trustItems = [
+  ["Real store, not a mockup", "Every row you see on the dashboard is a real submission that went through this pipeline. The store file is right here in the repo."],
+  ["Failures are named, not hidden", "If a step can't report, it says N/R — never a green light. If a piece is pending, the page says PENDING. Degraded states render DEGRADED."],
+  ["Open build", "The whole pipeline, the workflow definition, and the build log are documented behind the scenes — including what is still waiting on you."],
 ];
 export default function Home() {
   return (
     <div>
       <Hero />
       <section id="about" className="mx-auto max-w-6xl px-6 py-16">
-        <SectionHeading title="About me" />
-        <p className="measure text-base leading-relaxed text-muted">
-          I am Vstalin, a developer who ships. I build with Next.js, React, and TypeScript, connect systems with automation, and use AI coding tools every day to learn faster. I am applying for the Lead Automation &amp; Web Engineer role because it is exactly the work I want to grow into at Eterna Indonesia: Webflow experiences, N8N automations, cloud infrastructure, and AI-enhanced delivery for global clients.
-        </p>
+        <SectionHeading eyebrow="WHAT LEADCARE DOES" title="What LeadCare does" />
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           {aboutCards.map(([title, text]) => (
-            <AnimatedContent key={title} distance={24} duration={0.7} className="h-full">
+            <AnimatedContent key={title} distance={12} duration={0.5} className="h-full">
               <article className="h-full border border-border bg-surface p-6">
                 <h3 className="font-semibold text-text">{title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-muted">{text}</p>
@@ -46,35 +33,19 @@ export default function Home() {
         </div>
       </section>
       <section id="role" className="mx-auto max-w-6xl px-6 py-16">
-        <SectionHeading title="The role I am applying for" />
-        <p className="measure text-sm leading-relaxed text-muted">This application targets the Lead Automation &amp; Web Engineer position at Eterna Indonesia.</p>
-        <div className="mt-8 grid gap-6 md:grid-cols-4">
-          {roleFacts.map(([title, text]) => (
-            <AnimatedContent key={title} distance={24} duration={0.7} className="h-full">
-              <article className="h-full border border-border bg-surface p-6">
-                <p className="font-mono text-xs uppercase tracking-widest text-muted">{title}</p>
-                <p className="mt-3 font-semibold text-text">{text}</p>
-              </article>
-            </AnimatedContent>
-          ))}
-        </div>
-        <p className="mt-6 text-xs text-muted">I am applying through Eterna&apos;s official process; this site is my supporting evidence.</p>
-      </section>
-      <section id="fit" className="mx-auto max-w-6xl px-6 py-16">
-        <SectionHeading title="Why I am a strong fit" />
-        <div className="grid gap-4 md:grid-cols-2">
-          {fit.map(([ask, mine]) => (
-            <SpotlightCard key={ask} spotlightColor="rgba(52, 211, 153, 0.09)" className="h-full">
-              <p className="font-mono text-[0.65rem] uppercase tracking-widest text-muted">The role asks</p>
-              <h3 className="mt-2 font-semibold text-text">{ask}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted">{mine}</p>
+        <SectionHeading eyebrow="WHY YOU CAN TRUST IT" title="Why you can trust it" />
+        <div className="mt-8 grid gap-6 md:grid-cols-3">
+          {trustItems.map(([title, text]) => (
+            <SpotlightCard key={title} spotlightColor="rgba(52, 211, 153, 0.09)" className="h-full">
+              <h3 className="font-semibold text-text">{title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted">{text}</p>
             </SpotlightCard>
           ))}
         </div>
       </section>
       <section id="demo" className="mx-auto max-w-6xl px-6 py-16">
-        <SectionHeading title="My automation, live" />
-        <p className="measure mb-8 text-sm leading-relaxed text-muted">This is the kind of workflow I would build and maintain for Eterna, and it is running on this site right now. Every submission follows a visible path with named states.</p>
+        <SectionHeading title="The pipeline, live" />
+        <p className="measure mb-8 text-sm leading-relaxed text-muted">This is the LeadCare pipeline, running on this page right now. Every recorded lead follows a visible path with named stages.</p>
         <PipelineDiagram />
         <div className="mt-8 flex flex-wrap gap-4">
           <a id="ops-link" href="/ops" className="inline-flex items-center gap-2 bg-ok px-6 py-3 text-sm font-semibold text-zinc-950 transition hover:brightness-110 focus-visible:outline-2 focus-visible:outline-live">View the ops dashboard</a>
@@ -82,12 +53,10 @@ export default function Home() {
         </div>
       </section>
       <section id="contact" className="mx-auto max-w-6xl px-6 py-16">
-        <SectionHeading title="Contact me about this role" />
+        <SectionHeading eyebrow="TRY IT" title="Try it" />
         <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start">
           <div>
-            <p className="measure text-sm leading-relaxed text-muted">I have submitted through Eterna&apos;s official application. If you are on the hiring team, I would welcome the chance to talk. Send a note below and it flows through the same visible pipeline this site demonstrates.</p>
-            <a className="mt-6 inline-flex bg-ok px-6 py-3 text-sm font-semibold text-zinc-950 transition hover:brightness-110" href={officialUrl} target="_blank" rel="noreferrer">See the official job posting ↗</a>
-            <p className="mt-5 text-xs text-muted">This form is a live demo, not Eterna&apos;s official application.</p>
+            <p className="measure text-sm leading-relaxed text-muted">Send a test lead — it travels the same path a real one would: checked, logged, and tracked live on the ops dashboard. This form is a live demo, not Eterna&apos;s official application.</p>
           </div>
           <ApplicationForm />
         </div>

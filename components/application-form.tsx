@@ -1,5 +1,6 @@
 "use client";
 import { FormEvent, useState } from "react";
+import { CheckCircle } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -107,12 +108,15 @@ export default function ApplicationForm() {
         {state === "sending" ? "Sending…" : "Send me a message"}
       </Button>
       <p
-        className={`mt-4 min-h-5 text-sm ${
+        className={`mt-4 flex min-h-5 items-start gap-2 text-sm ${
           state === "error" ? "text-err" : state === "sent" ? "text-ok" : "text-muted"
         }`}
         role="status"
       >
-        {message}
+        {state === "sent" && (
+          <CheckCircle className="success-check mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+        )}
+        <span>{message}</span>
       </p>
     </form>
   );

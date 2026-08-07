@@ -23,8 +23,8 @@ const AnimatedContent: React.FC<AnimatedContentProps> = ({
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const dial = useDialKit('AnimatedContent', {
-    distance: [100, 0, 300],
-    duration: [0.8, 0.1, 3]
+    distance: [12, 0, 100],
+    duration: [0.5, 0.1, 1]
   });
   const dist = distance ?? dial.distance;
   const dur = duration ?? dial.duration;
@@ -42,7 +42,7 @@ const AnimatedContent: React.FC<AnimatedContentProps> = ({
     tl.to(el, {
       y: 0,
       opacity: 1,
-      duration,
+      duration: dur,
       ease
     });
 

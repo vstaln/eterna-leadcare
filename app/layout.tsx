@@ -9,9 +9,9 @@ const jetbrainsMono = JetBrains_Mono({ weight: ["400", "500", "600", "700"], sub
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://eterna.vstal.in"),
-  title: "Vstalin — Application for Lead Automation & Web Engineer | Eterna Indonesia",
-  description: "My application for Eterna Indonesia's Lead Automation & Web Engineer role, with live automation and cloud work as evidence.",
-  openGraph: { title: "Vstalin — Application for Lead Automation & Web Engineer | Eterna Indonesia", description: "My application for Eterna Indonesia's Lead Automation & Web Engineer role, with live automation and cloud work as evidence.", url: "https://eterna.vstal.in", siteName: "Vstalin application portfolio", locale: "en_US", type: "website" },
+  title: "Eterna LeadCare — every lead, checked, logged, shown live",
+  description: "Eterna LeadCare: a live lead-handling demo — honeypot shield, signed dispatch, execution store, and an honest ops dashboard. Every lead gets a tracking number.",
+  openGraph: { title: "Eterna LeadCare — every lead, checked, logged, shown live", description: "Eterna LeadCare: a live lead-handling demo — honeypot shield, signed dispatch, execution store, and an honest ops dashboard. Every lead gets a tracking number.", url: "https://eterna.vstal.in", siteName: "Eterna LeadCare", locale: "en_US", type: "website" },
 };
 
 const DialPanel = process.env.NODE_ENV !== "production" ? (await import("@/components/dial-panel")).default : null;
