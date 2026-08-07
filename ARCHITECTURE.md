@@ -2,27 +2,37 @@
 
 ## Status
 
-**Phase 3 of ET-48 v2 — ops dashboard (this slice).** The real pipeline ships: visitor lead form → `/api/lead` (HMAC-signed proxy) → self-hosted N8N on the Oracle box (`oracle-old`, x86_64, Ubuntu 24.04, Docker Compose, sqlite) → RDAP enrichment → Apps Script log → `[DEMO]` Sheets audit trail → report card. Telegram notify, stage callbacks, Postgres, and public deploy are LATER phases (P5).
+**Eterna LeadCare (rebrand of ET-48).** The real pipeline ships: web form → `/api/lead` (honeypot shield + signed dispatch) → self-hosted N8N on the Oracle box (`oracle-old`, x86_64, Ubuntu 24.04, Docker Compose, sqlite) → RDAP enrichment → Apps Script log → `[DEMO]` Sheets audit trail → live ops dashboard. Telegram notify, stage callbacks, Postgres, and public deploy are LATER phases (P5).
+
+## Product framing
+
+LeadCare is presented as a lead-handling product Eterna could ship: every form submission gets checked (SPAM SHIELD), researched (RESEARCHED), logged (LOGGED), and shown live (LIVE) with a tracking number (ELC-2026-XXXXX) on every lead. Honesty is the brand: every claim on the site is backed by the store or a labeled env reading — nothing simulated. The jargon→plain-English map lives in `docs/leadcare-hr-script.md`.
 
 ## Branch B — front door (phone-only operator decision)
 
-The operator runs this build phone-only (Termux, no GUI browser, no local Docker). The front door is therefore a **hand-coded Next.js app** — the interactive dashboard, `/live`, `/ops`, and `/behind-the-scenes` will live inside it. **Webflow = a template one-pager + written migration plan only, no iframe.** (The JD is Webflow-first; the one-pager proves the Webflow leg, the hand-coded app is the automation depth.)
+The operator runs this build phone-only (Termux, no GUI browser, no local Docker). The front door is therefore a **hand-coded Next.js app** — the interactive dashboard, `/ops`, and `/behind-the-scenes` live inside it. **Webflow = a template one-pager + written migration plan only, no iframe.** (The JD is Webflow-first; the one-pager proves the Webflow leg, the hand-coded app is the automation depth.)
 
 ## Data flow (this slice)
 
 ```
-Browser → Next.js API (/api/lead, HMAC-SHA256 over executionId.nonce.ts, 5-min freshness)
-        → N8N webhook (path configurable via `N8N_WEBHOOK_PATH`; default `/webhook/lead` for the local stub, the real value is set in `.env.local` — verify HMAC → RDAP enrich → token-gated Apps Script log)
+Browser → Next.js API (/api/lead: honeypot trap → validate → sign HMAC-SHA256
+        over executionId.nonce.ts, 5-min freshness)
+        → N8N webhook (path configurable via `N8N_WEBHOOK_PATH`; default `/webhook/lead`;
+        verify HMAC → RDAP enrich → token-gated Apps Script log)
         → [DEMO] row in Sheets → Respond 200 → execution store (data/executions.json, gitignored)
-        → frontend reads the execution store (authed `/api/executions` + `/api/executions/public` PII-stripped mirror)
+        → rejections sidecar: data/shield.json (honeypot hits, malformed requests, n8n 401s)
+        → frontend reads the execution store (authed `/api/executions` + `/api/executions/public`
+        PII-stripped mirror) and the public `/api/shield` counts
 ```
 
 Callbacks, Postgres, and Telegram are P5.
 
 ## Security
 
-- HMAC over canonical fields (`executionId.nonce.ts`), timing-safe compare, 5-minute freshness window; replay within the window is an accepted, documented demo tradeoff.
-- `/api/executions` is bearer-gated (`EXECUTIONS_AUTH_TOKEN`); the public mirror exposes only id prefix, status, stage, created_at — no PII.
+- Honeypot trap on `/api/lead` (hidden `website` field → 200 decoy with fake UUID, recorded in the shield sidecar — fire-and-forget so the decoy is never slower than the real path).
+- HMAC over canonical fields (`executionId.nonce.ts`), timing-safe compare, 5-minute freshness window; replay within the window is an accepted, documented demo tradeoff. A 401 from n8n is recorded as `n8n_rejected`, never collapsed into "unreachable".
+- `/api/executions` is bearer-gated (`EXECUTIONS_AUTH_TOKEN`); the public mirror exposes only id prefix, tracking, status, stage, created_at — no PII.
+- `/api/shield` is public by design: it returns only counts + reason codes, never payload data.
 - Apps Script endpoint is token-gated (`APPS_SCRIPT_TOKEN` in Script Properties); the "anyone with link" deployment is bounded by that token, which never lives in the repo.
 - Only TCP 5678 is intended for exposure and is currently bound to localhost on the box; opening the OCI security-list rule is a user-gated step. 5432 stays closed. P5 hardening: Cloudflare proxy + IP allowlisting.
 
