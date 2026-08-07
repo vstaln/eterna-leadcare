@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>ET-48 OPS — automation command center</title>
-<meta name="description" content="Visitor lead form → HMAC-verified webhook → N8N → live report card. 48-hour, phone-built, $0/month showcase of the EMPWR webhook integrations Eterna ships for US clients." />
+<title>Eterna LeadCare — every lead, checked, logged, shown live</title>
+<meta name="description" content="Eterna LeadCare demo: lead form → spam shield → research → log → live dashboard, with a tracking number on every lead." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -16,6 +16,7 @@
   section{padding:3.5rem 0}
   h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:600;letter-spacing:-.05em;line-height:1.02}
   h2{font-size:1.5rem;font-weight:600;margin-bottom:1.5rem}
+  .eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem}
   .led{display:inline-block;width:10px;height:10px;border-radius:50%;box-shadow:0 0 8px currentColor}
   .ok{color:var(--ok);background:var(--ok)} .warn{color:var(--warn);background:var(--warn)} .err{color:var(--err);background:var(--err)} .live{color:var(--live);background:var(--live);animation:pulse 2s infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
@@ -37,46 +38,56 @@
   button.btn2{margin-top:1.5rem;padding:.9rem 1.5rem;border:1px solid var(--live);background:transparent;color:var(--live);font-family:var(--mono);font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer}
   button.btn2:disabled{opacity:.4;cursor:wait}
   #formmsg{font-family:var(--mono);font-size:.72rem;margin-top:1rem;min-height:1.2em;letter-spacing:.1em}
+  .shieldline{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-top:.75rem;letter-spacing:.08em}
   @media(max-width:720px){.stages{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <section>
-    <h1>ET-48 OPS — automation command center</h1>
+    <div class="eyebrow">ETERNA LEADCARE // PRODUCT DEMO</div>
+    <h1>Every lead arrives. Every lead is tracked. Every lead arrives with proof.</h1>
+    <p style="margin-top:1rem;color:var(--muted);max-width:44rem;line-height:1.6">
+      Eterna LeadCare is a simple add-on for any client website: block the spam, save
+      who they are, log the lead — then watch every step on a live dashboard, with a
+      tracking number on every lead.
+    </p>
   </section>
   <section>
-    <h2>Submit a lead</h2>
+    <h2>Send a test lead</h2>
     <form class="f" id="leadform">
+      <!-- Honeypot bait: hidden from humans, bots fill it and get a decoy response -->
+      <input type="text" name="website" tabindex="-1" autocomplete="off" style="display:none" />
       <label for="f_name">Name</label><input id="f_name" name="name" required autocomplete="name" />
       <label for="f_email">Email</label><input id="f_email" name="email" type="email" required autocomplete="email" />
       <label for="f_company">Company</label><input id="f_company" name="company" autocomplete="organization" />
-      <button class="btn2" type="submit" id="submitbtn">Dispatch</button>
+      <button class="btn2" type="submit" id="submitbtn">Send a test lead</button>
       <div id="formmsg"></div>
     </form>
   </section>
   <section>
     <h2>Pipeline</h2>
     <div class="stages">
-      <div class="stage"><div class="n">01</div><div class="t">Form</div><div class="s ok">live</div></div>
-      <div class="stage"><div class="n">02</div><div class="t">API</div><div class="s ok">hmac</div></div>
-      <div class="stage"><div class="n">03</div><div class="t">N8N</div><div class="s ok">dispatch</div></div>
-      <div class="stage"><div class="n">04</div><div class="t">Store</div><div class="s ok">rows</div></div>
-      <div class="stage"><div class="n">05</div><div class="t">Report Card</div><div class="s ok">live</div></div>
+      <div class="stage"><div class="n">01</div><div class="t">Captured</div><div class="s ok">web form</div></div>
+      <div class="stage"><div class="n">02</div><div class="t">Spam Shield</div><div class="s ok">honeypot</div></div>
+      <div class="stage"><div class="n">03</div><div class="t">Researched</div><div class="s warn">n8n · rdap</div></div>
+      <div class="stage"><div class="n">04</div><div class="t">Logged</div><div class="s ok">store</div></div>
+      <div class="stage"><div class="n">05</div><div class="t">Live</div><div class="s live">dashboard</div></div>
     </div>
   </section>
   <section>
     <h2>Report card</h2>
     <table id="execs">
-      <tr><th>ID</th><th>Status</th><th>Stage</th><th>Created</th></tr>
-      <tr><td colspan="4" style="color:var(--muted)">loading…</td></tr>
+      <tr><th>ID</th><th>Tracking</th><th>Status</th><th>Stage</th><th>Created</th></tr>
+      <tr><td colspan="5" style="color:var(--muted)">loading…</td></tr>
     </table>
+    <div class="shieldline" id="shieldline">shield: checking…</div>
   </section>
   <section>
     <h2>Source</h2>
     <table>
       <tr><th>Artifact</th><th>Where</th></tr>
-      <tr><td class="t2">Report card</td><td><a class="lnk" href="https://eterna.vstal.in/ops">eterna.vstal.in/ops</a></td></tr>
+      <tr><td class="t2">Live report card</td><td><a class="lnk" href="https://eterna.vstal.in/ops">eterna.vstal.in/ops</a></td></tr>
       <tr><td class="t2">Source + build log</td><td><a class="lnk" href="https://github.com/vstaln/eterna-ops-command-center/blob/main/AI_LOG.md">github.com/vstaln/eterna-ops-command-center</a></td></tr>
     </table>
   </section>
@@ -91,12 +102,24 @@ async function loadExecs() {
     const r = await fetch("/api/executions/public");
     const j = await r.json();
     const rows = (j.executions || []).map((e) => `<tr>
-      <td class="t2 mono" style="font-family:var(--mono);font-size:.75rem">${esc(e.id)}</td>
+      <td style="font-family:var(--mono);font-size:.75rem">${esc(e.id)}</td>
+      <td class="t2" style="font-family:var(--mono);font-size:.75rem;color:var(--live)">${esc(e.tracking || "—")}</td>
       <td><span class="led ${e.status === "failed" ? "err" : e.status === "dispatched" ? "ok" : "warn"}"></span> ${esc(e.status)}</td>
       <td>${esc(e.stage)}</td>
       <td style="font-family:var(--mono);font-size:.75rem">${esc(e.created_at)}</td></tr>`).join("");
-    $("#execs").innerHTML = `<tr><th>ID</th><th>Status</th><th>Stage</th><th>Created</th></tr>` + rows;
-  } catch { $("#execs").innerHTML = `<tr><td colspan="4" style="color:var(--err)">unreachable</td></tr>`; }
+    $("#execs").innerHTML = `<tr><th>ID</th><th>Tracking</th><th>Status</th><th>Stage</th><th>Created</th></tr>` + rows;
+  } catch { $("#execs").innerHTML = `<tr><td colspan="5" style="color:var(--err)">unreachable</td></tr>`; }
+}
+
+async function loadShield() {
+  try {
+    const r = await fetch("/api/shield");
+    const j = await r.json();
+    const c = j.counts || {};
+    $("#shieldline").textContent =
+      `shield: honeypot-gated · ${c.honeypot || 0} blocked · ` +
+      `${c.intake_400 || 0} malformed · ${c.n8n_rejected || 0} dispatch-rejected`;
+  } catch { $("#shieldline").textContent = "shield: unreachable"; }
 }
 
 $("#leadform").addEventListener("submit", async (ev) => {
@@ -113,11 +136,15 @@ $("#leadform").addEventListener("submit", async (ev) => {
         name: $("#f_name").value,
         email: $("#f_email").value,
         company: $("#f_company").value,
+        website: document.querySelector('input[name="website"]').value,
       }),
     });
     const j = await r.json();
     if (j.ok) {
-      msg.textContent = "OK — " + j.executionId;
+      // LeadCare promise: every accepted lead shows its tracking number.
+      msg.textContent = j.tracking
+        ? "Received — tracking number " + j.tracking + ". Watch it move on the ops dashboard."
+        : "OK — " + j.executionId;
       loadExecs();
     } else {
       msg.textContent = "failed: " + (j.error || r.status);
@@ -129,6 +156,7 @@ $("#leadform").addEventListener("submit", async (ev) => {
 });
 
 loadExecs();
+loadShield();
 </script>
 </body>
 </html>
