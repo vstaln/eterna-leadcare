@@ -4,27 +4,21 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ET-48 OPS — automation command center</title>
-<meta name="description" content="Visitor lead form → HMAC-verified webhook → N8N → RDAP → Apps Script → live report card. A 48-hour, phone-built, $0/month showcase of the EMPWR webhook integrations Eterna ships for US clients." />
+<meta name="description" content="Visitor lead form → HMAC-verified webhook → N8N → live report card. 48-hour, phone-built, $0/month showcase of the EMPWR webhook integrations Eterna ships for US clients." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
   :root{--base:#09090b;--surface:#18181b;--border:#27272a;--text:#f4f4f5;--muted:#c6c6cc;--ok:#4ade80;--warn:#fbbf24;--err:#f87171;--live:#34d399;--sans:'Space Grotesk',system-ui,sans-serif;--mono:'JetBrains Mono',monospace}
   *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--base);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.625;-webkit-font-smoothing:antialiased}
+  body{background:var(--base);color:var(--text);font-family:var(--sans);font-size:16px;-webkit-font-smoothing:antialiased}
   .wrap{max-width:72rem;margin:0 auto;padding:0 1.5rem}
-  .grid{background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:32px 32px}
-  section{padding:4rem 0}
-  .mono{font-family:var(--mono);font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
-  h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:600;letter-spacing:-.05em;line-height:1.02;margin-top:1rem}
+  section{padding:3.5rem 0}
+  h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:600;letter-spacing:-.05em;line-height:1.02}
   h2{font-size:1.5rem;font-weight:600;margin-bottom:1.5rem}
-  p.body{max-width:65ch;color:var(--muted);margin-top:1.25rem}
-  .led{display:inline-block;width:12px;height:12px;border-radius:50%;box-shadow:0 0 8px currentColor}
+  .led{display:inline-block;width:10px;height:10px;border-radius:50%;box-shadow:0 0 8px currentColor}
   .ok{color:var(--ok);background:var(--ok)} .warn{color:var(--warn);background:var(--warn)} .err{color:var(--err);background:var(--err)} .live{color:var(--live);background:var(--live);animation:pulse 2s infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-  .status{display:flex;flex-wrap:wrap;gap:1.25rem;margin-top:2rem;font-family:var(--mono);font-size:.75rem;letter-spacing:.15em;text-transform:uppercase}
-  .status span{display:inline-flex;align-items:center;gap:.5rem}
-  .status em{font-style:normal;color:var(--muted)}
   .stages{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);border:1px solid var(--border)}
   .stage{background:var(--surface);padding:1rem}
   .stage .n{font-family:var(--mono);font-size:.7rem;color:var(--muted);letter-spacing:.15em}
@@ -35,51 +29,106 @@
   th{font-family:var(--mono);font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
   td.t2{font-weight:600}
   a.lnk{color:var(--text)}
-  a.btn{display:inline-block;margin-top:1.5rem;padding:.9rem 1.5rem;border:1px solid var(--border);font-family:var(--mono);font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text);text-decoration:none;transition:border-color .15s,color .15s}
-  a.btn:hover{border-color:var(--live);color:var(--live)}
-  footer{padding:2rem 0;border-top:1px solid var(--border);font-family:var(--mono);font-size:.7rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase}
+  form.f{border:1px solid var(--border);background:var(--surface);padding:1.5rem;max-width:34rem}
+  form.f label{display:block;font-family:var(--mono);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin:1rem 0 .35rem}
+  form.f label:first-child{margin-top:0}
+  form.f input{width:100%;background:var(--base);border:1px solid var(--border);color:var(--text);padding:.7rem .9rem;font-family:var(--sans);font-size:.95rem;outline:none}
+  form.f input:focus{border-color:var(--live)}
+  button.btn2{margin-top:1.5rem;padding:.9rem 1.5rem;border:1px solid var(--live);background:transparent;color:var(--live);font-family:var(--mono);font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer}
+  button.btn2:disabled{opacity:.4;cursor:wait}
+  #formmsg{font-family:var(--mono);font-size:.72rem;margin-top:1rem;min-height:1.2em;letter-spacing:.1em}
   @media(max-width:720px){.stages{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<div class="grid">
-  <header class="wrap" style="padding:2.5rem 1.5rem .5rem"><p class="mono">vstal@eterna:~/front-door</p></header>
-  <section class="wrap">
-    <p class="mono" style="border:1px solid var(--border);display:inline-block;padding:.35rem 1rem">ET-48 // BUILD PHASE 1</p>
+<div class="wrap">
+  <section>
     <h1>ET-48 OPS — automation command center</h1>
-    <p class="body">Visitor lead form → HMAC-verified webhook → N8N → RDAP → Apps Script → live report card.</p>
-    <div class="status">
-      <span><span class="led ok"></span><em>HMAC gate — enabled</em></span>
-      <span><span class="led ok"></span><em>N8N — configured</em></span>
-      <span><span class="led err"></span><em>Apps Script — pending</em></span>
-      <span><span class="led warn"></span><em>RDAP — N/R</em></span>
-    </div>
-    <a class="btn" href="https://eterna.vstal.in/ops">View the live report card</a>
   </section>
-  <section class="wrap">
-    <h2>What it is</h2>
-    <p class="body">A 48-hour, phone-built, $0/month demo of the EMPWR-pattern webhook integrations Eterna ships for US clients. Real execution store — nothing simulated.</p>
+  <section>
+    <h2>Submit a lead</h2>
+    <form class="f" id="leadform">
+      <label for="f_name">Name</label><input id="f_name" name="name" required autocomplete="name" />
+      <label for="f_email">Email</label><input id="f_email" name="email" type="email" required autocomplete="email" />
+      <label for="f_company">Company</label><input id="f_company" name="company" autocomplete="organization" />
+      <button class="btn2" type="submit" id="submitbtn">Dispatch</button>
+      <div id="formmsg"></div>
+    </form>
   </section>
-  <section class="wrap">
+  <section>
     <h2>Pipeline</h2>
     <div class="stages">
-      <div class="stage"><div class="n">01</div><div class="t">Form</div><div class="s warn">static preview</div></div>
-      <div class="stage"><div class="n">02</div><div class="t">API</div><div class="s ok">hmac enabled</div></div>
-      <div class="stage"><div class="n">03</div><div class="t">N8N</div><div class="s ok">configured</div></div>
-      <div class="stage"><div class="n">04</div><div class="t">RDAP</div><div class="s warn">n/r</div></div>
-      <div class="stage"><div class="n">05</div><div class="t">Report Card</div><div class="s err">pending</div></div>
+      <div class="stage"><div class="n">01</div><div class="t">Form</div><div class="s ok">live</div></div>
+      <div class="stage"><div class="n">02</div><div class="t">API</div><div class="s ok">hmac</div></div>
+      <div class="stage"><div class="n">03</div><div class="t">N8N</div><div class="s ok">dispatch</div></div>
+      <div class="stage"><div class="n">04</div><div class="t">Store</div><div class="s ok">rows</div></div>
+      <div class="stage"><div class="n">05</div><div class="t">Report Card</div><div class="s ok">live</div></div>
     </div>
   </section>
-  <section class="wrap">
-    <h2>Proof</h2>
-    <table>
-      <tr><th>Artifact</th><th>Where</th></tr>
-      <tr><td class="t2">Live report card</td><td><a class="lnk" href="https://eterna.vstal.in/ops">eterna.vstal.in/ops</a></td></tr>
-      <tr><td class="t2">Source + build log</td><td><a class="lnk" href="https://github.com/vstaln/eterna-ops-command-center/blob/main/AI_LOG.md">AI_LOG.md — every session, honestly</a></td></tr>
+  <section>
+    <h2>Report card</h2>
+    <table id="execs">
+      <tr><th>ID</th><th>Status</th><th>Stage</th><th>Created</th></tr>
+      <tr><td colspan="4" style="color:var(--muted)">loading…</td></tr>
     </table>
   </section>
-  <section class="wrap"><h2>Contact / CTA</h2><p class="body">Submit a demo lead.</p><a class="btn" href="mailto:vstalingrady@gmail.com">Submit a demo lead</a></section>
-  <footer class="wrap">ET-48 // BUILD // eterna.vstal.in — honest automation showcase</footer>
+  <section>
+    <h2>Source</h2>
+    <table>
+      <tr><th>Artifact</th><th>Where</th></tr>
+      <tr><td class="t2">Report card</td><td><a class="lnk" href="https://eterna.vstal.in/ops">eterna.vstal.in/ops</a></td></tr>
+      <tr><td class="t2">Source + build log</td><td><a class="lnk" href="https://github.com/vstaln/eterna-ops-command-center/blob/main/AI_LOG.md">github.com/vstaln/eterna-ops-command-center</a></td></tr>
+    </table>
+  </section>
 </div>
+<script>
+const $ = (s) => document.querySelector(s);
+const ESC = {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"};
+const esc = (s) => String(s||"").replace(/[&<>"']/g, (c) => ESC[c]);
+
+async function loadExecs() {
+  try {
+    const r = await fetch("/api/executions/public");
+    const j = await r.json();
+    const rows = (j.executions || []).map((e) => `<tr>
+      <td class="t2 mono" style="font-family:var(--mono);font-size:.75rem">${esc(e.id)}</td>
+      <td><span class="led ${e.status === "failed" ? "err" : e.status === "dispatched" ? "ok" : "warn"}"></span> ${esc(e.status)}</td>
+      <td>${esc(e.stage)}</td>
+      <td style="font-family:var(--mono);font-size:.75rem">${esc(e.created_at)}</td></tr>`).join("");
+    $("#execs").innerHTML = `<tr><th>ID</th><th>Status</th><th>Stage</th><th>Created</th></tr>` + rows;
+  } catch { $("#execs").innerHTML = `<tr><td colspan="4" style="color:var(--err)">unreachable</td></tr>`; }
+}
+
+$("#leadform").addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  const btn = $("#submitbtn");
+  const msg = $("#formmsg");
+  btn.disabled = true;
+  msg.textContent = "dispatching…";
+  try {
+    const r = await fetch("/api/lead", {
+      method: "POST",
+      headers: {"content-type": "application/json"},
+      body: JSON.stringify({
+        name: $("#f_name").value,
+        email: $("#f_email").value,
+        company: $("#f_company").value,
+      }),
+    });
+    const j = await r.json();
+    if (j.ok) {
+      msg.textContent = "OK — " + j.executionId;
+      loadExecs();
+    } else {
+      msg.textContent = "failed: " + (j.error || r.status);
+    }
+  } catch (e) {
+    msg.textContent = "failed: " + e.message;
+  }
+  btn.disabled = false;
+});
+
+loadExecs();
+</script>
 </body>
 </html>
