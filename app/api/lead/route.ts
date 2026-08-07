@@ -3,6 +3,7 @@ import { randomUUID } from "crypto";
 import { createExecution, updateExecution } from "@/lib/store";
 import { hmacHex } from "@/lib/crypto";
 import { env } from "@/lib/env";
+import { recordShield } from "@/lib/shield";
 
 export async function POST(req: NextRequest) {
   if (!env.N8N_BASE_URL || !env.WEBHOOK_TOKEN) {
@@ -22,11 +23,18 @@ export async function POST(req: NextRequest) {
   try {
     body = await req.json();
   } catch {
+    void recordShield("intake_400");
     return NextResponse.json({ ok: false, error: "invalid json" }, { status: 400 });
   }
 
+  // Honeypot trap: a bot that fills the hidden `website` field (real humans
+  // never see it) gets a 200 that looks EXACTLY like success — including a
+  // fake execution id — so bots cannot distinguish the decoy from a real
+  // submission. The attempt is recorded in the shield sidecar (fire and
+  // forget: never let the decoy be slower than the real path).
   if (body.website) {
-    return NextResponse.json({ ok: true }, { status: 200 });
+    void recordShield("honeypot");
+    return NextResponse.json({ ok: true, executionId: randomUUID() }, { status: 200 });
   }
 
   const name = typeof body.name === "string" ? body.name.trim().slice(0, 120) : "";
@@ -35,6 +43,7 @@ export async function POST(req: NextRequest) {
   const message = typeof body.message === "string" ? body.message.trim().slice(0, 1000) : "";
 
   if (!name || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    void recordShield("intake_400");
     return NextResponse.json({ ok: false, error: "invalid fields" }, { status: 400 });
   }
 
@@ -67,6 +76,18 @@ export async function POST(req: NextRequest) {
       }),
       signal: AbortSignal.timeout(10000),
     });
+    // A 401 from n8n means our signed dispatch was rejected (HMAC verify
+    // failed on their side). That is a SHIELD event, not a network outage —
+    // record it as such so the ops dashboard can name it honestly.
+    if (res.status === 401) {
+      await updateExecution(executionId, {
+        status: "failed",
+        stage: "failed",
+        error: "rejected by n8n (signed dispatch failed)",
+      });
+      void recordShield("n8n_rejected");
+      return NextResponse.json({ ok: false, error: "pipeline unavailable" }, { status: 502 });
+    }
     if (!res.ok) {
       throw new Error(`n8n ${res.status}`);
     }

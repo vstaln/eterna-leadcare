@@ -50,3 +50,4 @@ data/
 
 # SDD plan workspaces (ledgers, briefs, review packages)
 .superpowers/
+data/shield.json

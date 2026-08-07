@@ -23,6 +23,7 @@ export default function ApplicationForm() {
           email: form.get("email"),
           company: "Eterna hiring team",
           message: form.get("message"),
+          website: form.get("website"), // honeypot — normally empty string
         }),
       });
       const result = await response.json();
@@ -38,6 +39,17 @@ export default function ApplicationForm() {
 
   return (
     <form onSubmit={submit} className="border border-border bg-surface p-6">
+      {/* Honeypot bait: hidden from humans (display:none + off-screen), but a
+          naive bot will happily fill it. The server rejects anyone who does
+          (see /api/lead) and logs the attempt in the shield sidecar. */}
+      <input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="hidden"
+      />
       <p className="font-mono text-xs uppercase tracking-widest text-muted">Reach me directly</p>
       <div className="mt-5 space-y-5">
         <div className="space-y-2">
