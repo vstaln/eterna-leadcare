@@ -1,10 +1,16 @@
 "use client";
 import { useRef } from "react";
 import { motion, useMotionValue, useReducedMotion, useSpring } from "motion/react";
+import { useDialKit } from "dialkit";
 import SplitText from "@/components/SplitText";
 
 export function HeroHeadline() {
   const reduced = useReducedMotion();
+  const dial = useDialKit("SplitText", {
+    delay: [25, 0, 500],
+    duration: [1.15, 0.1, 3],
+    distance: [32, 0, 120],
+  });
   if (reduced) {
     return (
       <h1 className="max-w-3xl text-balance text-[clamp(2.5rem,6vw,4.5rem)] font-semibold leading-[1.05] tracking-tighter text-text">
@@ -19,9 +25,9 @@ export function HeroHeadline() {
       textAlign="left"
       className="max-w-3xl text-balance text-[clamp(2.5rem,6vw,4.5rem)] font-semibold leading-[1.05] tracking-tighter text-text"
       splitType="words, chars"
-      delay={25}
-      duration={1.15}
-      from={{ opacity: 0, y: 32 }}
+      delay={dial.delay}
+      duration={dial.duration}
+      from={{ opacity: 0, y: dial.distance }}
       to={{ opacity: 1, y: 0 }}
       threshold={0.05}
     />

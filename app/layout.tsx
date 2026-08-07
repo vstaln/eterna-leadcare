@@ -14,6 +14,8 @@ export const metadata: Metadata = {
   openGraph: { title: "Vstalin — Application for Lead Automation & Web Engineer | Eterna Indonesia", description: "My application for Eterna Indonesia's Lead Automation & Web Engineer role, with live automation and cloud work as evidence.", url: "https://eterna.vstal.in", siteName: "Vstalin application portfolio", locale: "en_US", type: "website" },
 };
 
+const DialPanel = process.env.NODE_ENV !== "production" ? (await import("@/components/dial-panel")).default : null;
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} flex min-h-screen flex-col`}><a href="#main" className="skip-link">Skip to content</a><Nav /><main id="main" className="flex-1">{children}</main><SiteFooter /></body></html>;
+  return <html lang="en"><body className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} flex min-h-screen flex-col`}><a href="#main" className="skip-link">Skip to content</a><Nav /><main id="main" className="flex-1">{children}</main><SiteFooter />{DialPanel && <DialPanel />}</body></html>;
 }

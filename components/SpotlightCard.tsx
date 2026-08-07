@@ -1,5 +1,6 @@
 "use client";
 import React, { useRef, useState } from 'react';
+import { useDialKit } from 'dialkit';
 
 interface Position {
   x: number;
@@ -17,6 +18,9 @@ const SpotlightCard: React.FC<SpotlightCardProps> = ({
   spotlightColor = 'rgba(255, 255, 255, 0.25)'
 }) => {
   const divRef = useRef<HTMLDivElement>(null);
+  const dial = useDialKit('SpotlightCard', {
+    hoverOpacity: [0.6, 0, 1]
+  });
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
   const [opacity, setOpacity] = useState<number>(0);
@@ -26,7 +30,7 @@ const SpotlightCard: React.FC<SpotlightCardProps> = ({
       const rect = divRef.current.getBoundingClientRect();
       setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
     }
-    setOpacity(0.6);
+    setOpacity(dial.hoverOpacity);
   };
 
   const handlePointerLeaveOrBlur = () => {
