@@ -11,10 +11,10 @@ export default async function Hero() {
               <TerminalWindow className="h-4 w-4 text-live" aria-hidden="true" />
               ET-48 // BUILD PHASE 1
             </p>
-            <h1 className="max-w-3xl text-balance text-[clamp(2.5rem,6vw,4.5rem)] font-bold leading-[1.05] tracking-[-0.03em] text-text">
+            <h1 className="max-w-3xl text-balance text-[clamp(2.5rem,6vw,4.5rem)] font-semibold leading-[1.05] tracking-tighter text-text">
               Eterna Ops Command Center
             </h1>
-            <p className="mt-6 max-w-xl text-balance text-base leading-relaxed text-muted">
+            <p className="mt-6 measure text-balance text-base leading-relaxed text-muted">
               A live, honest EMPWR webhook showcase: lead form to report card.
               Built in 48 hours for $0.
             </p>

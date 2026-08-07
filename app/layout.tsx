@@ -1,7 +1,22 @@
 import type { Metadata } from "next";
+import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import Nav from "@/components/nav";
 import SiteFooter from "@/components/site-footer";
 import "./globals.css";
+
+const spaceGrotesk = Space_Grotesk({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://eterna.vstal.in"),
@@ -32,7 +47,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="flex min-h-screen flex-col">
+      <body
+        className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} flex min-h-screen flex-col`}
+      >
         <a href="#main" className="skip-link">
           Skip to content
         </a>

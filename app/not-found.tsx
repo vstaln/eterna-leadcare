@@ -6,7 +6,7 @@ export default function NotFound() {
       <p className="font-mono text-xs uppercase tracking-widest text-muted">
         error 404
       </p>
-      <h1 className="mt-4 text-balance text-[clamp(2.5rem,6vw,4.5rem)] font-bold tracking-[-0.03em] text-text">
+      <h1 className="mt-4 text-balance text-[clamp(2.5rem,6vw,4.5rem)] font-semibold tracking-tighter text-text">
         command not found
       </h1>
       <p className="mt-4 max-w-md font-mono text-sm text-muted">

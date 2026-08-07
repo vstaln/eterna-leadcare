@@ -18,19 +18,21 @@ Source of truth for the design DNA (plan Global Constraints §3). Tokens are def
 
 ## Fonts
 
+Both families are loaded at build time via `next/font/google` (self-hosted woff2, no external `<link>`) in `app/layout.tsx` and exposed on `<body>` as CSS variables.
+
 | Token | Value | Usage |
 | --- | --- | --- |
-| `sans` | `system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif` | Body, headings |
-| `mono` | `ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Menlo, monospace` | Data, labels, status lines, code |
+| `sans` | `--font-sans` = Space Grotesk (400/500/600/700), next/font metric-compatible fallback | Display, headings, body |
+| `mono` | `--font-mono` = JetBrains Mono (400/500/600/700), next/font metric-compatible fallback | Data, labels, eyebrows, status lines, code |
 
 ## Type scale
 
 | Role | Spec |
 | --- | --- |
-| Display | `clamp(2.5rem, 6vw, 4.5rem)`, weight 700, letter-spacing `-0.03em` |
-| h2 / section | `1.5rem`, weight 600 |
-| Body | `1rem`, line-height 1.6 |
-| Data / labels | `0.875rem`, mono |
+| Display | `clamp(2.5rem, 6vw, 4.5rem)` (ops: `clamp(2.25rem, 5vw, 3.75rem)`), sans weight 600, letter-spacing `-0.05em` (tracking-tighter) |
+| h2 / section | `1.5rem`, sans weight 600 |
+| Body | `1rem` (16px floor), sans weight 400, line-height 1.625 (relaxed), prose measure 45-75ch via the `measure` utility (`max-width: 65ch`) |
+| Data / labels | `0.875rem` and below, mono; uppercase labels `0.625-0.75rem` + `tracking-widest`; numeric surfaces use `tabular-nums` (hero data panel, ops dashboard) |
 
 ## Spacing & layout
 
@@ -53,4 +55,4 @@ Source of truth for the design DNA (plan Global Constraints §3). Tokens are def
 
 ## Art direction
 
-The hero hierarchy is a single read: a mono status line (machine voice: `ET-48 // BUILD PHASE 1`), then a large display headline naming the system, then one short body paragraph, then one primary action, with a real-data terminal panel (last 5 executions from `lib/store.ts`) as the hero visual. Nothing competes with that line; everything below it is structured, labelled data. The palette is zinc neutrals plus traffic-light semantics — the interface speaks the language of an operations console, where color is information (ok/warn/err/live), not decoration; that is also why there is no purple and no gradients: this is not a marketing gradient page, it is a control room. The system font stack is deliberate too — no Inter, no custom webfont: it keeps the page fast and honest on any device, and the monospace stack gives data and status lines their instrument-panel identity against the sans body. (Known tradeoff: on Android the mono stack resolves to generic monospace; a self-hosted woff2 via `next/font/local` is the documented upgrade path if the instrument identity needs to survive there, but it is deliberately not forced.)
+The hero hierarchy is a single read: a mono status line (machine voice: `ET-48 // BUILD PHASE 1`), then a large display headline naming the system, then one short body paragraph, then one primary action, with a real-data terminal panel (last 5 executions from `lib/store.ts`) as the hero visual. Nothing competes with that line; everything below it is structured, labelled data. The palette is zinc neutrals plus traffic-light semantics — the interface speaks the language of an operations console, where color is information (ok/warn/err/live), not decoration; that is also why there is no purple and no gradients: this is not a marketing gradient page, it is a control room. The two-face system is deliberate: Space Grotesk carries display/headings/body, JetBrains Mono gives data and status lines their instrument-panel identity, both self-hosted at build time via `next/font/google` — no external font requests, no invisible-text window (`display: swap`), and on Android the mono stack now resolves to real JetBrains Mono instead of a generic monospace fallback.
