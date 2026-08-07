@@ -10,7 +10,7 @@ Source of truth for the design DNA (plan Global Constraints §3). Tokens are def
 | `surface` | `#18181b` | Cards, panels, nav |
 | `border` | `#27272a` | Hairlines, dividers, node outlines |
 | `text` | `#f4f4f5` | Primary text |
-| `muted` | `#a1a1aa` | Secondary/labels/eyebrows |
+| `muted` | `#c6c6cc` | Secondary/labels/eyebrows (WCAG AA 4.5:1 on `base` and `surface`) |
 | `ok` | `#4ade80` | Positive/primary-action semantic |
 | `warn` | `#fbbf24` | Warning semantic |
 | `err` | `#f87171` | Error/failure semantic |
@@ -35,6 +35,8 @@ Source of truth for the design DNA (plan Global Constraints §3). Tokens are def
 ## Spacing & layout
 
 - 4px grid; section vertical padding `4rem`; max content width `72rem`, centered.
+- Hero: top padding `pt-20` / `sm:pt-24` (96px cap), bottom `pb-16`; clears the 64px fixed nav.
+- Shape system: interactive controls are sharp (radius 0), data-viz nodes are 8px (`rx=8`), status LEDs are full-round. Documented rule, applied everywhere.
 
 ## Motion
 
@@ -51,4 +53,4 @@ Source of truth for the design DNA (plan Global Constraints §3). Tokens are def
 
 ## Art direction
 
-The hero hierarchy is a single read: a mono status line (machine voice: `ET-48 // BUILD PHASE 1`), then a large display headline naming the system, then one short body paragraph, then one primary action. Nothing competes with that line; everything below it is structured, labelled data. The palette is zinc neutrals plus traffic-light semantics — the interface speaks the language of an operations console, where color is information (ok/warn/err/live), not decoration; that is also why there is no purple and no gradients: this is not a marketing gradient page, it is a control room. The system font stack is deliberate too — no Inter, no custom webfont: it keeps the page fast and honest on any device, and the monospace stack gives data and status lines their instrument-panel identity against the sans body.
+The hero hierarchy is a single read: a mono status line (machine voice: `ET-48 // BUILD PHASE 1`), then a large display headline naming the system, then one short body paragraph, then one primary action, with a real-data terminal panel (last 5 executions from `lib/store.ts`) as the hero visual. Nothing competes with that line; everything below it is structured, labelled data. The palette is zinc neutrals plus traffic-light semantics — the interface speaks the language of an operations console, where color is information (ok/warn/err/live), not decoration; that is also why there is no purple and no gradients: this is not a marketing gradient page, it is a control room. The system font stack is deliberate too — no Inter, no custom webfont: it keeps the page fast and honest on any device, and the monospace stack gives data and status lines their instrument-panel identity against the sans body. (Known tradeoff: on Android the mono stack resolves to generic monospace; a self-hosted woff2 via `next/font/local` is the documented upgrade path if the instrument identity needs to survive there, but it is deliberately not forced.)

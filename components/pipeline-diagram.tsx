@@ -1,7 +1,7 @@
 const nodes = [
   { label: "Form", x: 80 },
-  { label: "API", x: 240 },
-  { label: "N8N", x: 400 },
+  { label: "API", sub: "HMAC", x: 240 },
+  { label: "N8N", sub: "RDAP", x: 400 },
   { label: "Apps Script", x: 560 },
   { label: "Report Card", x: 720 },
 ];
@@ -13,7 +13,7 @@ export default function PipelineDiagram() {
         viewBox="0 0 800 180"
         className="h-auto w-full"
         role="img"
-        aria-label="Pipeline diagram: Form, API, N8N, Apps Script, Report Card"
+        aria-label="Pipeline diagram: Form, API (HMAC), N8N (RDAP), Apps Script, Report Card"
       >
         <defs>
           <marker
@@ -74,11 +74,23 @@ export default function PipelineDiagram() {
             >
               {node.label}
             </text>
+            {node.sub && (
+              <text
+                x={node.x}
+                y={106}
+                textAnchor="middle"
+                fontSize={9}
+                fill="var(--color-muted)"
+                style={{ fontFamily: "var(--font-mono)", opacity: 0.7 }}
+              >
+                {node.sub}
+              </text>
+            )}
           </g>
         ))}
       </svg>
       <figcaption className="mt-4 text-center font-mono text-xs uppercase tracking-widest text-muted">
-        STATIC PREVIEW — live execution coming in build phase 2
+        STATIC PREVIEW - live execution lands in build phase 2
       </figcaption>
     </figure>
   );

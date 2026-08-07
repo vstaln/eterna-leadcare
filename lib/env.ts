@@ -4,8 +4,6 @@ const REQUIRED = [
   "EXECUTIONS_AUTH_TOKEN",
 ] as const;
 
-const OPTIONAL = ["N8N_API_KEY", "APPS_SCRIPT_URL", "N8N_WEBHOOK_PATH"] as const;
-
 export const NODE_ENV = process.env.NODE_ENV ?? "development";
 
 function readEnv() {
