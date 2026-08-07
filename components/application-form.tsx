@@ -29,7 +29,14 @@ export default function ApplicationForm() {
       const result = await response.json();
       if (!response.ok || !result.ok) throw new Error(result.error || "Submission failed");
       setState("sent");
-      setMessage(`Received. Execution ID: ${result.executionId || "recorded"}`);
+      // LeadCare promise: every accepted lead gets a tracking number the
+      // visitor can follow on the ops dashboard. Fall back to the raw id
+      // if the API didn't return one (older deployments).
+      setMessage(
+        result.tracking
+          ? `Received — tracking number ${result.tracking}. Watch it move on the ops dashboard.`
+          : `Received. Execution ID: ${result.executionId || "recorded"}`
+      );
       event.currentTarget.reset();
     } catch (error) {
       setState("error");

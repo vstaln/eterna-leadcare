@@ -3,6 +3,7 @@ import SectionHeading from "@/components/section-heading";
 import { env } from "@/lib/env";
 import { listExecutions } from "@/lib/store";
 import { clock, relativeAge, shortIso } from "@/lib/time";
+import { trackingId } from "@/lib/tracking";
 
 export const dynamic = "force-dynamic";
 
@@ -268,7 +269,7 @@ export default async function OpsPage() {
             <table className="w-full min-w-[640px] text-left font-mono text-xs tabular-nums sm:text-sm">
               <thead className="border-b border-border text-muted">
                 <tr>
-                  <th scope="col" className="px-4 py-2 font-medium">ID</th>
+                  <th scope="col" className="px-4 py-2 font-medium">TRACKING</th>
                   <th scope="col" className="px-4 py-2 font-medium">STATE</th>
                   <th scope="col" className="px-4 py-2 font-medium">STAGE</th>
                   <th scope="col" className="px-4 py-2 font-medium">WHEN</th>
@@ -279,6 +280,7 @@ export default async function OpsPage() {
                 {rows.map((row) => (
                   <tr key={row.id}>
                     <td className="px-4 py-2 text-muted">{row.id.slice(0, 8)}</td>
+                    <td className="px-4 py-2 text-ok">{trackingId(row.id)}</td>
                     <td
                       className={
                         row.status === "failed"

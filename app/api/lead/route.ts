@@ -4,6 +4,7 @@ import { createExecution, updateExecution } from "@/lib/store";
 import { hmacHex } from "@/lib/crypto";
 import { env } from "@/lib/env";
 import { recordShield } from "@/lib/shield";
+import { trackingId } from "@/lib/tracking";
 
 export async function POST(req: NextRequest) {
   if (!env.N8N_BASE_URL || !env.WEBHOOK_TOKEN) {
@@ -92,7 +93,9 @@ export async function POST(req: NextRequest) {
       throw new Error(`n8n ${res.status}`);
     }
     await updateExecution(executionId, { status: "dispatched", stage: "dispatched" });
-    return NextResponse.json({ ok: true, executionId });
+    // Return the tracking code alongside the internal execution id — the
+    // form's success message shows it to the visitor.
+    return NextResponse.json({ ok: true, executionId, tracking: trackingId(executionId) });
   } catch {
     await updateExecution(executionId, {
       status: "failed",
