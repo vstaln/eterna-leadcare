@@ -9,9 +9,8 @@ export function verifyHmac(
   message: string,
   provided: string
 ): boolean {
-  const expected = hmacHex(secret, message);
-  const actual = hmacHex(provided, message);
-  const a = Buffer.from(expected, "utf8");
-  const b = Buffer.from(actual, "utf8");
-  return timingSafeEqual(a, b);
+  const expected = Buffer.from(hmacHex(secret, message), "utf8");
+  const actual = Buffer.from(provided, "utf8");
+  if (expected.length !== actual.length) return false;
+  return timingSafeEqual(expected, actual);
 }

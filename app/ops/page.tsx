@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import SectionHeading from "@/components/section-heading";
 import { env } from "@/lib/env";
 import { listExecutions } from "@/lib/store";
+import { clock, relativeAge, shortIso } from "@/lib/time";
 
 export const dynamic = "force-dynamic";
 
@@ -85,24 +86,50 @@ const stateColor: Record<string, string> = {
   DEGRADED: "text-err",
 };
 
-function relativeAge(iso: string, now: number): string {
-  const ms = now - new Date(iso).getTime();
-  const secs = Number.isFinite(ms) ? Math.max(0, Math.floor(ms / 1000)) : 0;
-  if (secs < 60) return "now";
-  const mins = Math.floor(secs / 60);
-  if (mins < 60) return `${mins}m ago`;
-  const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
-  return `${Math.floor(hours / 24)}d ago`;
-}
+type UserGatedItem = { label: string; note: string };
 
-function shortIso(iso: string): string {
-  return iso.slice(0, 19).replace("T", " ");
-}
+const userGatedItems: UserGatedItem[] = [
+  { label: "5678 EXPOSURE", note: "(user-gated — OCI security list)" },
+  { label: "OWNER API KEY", note: "(P5 — N8N_API_KEY)" },
+];
 
-function clock() {
-  return { now: Date.now(), iso: new Date().toISOString() };
-}
+type LedgerItem = {
+  title: string;
+  ready: boolean;
+  note: string;
+  description: string;
+};
+
+const ledgerItems: LedgerItem[] = [
+  {
+    title: "5678 EXPOSURE",
+    ready: false,
+    note: "(user-gated — OCI security list)",
+    description:
+      "Open TCP 5678 inbound on the box; until then n8n is reachable only from the box itself.",
+  },
+  {
+    title: "APPS SCRIPT DEPLOY",
+    ready: Boolean(env.APPS_SCRIPT_URL),
+    note: "(user-gated — docs/apps-script-setup.md)",
+    description:
+      "Deploy the web app and set APPS_SCRIPT_URL in .env.local; the pipeline upgrades from degraded to full after deploy.",
+  },
+  {
+    title: "N8N OWNER API KEY",
+    ready: Boolean(env.N8N_API_KEY),
+    note: "(P5)",
+    description:
+      "Created in the n8n settings UI; needed for the P5 stage callbacks, not for the current slice.",
+  },
+  {
+    title: "TELEGRAM NOTIFY",
+    ready: false,
+    note: "(P5 — documented, deferred)",
+    description:
+      "Live delivery notifications land in the documented P5 phase; the report card already records everything the bot would send.",
+  },
+];
 
 export default async function OpsPage() {
   const ring = await listExecutions(100);
@@ -178,18 +205,14 @@ export default async function OpsPage() {
             User-gated items
           </p>
           <ul className="space-y-1.5 font-mono text-xs tabular-nums">
-            <li className="flex flex-wrap items-center gap-2">
-              <span className="led-warn" aria-hidden="true" />
-              <span className="text-text">5678 EXPOSURE</span>
-              <span className="text-warn">PENDING</span>
-              <span className="text-muted">(user-gated — OCI security list)</span>
-            </li>
-            <li className="flex flex-wrap items-center gap-2">
-              <span className="led-warn" aria-hidden="true" />
-              <span className="text-text">OWNER API KEY</span>
-              <span className="text-warn">PENDING</span>
-              <span className="text-muted">(P5 — N8N_API_KEY)</span>
-            </li>
+            {userGatedItems.map((item) => (
+              <li key={item.label} className="flex flex-wrap items-center gap-2">
+                <span className="led-warn" aria-hidden="true" />
+                <span className="text-text">{item.label}</span>
+                <span className="text-warn">PENDING</span>
+                <span className="text-muted">{item.note}</span>
+              </li>
+            ))}
           </ul>
         </div>
       </section>
@@ -197,86 +220,28 @@ export default async function OpsPage() {
       <section id="ledger" className="mx-auto max-w-6xl px-6 py-16">
         <SectionHeading eyebrow="LEDGER // known unknowns" title="What&apos;s still missing?" />
         <ul className="divide-y divide-border border border-border bg-surface">
-          <li className="flex items-start gap-3 px-4 py-3">
-            <span
-              aria-hidden="true"
-              className="mt-0.5 h-3.5 w-3.5 shrink-0 border border-muted/50"
-            />
-            <div>
-              <p className="font-mono text-sm tabular-nums">
-                <span className="text-text">5678 EXPOSURE</span>
-                <span className="ml-2 text-warn">PENDING</span>
-                <span className="ml-2 text-muted">(user-gated — OCI security list)</span>
-              </p>
-              <p className="mt-1 text-xs text-muted">
-                Open TCP 5678 inbound on the box; until then n8n is reachable
-                only from the box itself.
-              </p>
-            </div>
-          </li>
-          <li className="flex items-start gap-3 px-4 py-3">
-            <span
-              aria-hidden="true"
-              className="mt-0.5 h-3.5 w-3.5 shrink-0 border border-muted/50"
-            />
-            <div>
-              <p className="font-mono text-sm tabular-nums">
-                <span className="text-text">APPS SCRIPT DEPLOY</span>
-                {env.APPS_SCRIPT_URL ? (
-                  <span className="ml-2 text-ok">CONFIGURED</span>
-                ) : (
-                  <>
-                    <span className="ml-2 text-warn">PENDING</span>
-                    <span className="ml-2 text-muted">(user-gated — docs/apps-script-setup.md)</span>
-                  </>
-                )}
-              </p>
-              <p className="mt-1 text-xs text-muted">
-                Deploy the web app and set APPS_SCRIPT_URL in .env.local; the
-                pipeline upgrades from degraded to full after deploy.
-              </p>
-            </div>
-          </li>
-          <li className="flex items-start gap-3 px-4 py-3">
-            <span
-              aria-hidden="true"
-              className="mt-0.5 h-3.5 w-3.5 shrink-0 border border-muted/50"
-            />
-            <div>
-              <p className="font-mono text-sm tabular-nums">
-                <span className="text-text">N8N OWNER API KEY</span>
-                {env.N8N_API_KEY ? (
-                  <span className="ml-2 text-ok">CONFIGURED</span>
-                ) : (
-                  <>
-                    <span className="ml-2 text-warn">PENDING</span>
-                    <span className="ml-2 text-muted">(P5)</span>
-                  </>
-                )}
-              </p>
-              <p className="mt-1 text-xs text-muted">
-                Created in the n8n settings UI; needed for the P5 stage
-                callbacks, not for the current slice.
-              </p>
-            </div>
-          </li>
-          <li className="flex items-start gap-3 px-4 py-3">
-            <span
-              aria-hidden="true"
-              className="mt-0.5 h-3.5 w-3.5 shrink-0 border border-muted/50"
-            />
-            <div>
-              <p className="font-mono text-sm tabular-nums">
-                <span className="text-text">TELEGRAM NOTIFY</span>
-                <span className="ml-2 text-warn">PENDING</span>
-                <span className="ml-2 text-muted">(P5 — documented, deferred)</span>
-              </p>
-              <p className="mt-1 text-xs text-muted">
-                Live delivery notifications land in the documented P5 phase;
-                the report card already records everything the bot would send.
-              </p>
-            </div>
-          </li>
+          {ledgerItems.map((item) => (
+            <li key={item.title} className="flex items-start gap-3 px-4 py-3">
+              <span
+                aria-hidden="true"
+                className="mt-0.5 h-3.5 w-3.5 shrink-0 border border-muted/50"
+              />
+              <div>
+                <p className="font-mono text-sm tabular-nums">
+                  <span className="text-text">{item.title}</span>
+                  {item.ready ? (
+                    <span className="ml-2 text-ok">CONFIGURED</span>
+                  ) : (
+                    <>
+                      <span className="ml-2 text-warn">PENDING</span>
+                      <span className="ml-2 text-muted">{item.note}</span>
+                    </>
+                  )}
+                </p>
+                <p className="mt-1 text-xs text-muted">{item.description}</p>
+              </div>
+            </li>
+          ))}
         </ul>
         {appsScriptPending && (
           <div className="mt-4 border border-warn/40 bg-surface px-4 py-3 font-mono text-xs leading-relaxed text-muted tabular-nums">

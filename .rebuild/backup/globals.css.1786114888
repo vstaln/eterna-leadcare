@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+@theme {
+  --color-base: #09090b;
+  --color-surface: #18181b;
+  --color-border: #27272a;
+  --color-text: #f4f4f5;
+  --color-muted: #c6c6cc;
+  --color-ok: #4ade80;
+  --color-warn: #fbbf24;
+  --color-err: #f87171;
+  --color-live: #34d399;
+
+  --font-sans: "Space Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
+}
+
+@utility measure {
+  max-width: 65ch;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-base text-text font-sans antialiased;
+  }
+}
+
+.skip-link {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 100;
+  transform: translateY(-200%);
+  padding: 0.5rem 1rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-text);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  outline: 2px solid var(--color-live);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.scanlines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.03) 0px,
+    rgba(255, 255, 255, 0.03) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
+
+.led-ok,
+.led-warn,
+.led-err,
+.led-live {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 9999px;
+}
+
+.led-ok {
+  background-color: var(--color-ok);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--color-ok) 25%, transparent);
+}
+
+.led-warn {
+  background-color: var(--color-warn);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--color-warn) 25%, transparent);
+}
+
+.led-err {
+  background-color: var(--color-err);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--color-err) 25%, transparent);
+}
+
+.led-live {
+  background-color: var(--color-live);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--color-live) 25%, transparent);
+  animation: led-pulse 2s ease-in-out infinite;
+}
+
+@keyframes led-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .led-live {
+    animation: none;
+  }
+}

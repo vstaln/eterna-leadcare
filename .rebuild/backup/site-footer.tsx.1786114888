@@ -6,8 +6,7 @@ export default function SiteFooter() {
           ETERNA APPLICATION // eterna.vstal.in
         </p>
         <p className="text-sm text-muted">
-          © {new Date().getFullYear()} Vstalin — application for Lead Automation &amp; Web Engineer
-          at Eterna Indonesia
+          © {new Date().getFullYear()} Vstalin — application for Lead Automation &amp; Web Engineer at Eterna Indonesia
         </p>
       </div>
     </footer>

@@ -1,9 +1,9 @@
 "use client";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { House, Gauge, Clock, Eye, PaperPlaneTilt } from "@phosphor-icons/react";
+import { House, Gauge, Clock, Eye } from "@phosphor-icons/react";
 import LiveBadge from "@/components/live-badge";
-import TourTrigger from "@/components/tour";
 
 const links = [
   { label: "Home", href: "/", live: true, icon: House },
@@ -39,7 +39,9 @@ export default function Nav() {
                 >
                   <Icon className="h-4 w-4 text-muted/40" aria-hidden="true" />
                   <span className="hidden sm:inline">{link.label}</span>
-                  <span className="sm:hidden">{link.label.split(" ")[0]}</span>
+                  <span className="sm:hidden">
+                    {link.label.split(" ")[0]}
+                  </span>
                   <span className="font-mono text-[0.625rem] uppercase tracking-widest text-muted">
                     soon
                   </span>
@@ -48,18 +50,9 @@ export default function Nav() {
             );
           })}
         </ul>
-        <div className="flex items-center gap-3 sm:gap-5">
-          <TourTrigger variant="nav" />
-          <Link
-            href="/#contact"
-            className="hidden items-center gap-1.5 bg-ok px-4 py-2 text-sm font-semibold text-zinc-950 transition hover:brightness-110 focus-visible:outline-2 focus-visible:outline-live sm:inline-flex"
-          >
-            <PaperPlaneTilt className="h-4 w-4" aria-hidden="true" />
-            <span>Contact me</span>
-          </Link>
-          <LiveBadge />
-        </div>
+        <LiveBadge />
       </nav>
     </header>
   );
 }
+

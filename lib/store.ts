@@ -16,12 +16,12 @@ export type Execution = {
 let cache: Execution[] | null = null;
 
 async function load(): Promise<Execution[]> {
-  if (cache) return cache;
-  try {
-    const raw = await fs.readFile(FILE, "utf8");
-    cache = JSON.parse(raw) as Execution[];
-  } catch {
-    cache = [];
+  if (!cache) {
+    try {
+      cache = JSON.parse(await fs.readFile(FILE, "utf8")) as Execution[];
+    } catch {
+      cache = [];
+    }
   }
   return cache;
 }
@@ -42,7 +42,6 @@ export async function createExecution(
   const now = new Date().toISOString();
   list.unshift({ id, status, stage, created_at: now, updated_at: now });
   if (list.length > CAP) list.length = CAP;
-  cache = list;
   await persist(list);
 }
 
@@ -54,7 +53,6 @@ export async function updateExecution(
   const row = list.find((r) => r.id === id);
   if (!row) return false;
   Object.assign(row, patch, { updated_at: new Date().toISOString() });
-  cache = list;
   await persist(list);
   return true;
 }

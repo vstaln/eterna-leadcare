@@ -1,0 +1,14 @@
+# INSTALLED — Eterna rebuild (lead)
+npm deps (added):
+- driver.js@1.8.0, clsx, tailwind-merge, class-variance-authority, lucide-react, tw-animate-css
+- gsap@3.15.0, @gsap/react@2.1.2 (auto via shadcn add)
+- motion (already present, ^13.0.0)
+
+shadcn primitives (components/ui/): button, card, input, textarea, label, separator, badge
+React Bits (via @react-bits registry, "use client" added):
+- components/SplitText.tsx         (gsap)
+- components/AnimatedContent.tsx   (gsap)
+- components/SpotlightCard.tsx     (no deps)
+- TiltedCard removed (image-based; replaced by hand-rolled PanelTilt in hero-animated.tsx)
+
+components.json registries: @tailark-oss + @react-bits

@@ -2,9 +2,10 @@ const nodes = [
   { label: "Form", x: 80 },
   { label: "API", sub: "HMAC", x: 240 },
   { label: "N8N", sub: "RDAP", x: 400 },
-  { label: "Store", x: 560 },
+  { label: "Apps Script", x: 560 },
   { label: "Report Card", x: 720 },
 ];
+
 export default function PipelineDiagram() {
   return (
     <figure>
@@ -12,7 +13,7 @@ export default function PipelineDiagram() {
         viewBox="0 0 800 180"
         className="h-auto w-full"
         role="img"
-        aria-label="Pipeline diagram: Form, API (HMAC), N8N (RDAP), Store, Report Card"
+        aria-label="Pipeline diagram: Form, API (HMAC), N8N (RDAP), Apps Script, Report Card"
       >
         <defs>
           <marker
@@ -89,7 +90,7 @@ export default function PipelineDiagram() {
         ))}
       </svg>
       <figcaption className="mt-4 text-center font-mono text-xs uppercase tracking-widest text-muted">
-        LIVE PIPELINE - every submission follows this path, step by step
+        STATIC PREVIEW - live execution lands in build phase 2
       </figcaption>
     </figure>
   );

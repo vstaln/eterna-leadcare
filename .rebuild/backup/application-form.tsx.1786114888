@@ -1,0 +1,51 @@
+"use client";
+
+import { FormEvent, useState } from "react";
+
+export default function ApplicationForm() {
+  const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [message, setMessage] = useState("");
+
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setState("sending");
+    setMessage("");
+    const form = new FormData(event.currentTarget);
+    try {
+      const response = await fetch("/api/lead", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          name: form.get("name"),
+          email: form.get("email"),
+          company: "Eterna hiring team",
+          message: form.get("message"),
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok || !result.ok) throw new Error(result.error || "Submission failed");
+      setState("sent");
+      setMessage(`Received. Execution ID: ${result.executionId || "recorded"}`);
+      event.currentTarget.reset();
+    } catch (error) {
+      setState("error");
+      setMessage(error instanceof Error ? error.message : "Unable to submit right now");
+    }
+  }
+
+  return (
+    <form onSubmit={submit} className="border border-border bg-surface p-6">
+      <p className="font-mono text-xs uppercase tracking-widest text-muted">Reach me directly</p>
+      <label className="mt-5 block font-mono text-xs uppercase tracking-widest text-muted" htmlFor="name">Your name</label>
+      <input className="mt-2 w-full border border-border bg-base px-3 py-3 text-sm text-text outline-none focus:border-live" id="name" name="name" required maxLength={120} autoComplete="name" />
+      <label className="mt-5 block font-mono text-xs uppercase tracking-widest text-muted" htmlFor="email">Email</label>
+      <input className="mt-2 w-full border border-border bg-base px-3 py-3 text-sm text-text outline-none focus:border-live" id="email" name="email" type="email" required maxLength={200} autoComplete="email" />
+      <label className="mt-5 block font-mono text-xs uppercase tracking-widest text-muted" htmlFor="message">Message <span className="normal-case tracking-normal">(optional)</span></label>
+      <textarea className="mt-2 min-h-28 w-full resize-y border border-border bg-base px-3 py-3 text-sm text-text outline-none focus:border-live" id="message" name="message" maxLength={1000} placeholder="Interview slot, portfolio question, or feedback — anything helps." />
+      <button className="mt-6 bg-ok px-5 py-3 text-sm font-semibold text-zinc-950 transition hover:brightness-110 disabled:cursor-wait disabled:opacity-50" type="submit" disabled={state === "sending"}>
+        {state === "sending" ? "Sending…" : "Send me a message"}
+      </button>
+      <p className={`mt-4 min-h-5 text-sm ${state === "error" ? "text-err" : state === "sent" ? "text-ok" : "text-muted"}`} role="status">{message}</p>
+    </form>
+  );
+}
