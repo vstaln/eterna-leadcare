@@ -17,9 +17,9 @@
     "lib": "@/lib",
     "hooks": "@/hooks"
   },
-  "iconLibrary": "lucide",
+  "iconLibrary": "phosphor",
   "registries": {
     "@tailark-oss": "https://oss.tailark.com/r/{name}",
-    "@react-bits": "https://www.reactbits.dev/r/{name}"
+    "@react-bits": "https://www.reactbits.dev/r/{name}.json"
   }
 }
