@@ -1,6 +1,6 @@
 "use client";
 import { lazy, Suspense, useCallback, useState } from "react";
-import { Compass } from "lucide-react";
+import { Compass } from "@phosphor-icons/react";
 
 const DriverTour = lazy(() => import("@/components/driver-tour"));
 
