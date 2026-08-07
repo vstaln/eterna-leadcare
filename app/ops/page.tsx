@@ -4,13 +4,15 @@ import { env } from "@/lib/env";
 import { listExecutions } from "@/lib/store";
 import { clock, relativeAge, shortIso } from "@/lib/time";
 import { trackingId } from "@/lib/tracking";
+import { listShield, shieldCounts } from "@/lib/shield";
+import OpsChart from "@/components/ops-chart";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Ops — Eterna Ops Command Center",
+  title: "Ops — Eterna LeadCare",
   description:
-    "The honest report card of the EMPWR-pattern pipeline: real store rows, named states, no simulated lights.",
+    "The honest report card of the LeadCare pipeline: real store rows, named stages, shield log, no simulated lights.",
 };
 
 type LedColor = "ok" | "warn" | "err";
@@ -24,42 +26,44 @@ type Stage = {
   note: string;
 };
 
-function stageStates(): Stage[] {
+async function stageStates(): Promise<Stage[]> {
   const n8nConfigured = Boolean(env.N8N_BASE_URL && env.WEBHOOK_TOKEN);
-  const hmacEnabled = Boolean(env.WEBHOOK_TOKEN);
   const appsScriptConfigured = Boolean(env.APPS_SCRIPT_URL);
+  const counts = await shieldCounts();
+  const shieldEvents = await listShield(1);
+  const firstShieldAt = shieldEvents.length > 0 ? shieldEvents[shieldEvents.length - 1].at : null;
   return [
     {
       num: "01",
-      name: "FORM",
-      state: "STATIC PREVIEW",
-      led: "warn",
+      name: "CAPTURED",
+      state: "LIVE",
+      led: "ok",
       source: "site repo",
-      note: "no form UI shipped yet; intake endpoint /api/lead is live",
+      note: "the form on the landing page posts here — every submission is captured with a timestamp",
     },
     {
       num: "02",
-      name: "HMAC GATE",
-      state: hmacEnabled ? "ENABLED" : "PENDING",
-      led: hmacEnabled ? "ok" : "err",
-      source: "env",
-      note: hmacEnabled
-        ? "sha256 + 5-min freshness — WEBHOOK_TOKEN present; every dispatch is signed"
-        : "WEBHOOK_TOKEN missing — dispatches cannot be signed; /api/lead returns 503",
+      name: "SPAM SHIELD",
+      state: "ENABLED",
+      led: "ok",
+      source: "data/shield.json",
+      note: `honeypot-gated · ${counts.honeypot} blocked${
+        firstShieldAt ? ` since ${shortIso(firstShieldAt)}` : " — no hits recorded"
+      }`,
     },
     {
       num: "03",
-      name: "N8N",
+      name: "RESEARCHED",
       state: n8nConfigured ? "CONFIGURED" : "PENDING",
       led: n8nConfigured ? "ok" : "err",
       source: "env",
       note: n8nConfigured
-        ? "N8N_BASE_URL + WEBHOOK_TOKEN present; never live-verified from this device — no public status endpoint"
+        ? "N8N_BASE_URL + WEBHOOK_TOKEN present; signed dispatch enabled — never live-verified from this device"
         : "N8N_BASE_URL/WEBHOOK_TOKEN missing — lead intake is offline",
     },
     {
       num: "04",
-      name: "RDAP",
+      name: "LOGGED",
       state: "N/R",
       led: "warn",
       source: "workflow definition",
@@ -67,8 +71,8 @@ function stageStates(): Stage[] {
     },
     {
       num: "05",
-      name: "APPS SCRIPT",
-      state: appsScriptConfigured ? "CONFIGURED" : "PENDING",
+      name: "LIVE",
+      state: appsScriptConfigured ? "LIVE" : "DEGRADED",
       led: appsScriptConfigured ? "ok" : "warn",
       source: "env",
       note: appsScriptConfigured
@@ -79,9 +83,9 @@ function stageStates(): Stage[] {
 }
 
 const stateColor: Record<string, string> = {
-  "STATIC PREVIEW": "text-warn",
   ENABLED: "text-ok",
   CONFIGURED: "text-ok",
+  LIVE: "text-ok",
   "N/R": "text-warn",
   PENDING: "text-warn",
   DEGRADED: "text-err",
@@ -146,6 +150,35 @@ export default async function OpsPage() {
   const firstAt = ring.length > 0 ? ring[ring.length - 1].created_at : null;
   const lastFailure = rows.find((r) => r.status === "failed") ?? null;
 
+  // Chart series: bucket the retained ring by day (created_at date), count
+  // per status, and ZERO-FILL every day between first and last so absence
+  // is visible — an empty day is a real "no submissions that day".
+  const byDay = new Map<string, { received: number; dispatched: number; failed: number }>();
+  for (const r of ring) {
+    const day = r.created_at.slice(0, 10);
+    const slot = byDay.get(day) ?? { received: 0, dispatched: 0, failed: 0 };
+    slot[r.status] += 1;
+    byDay.set(day, slot);
+  }
+  const chartDays = [...byDay.keys()].sort();
+  // Zero-fill every day between first and last retained row — an empty day
+  // renders a zero-height bar (a real "no submissions that day"), never a gap.
+  const series: { day: string; received: number; dispatched: number; failed: number }[] =
+    chartDays.length === 0
+      ? []
+      : (() => {
+          const [first, last] = [chartDays[0], chartDays[chartDays.length - 1]];
+          const out: { day: string; received: number; dispatched: number; failed: number }[] = [];
+          for (let d = new Date(first); d <= new Date(last); d.setDate(d.getDate() + 1)) {
+            const day = d.toISOString().slice(0, 10);
+            out.push({ day, ...(byDay.get(day) ?? { received: 0, dispatched: 0, failed: 0 }) });
+          }
+          return out;
+        })();
+
+  const shieldRows = await listShield(10);
+  const shield = await shieldCounts();
+
   const statsLine =
     totals.n === 0
       ? "N=0 received=0 dispatched=0 failed=0 — store empty"
@@ -153,7 +186,7 @@ export default async function OpsPage() {
           firstAt ? shortIso(firstAt) : "—"
         }`;
 
-  const stages = stageStates();
+  const stages = await stageStates();
   const appsScriptPending = !env.APPS_SCRIPT_URL;
 
   return (
@@ -216,6 +249,47 @@ export default async function OpsPage() {
             ))}
           </ul>
         </div>
+      </section>
+
+      <section id="chart" className="mx-auto max-w-6xl px-6 py-16">
+        <SectionHeading eyebrow="TRAFFIC // executions per day" title="What actually came in?" />
+        <OpsChart series={series} total={totals.n} />
+        <p className="mt-3 font-mono text-xs text-muted tabular-nums">
+          RETAINED RING (LAST 100) — per day, by status · zero-filled days
+          shown, not skipped · every figure store-derived · not all-time
+        </p>
+      </section>
+
+      <section id="shield" className="mx-auto max-w-6xl px-6 py-16">
+        <SectionHeading eyebrow="SHIELD LOG // rejected attempts" title="What the shield blocked" />
+        <p className="mb-4 border border-border bg-surface px-4 py-3 font-mono text-xs leading-relaxed text-muted tabular-nums">
+          <span className="text-text">TOTALS</span> — honeypot: {shield.honeypot} · malformed
+          requests: {shield.intake_400} · signed-dispatch rejected: {shield.n8n_rejected}
+        </p>
+        {shieldRows.length === 0 ? (
+          <div className="border border-border bg-surface px-4 py-8 text-center font-mono text-sm text-muted">
+            SHIELD LOG EMPTY — no rejections recorded; the honeypot has never been triggered.
+          </div>
+        ) : (
+          <div className="overflow-x-auto border border-border bg-surface">
+            <table className="w-full min-w-[480px] text-left font-mono text-xs tabular-nums sm:text-sm">
+              <thead className="border-b border-border text-muted">
+                <tr>
+                  <th scope="col" className="px-4 py-2 font-medium">REASON</th>
+                  <th scope="col" className="px-4 py-2 font-medium">WHEN</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {shieldRows.map((entry) => (
+                  <tr key={entry.id}>
+                    <td className="px-4 py-2 text-warn">{entry.reason.toUpperCase()}</td>
+                    <td className="px-4 py-2 text-muted">{shortIso(entry.at)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </section>
 
       <section id="ledger" className="mx-auto max-w-6xl px-6 py-16">

@@ -1,9 +1,9 @@
 const nodes = [
-  { label: "Form", x: 80 },
-  { label: "API", sub: "HMAC", x: 240 },
-  { label: "N8N", sub: "RDAP", x: 400 },
-  { label: "Store", x: 560 },
-  { label: "Report Card", x: 720 },
+  { label: "Captured", sub: "web form", x: 80 },
+  { label: "Spam Shield", sub: "honeypot", x: 240 },
+  { label: "Researched", sub: "n8n · rdap", x: 400 },
+  { label: "Logged", sub: "store", x: 560 },
+  { label: "Live", sub: "dashboard", x: 720 },
 ];
 export default function PipelineDiagram() {
   return (
@@ -12,7 +12,7 @@ export default function PipelineDiagram() {
         viewBox="0 0 800 180"
         className="h-auto w-full"
         role="img"
-        aria-label="Pipeline diagram: Form, API (HMAC), N8N (RDAP), Store, Report Card"
+        aria-label="Pipeline diagram: Captured, Spam Shield, Researched, Logged, Live"
       >
         <defs>
           <marker
@@ -89,7 +89,7 @@ export default function PipelineDiagram() {
         ))}
       </svg>
       <figcaption className="mt-4 text-center font-mono text-xs uppercase tracking-widest text-muted">
-        LIVE PIPELINE - every submission follows this path, step by step
+        THE PATH EVERY RECORDED LEAD TAKES - STEP BY STEP
       </figcaption>
     </figure>
   );
