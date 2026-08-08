@@ -3,6 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { House, Gauge, Clock, Eye, PaperPlaneTilt } from "@phosphor-icons/react";
 import LiveBadge from "@/components/live-badge";
+import Magnet from "@/components/Magnet";
 import TourTrigger from "@/components/tour";
 import UtcClock from "@/components/utc-clock";
 
@@ -61,13 +62,15 @@ export default function Nav() {
         </div>
         <div className="flex items-center gap-3 sm:gap-5">
           <TourTrigger variant="nav" />
-          <Link
-            href="/#try"
-            className="press hidden items-center gap-1.5 bg-ok px-4 py-2 text-sm font-semibold text-zinc-950 transition hover:brightness-110 focus-visible:outline-2 focus-visible:outline-live sm:inline-flex"
-          >
-            <PaperPlaneTilt className="h-4 w-4" aria-hidden="true" />
-            <span>Contact us</span>
-          </Link>
+          <Magnet className="inline-flex" padding={6} activeStrength={2}>
+            <Link
+              href="/#try"
+              className="press hidden items-center gap-1.5 bg-ok px-4 py-2 text-sm font-semibold text-zinc-950 transition hover:brightness-110 focus-visible:outline-2 focus-visible:outline-live sm:inline-flex"
+            >
+              <PaperPlaneTilt className="h-4 w-4" aria-hidden="true" />
+              <span>Contact us</span>
+            </Link>
+          </Magnet>
           <LiveBadge />
           <UtcClock />
           <span className="caret" aria-hidden="true" />

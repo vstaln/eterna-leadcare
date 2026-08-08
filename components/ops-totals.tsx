@@ -1,4 +1,4 @@
-"use client";
+import CountUp from "@/components/CountUp";
 
 interface OpsTotalsProps {
   n: number;
@@ -23,10 +23,10 @@ export default function OpsTotals({ n, received, dispatched, failed }: OpsTotals
             {stat.label}
           </span>
           <span
-            className={`mt-1 block font-mono text-4xl font-medium tabular-nums ${stat.tone} number-pop md:text-5xl`}
+            className={`number-pop mt-1 block font-mono text-4xl font-medium tabular-nums md:text-5xl`}
             style={{ animationDelay: `calc(${i} * var(--duration-stagger))` }}
           >
-            {stat.value}
+            <CountUp to={stat.value} className={stat.tone} />
           </span>
         </div>
       ))}

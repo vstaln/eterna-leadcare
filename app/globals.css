@@ -50,24 +50,34 @@
 
 :root {
   --radius: 0.5rem;
-  --background: oklch(0.13 0.004 280);
-  --foreground: oklch(0.98 0.002 280);
-  --card: oklch(0.17 0.005 280);
-  --card-foreground: oklch(0.98 0.002 280);
-  --popover: oklch(0.17 0.005 280);
-  --popover-foreground: oklch(0.98 0.002 280);
+  /* the operations ledger — one world. paper base, ink text, stamps. */
+  --color-base: #f2efe7;
+  --color-surface: #fbf9f2;
+  --color-border: #d9d3c3;
+  --color-text: #191610;
+  --color-muted: #5f5a4a;
+  --color-ok: #2f855a;
+  --color-warn: #b7791f;
+  --color-err: #b0413e;
+  --color-live: #2f855a;
+  --background: #f2efe7;
+  --foreground: #191610;
+  --card: #fbf9f2;
+  --card-foreground: #191610;
+  --popover: #fbf9f2;
+  --popover-foreground: #191610;
   --primary: oklch(0.84 0.14 165);
   --primary-foreground: oklch(0.14 0.01 165);
   --secondary: oklch(0.17 0.005 280);
   --secondary-foreground: oklch(0.98 0.002 280);
-  --muted: oklch(0.17 0.005 280);
+  --muted: oklch(0.8 0.008 280);
   --muted-foreground: oklch(0.8 0.008 280);
   --accent: oklch(0.21 0.006 280);
   --accent-foreground: oklch(0.98 0.002 280);
   --destructive: oklch(0.7 0.19 22);
   --destructive-foreground: oklch(0.98 0.002 280);
-  --border: oklch(0.24 0.006 280);
-  --input: oklch(0.24 0.006 280);
+  --border: #d9d3c3;
+  --input: #d9d3c3;
   --ring: oklch(0.84 0.14 165);
   --chart-1: oklch(0.84 0.14 165);
   --chart-2: oklch(0.72 0.16 55);
@@ -82,7 +92,7 @@
 
 @layer base {
   html {
-    color-scheme: dark;
+    color-scheme: light;
     scroll-behavior: smooth;
   }
 
@@ -264,19 +274,6 @@
 
 /* ============ the operations ledger — one world ============ */
 
-.v3 {
-  --color-base: #f2efe7;
-  --color-surface: #fbf9f2;
-  --color-border: #d9d3c3;
-  --color-text: #191610;
-  --color-muted: #5f5a4a;
-  --color-ok: #2f855a;
-  --color-warn: #b7791f;
-  --color-err: #b0413e;
-  --color-live: #2f855a;
-  color-scheme: light;
-}
-
 .ledger-lines {
   background-color: var(--color-base);
   background-image: repeating-linear-gradient(
@@ -368,7 +365,66 @@
   }
 }
 
+/* shiny-text — moving sheen clipped to the glyphs (React Bits ShinyText) */
+.shiny-text {
+  background-image: linear-gradient(
+    120deg,
+    transparent 40%,
+    color-mix(in srgb, var(--color-text) 55%, transparent) 50%,
+    transparent 60%
+  );
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: currentColor;
+  animation: shiny-move 6s linear infinite;
+}
+
+@keyframes shiny-move {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* faulty-terminal — ghost glitch lines (React Bits FaultyTerminal, aria-hidden decoration) */
+.glitch-line {
+  display: inline-block;
+  animation: glitch-jitter 2.4s steps(2, jump-none) infinite;
+  animation-delay: calc(var(--glitch-delay, 0) * 1s);
+}
+
+@keyframes glitch-jitter {
+  0%,
+  91%,
+  100% {
+    transform: translateX(0);
+    filter: none;
+  }
+  92% {
+    transform: translateX(-2px) skewX(4deg);
+    filter: brightness(1.4);
+  }
+  94% {
+    transform: translateX(1px) skewX(-3deg);
+    filter: brightness(0.8);
+  }
+  96% {
+    transform: translateX(0) skewX(0);
+    filter: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .shiny-text {
+    animation: none;
+    background-image: none;
+  }
+  .glitch-line {
+    animation: none;
+  }
   .press {
     transition: none;
   }

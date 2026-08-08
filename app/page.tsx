@@ -1,8 +1,12 @@
 import SectionHeading from "@/components/section-heading";
 import LiveTicker from "@/components/live-ticker";
-import PipelineDiagram from "@/components/pipeline-diagram";
 import ApplicationForm from "@/components/application-form";
 import LedgerHeadline from "@/components/ledger-headline";
+import CountUp from "@/components/CountUp";
+import ShinyText from "@/components/ShinyText";
+import Magnet from "@/components/Magnet";
+import FaultyTerminal from "@/components/FaultyTerminal";
+import ScrollStack from "@/components/ScrollStack";
 import { listExecutions } from "@/lib/store";
 import { shieldCounts } from "@/lib/shield";
 import { stageStates } from "@/lib/stages";
@@ -83,7 +87,7 @@ export default async function HomePage() {
         <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
           <p className="mb-6 flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-muted">
             <span className="stamp stamp-red !p-0.5 !px-2 !text-[0.625rem]">LIVE</span>
-            Eterna LeadCare
+            <ShinyText text="Eterna LeadCare" />
           </p>
           <LedgerHeadline />
           <p className="mt-8 max-w-2xl text-balance text-lg leading-relaxed text-muted">
@@ -92,10 +96,14 @@ export default async function HomePage() {
             no simulated lights, no hidden steps.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-4">
-            <a href="/ops" className="stamp stamp-red press text-sm">Open the ledger</a>
-            <a href="#about" className="press inline-flex items-center gap-2 border border-border px-5 py-3 text-sm font-medium text-text transition hover:border-live focus-visible:outline-2 focus-visible:outline-live">
-              How it works
-            </a>
+            <Magnet className="inline-flex" padding={10} activeStrength={2}>
+              <a href="/ops" className="stamp stamp-red press text-sm">Open the ledger</a>
+            </Magnet>
+            <Magnet className="inline-flex" padding={10} activeStrength={2}>
+              <a href="#about" className="press inline-flex items-center gap-2 border border-border px-5 py-3 text-sm font-medium text-text transition hover:border-live focus-visible:outline-2 focus-visible:outline-live">
+                How it works
+              </a>
+            </Magnet>
           </div>
           <p className="mt-6 font-mono text-xs text-muted">
             THE OPERATIONS LEDGER — one pipeline, one real data set, no versions.
@@ -130,9 +138,11 @@ export default async function HomePage() {
           {statCells.map((cell, i) => (
             <div key={cell.label} className="relative bg-surface p-6 md:p-8">
               <p className="font-mono text-xs uppercase tracking-widest text-muted">{cell.label}</p>
-              <p className={`mt-2 font-mono text-4xl font-medium tabular-nums md:text-5xl ${cell.tone} number-pop`}
-                style={{ animationDelay: `calc(${i} * var(--duration-stagger))` }}>
-                {cell.value}
+              <p
+                className="number-pop mt-2 font-mono text-4xl font-medium tabular-nums md:text-5xl"
+                style={{ animationDelay: `calc(${i} * var(--duration-stagger))` }}
+              >
+                <CountUp to={cell.value} className={cell.tone} />
               </p>
               {cell.stamp && (
                 <span className={`stamp mt-4 ${cell.stamp[0]}`} aria-hidden="true">
@@ -201,24 +211,39 @@ export default async function HomePage() {
 
       <section id="pipeline" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="THE PIPELINE" title="The path every lead travels" />
-        <div className="border border-border bg-surface">
-          <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
-            <span className="led-live" aria-hidden="true" />
-            <span>THE PIPELINE — LIVE</span>
-            <span className="caret" aria-hidden="true" />
-          </div>
-          <div className="p-4">
-            <PipelineDiagram />
-          </div>
-        </div>
+        <ScrollStack
+          items={stages.map((stage, i) => (
+            <div key={stage.num} className="flex min-h-[45vh] flex-col p-8 md:min-h-[55vh] md:p-12">
+              {cornerPositions.map((pos) => (
+                <span key={pos} aria-hidden="true" className={`pointer-events-none absolute ${pos} px-1 font-mono text-xs text-muted/40`}>
+                  +
+                </span>
+              ))}
+              <div className="flex flex-wrap items-center gap-3">
+                <span className={`led-${stage.led}`} aria-hidden="true" />
+                <span className="font-mono text-xs uppercase tracking-widest text-muted">STAGE {stage.num}</span>
+                <span className={`font-mono text-xs ${stateColor[stage.state]}`}>{stage.state}</span>
+              </div>
+              <h3 className="mt-5 text-3xl font-semibold tracking-tight text-text md:text-4xl">{stage.name}</h3>
+              <p className="mt-3 font-mono text-xs text-muted">
+                sub={["web form", "honeypot", "n8n · rdap", "store", "dashboard"][i]} · source={stage.source}
+              </p>
+              <p className="mt-auto pt-6 font-mono text-xs leading-relaxed text-muted">{stage.note}</p>
+            </div>
+          ))}
+        />
         <p className="mt-3 font-mono text-xs text-muted">
           The same five lockstep stages as the ops dashboard — one vocabulary.
         </p>
       </section>
 
-      <section id="try" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <SectionHeading eyebrow="TRY IT" title="Send a test lead" />
-        <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start">
+      <section id="try" className="relative mx-auto max-w-6xl overflow-hidden px-6 py-24 md:py-32">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+          <FaultyTerminal className="absolute bottom-0 right-0 max-h-full overflow-hidden text-right text-ok/10" />
+        </div>
+        <div className="relative">
+          <SectionHeading eyebrow="TRY IT" title="Send a test lead" />
+          <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start">
           <div>
             <p className="measure text-sm leading-relaxed text-muted">
               Send a test lead — it travels the same path a real one would: checked, logged, and
@@ -240,6 +265,7 @@ export default async function HomePage() {
               Submits via POST /api/lead — honeypot-gated, tracked live on /ops
             </p>
           </div>
+        </div>
         </div>
       </section>
     </div>

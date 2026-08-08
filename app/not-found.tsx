@@ -1,4 +1,5 @@
 import Link from "next/link";
+import FallingText from "@/components/FallingText";
 
 export default function NotFound() {
   return (
@@ -7,7 +8,7 @@ export default function NotFound() {
         error 404
       </p>
       <h1 className="mt-4 text-balance text-[clamp(2.5rem,6vw,4.5rem)] font-semibold tracking-tighter text-text">
-        command not found
+        <FallingText text="command not found" stagger={0.06} speed={0.5} />
       </h1>
       <p className="mt-4 max-w-md font-mono text-sm text-muted">
         no pipeline exists for this path yet
