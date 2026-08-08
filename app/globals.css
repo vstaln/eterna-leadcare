@@ -261,3 +261,118 @@
   color: var(--color-muted);
   padding: 0.25rem;
 }
+
+/* ============ the operations ledger — one world ============ */
+
+.v3 {
+  --color-base: #f2efe7;
+  --color-surface: #fbf9f2;
+  --color-border: #d9d3c3;
+  --color-text: #191610;
+  --color-muted: #5f5a4a;
+  --color-ok: #2f855a;
+  --color-warn: #b7791f;
+  --color-err: #b0413e;
+  --color-live: #2f855a;
+  color-scheme: light;
+}
+
+.ledger-lines {
+  background-color: var(--color-base);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 27px,
+    color-mix(in srgb, var(--color-text) 5%, transparent) 27px,
+    color-mix(in srgb, var(--color-text) 5%, transparent) 28px
+  );
+}
+
+.stamp {
+  display: inline-block;
+  border: 2px solid currentColor;
+  border-radius: 4px;
+  padding: 0.25rem 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transform: rotate(-2deg);
+}
+
+.stamp-red {
+  color: var(--color-err);
+  background: color-mix(in srgb, var(--color-err) 7%, transparent);
+}
+
+.stamp-green {
+  color: var(--color-ok);
+  background: color-mix(in srgb, var(--color-ok) 7%, transparent);
+}
+
+.ledger-no {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-text);
+}
+
+.capture-terminal {
+  --color-base: #09090b;
+  --color-surface: #18181b;
+  --color-border: #27272a;
+  --color-text: #f4f4f5;
+  --color-muted: #c6c6cc;
+  --color-ok: #4ade80;
+  --color-warn: #fbbf24;
+  --color-err: #f87171;
+  --color-live: #34d399;
+  color-scheme: dark;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.press {
+  transition: transform 120ms var(--ease-smooth-out), filter 120ms var(--ease-smooth-out);
+}
+
+.press:active {
+  transform: translateY(1px) scale(0.995);
+  filter: brightness(0.97);
+}
+
+.caret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  margin-left: 2px;
+  background: var(--color-live);
+  animation: caret-blink 1.1s steps(1) infinite;
+}
+
+@keyframes caret-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press {
+    transition: none;
+  }
+  .caret {
+    animation: none;
+  }
+}

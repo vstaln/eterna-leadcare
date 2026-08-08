@@ -15,19 +15,17 @@ const links = [
 
 export default function Nav() {
   const pathname = usePathname();
-  const isV3 = pathname.startsWith("/v3");
-  const homeHref = isV3 ? "/v3" : "/v2";
   return (
-    <header className={`fixed top-0 z-50 w-full border-b border-border bg-base/80 backdrop-blur ${isV3 ? "v3" : ""}`}>
+    <header className="fixed top-0 z-50 w-full border-b border-border bg-base/80 backdrop-blur">
       <nav className="mx-auto flex h-12 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
         <div className="flex items-center gap-3 sm:gap-5">
           <Link
-            href={homeHref}
+            href="/"
             aria-label="Eterna LeadCare — home"
             className="hidden items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted sm:flex"
           >
             <span className="led-ok" aria-hidden="true" />
-            <span>{isV3 ? "Eterna LeadCare" : "ET-48 // ETERNA LEADCARE"}</span>
+            <span>Eterna LeadCare</span>
           </Link>
           <ul className="flex items-center gap-2.5 sm:gap-5">
             {links.map((link) => {
@@ -35,7 +33,7 @@ export default function Nav() {
               return link.live ? (
                 <li key={link.href}>
                   <Link
-                    href={link.href === "/" ? homeHref : link.href}
+                    href={link.href}
                     aria-current={pathname === link.href ? "page" : undefined}
                     className="flex items-center gap-1.5 text-sm font-medium text-text transition-colors duration-150 hover:text-muted focus-visible:outline-2 focus-visible:outline-live"
                   >
@@ -64,36 +62,12 @@ export default function Nav() {
         <div className="flex items-center gap-3 sm:gap-5">
           <TourTrigger variant="nav" />
           <Link
-            href={isV3 ? "/v3#try" : "/#contact"}
+            href="/#try"
             className="press hidden items-center gap-1.5 bg-ok px-4 py-2 text-sm font-semibold text-zinc-950 transition hover:brightness-110 focus-visible:outline-2 focus-visible:outline-live sm:inline-flex"
           >
             <PaperPlaneTilt className="h-4 w-4" aria-hidden="true" />
             <span>Contact us</span>
           </Link>
-          <div
-            role="group"
-            aria-label="Version"
-            className="flex items-center border border-border p-0.5 font-mono text-[0.625rem] uppercase tracking-widest"
-          >
-            <Link
-              href="/v2"
-              aria-current={!isV3 ? "page" : undefined}
-              className={`px-2 py-0.5 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-live ${
-                !isV3 ? "bg-ok text-zinc-950" : "text-muted hover:text-text"
-              }`}
-            >
-              v2
-            </Link>
-            <Link
-              href="/v3"
-              aria-current={isV3 ? "page" : undefined}
-              className={`px-2 py-0.5 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-live ${
-                isV3 ? "bg-ok text-zinc-950" : "text-muted hover:text-text"
-              }`}
-            >
-              v3
-            </Link>
-          </div>
           <LiveBadge />
           <UtcClock />
           <span className="caret" aria-hidden="true" />
