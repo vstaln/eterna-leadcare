@@ -1,4 +1,4 @@
-# Apps Script setup — ET-48 OPS leads log
+# Apps Script setup — Eterna LeadCare OPS leads log
 
 One Google Apps Script endpoint that appends `[DEMO]` rows to a spreadsheet. It is the **audit-trail leg** of the pipeline: after N8N enriches a lead (RDAP), it calls this endpoint, and the row lands in the sheet — the honest record of every demo execution.
 
@@ -6,7 +6,7 @@ Why only this, and why GET: RDAP enrichment runs inside N8N (public data, no sec
 
 ## 1. Create the spreadsheet
 
-1. Open https://sheets.new — name it **ET-48 OPS — leads**
+1. Open https://sheets.new — name it **Eterna LeadCare OPS — leads****
 2. Rename the first tab to **DEMO leads** (or leave it; the script creates the tab if missing)
 3. Keep this tab open for the next step
 

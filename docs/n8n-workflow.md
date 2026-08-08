@@ -1,4 +1,4 @@
-# N8N workflow — ET-48 lead pipeline
+# N8N workflow — Eterna LeadCare pipeline
 
 Export: `docs/n8n-workflow.json` · Workflow ID: `e5336198-9ef1-46e5-8746-4681e17aba1f` · Imported on `oracle-old` (n8n 1.123.69, container `eterna-n8n-1`, active).
 

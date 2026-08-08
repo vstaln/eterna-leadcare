@@ -59,7 +59,7 @@ PENDING, DEGRADED) instead of hidden.
   `.env` as `N8N_API_KEY` (a JWT). Do not mint another unless it is deleted.
 - The dispatch webhook path is **not** `/webhook/lead` — it is the full
   `N8N_WEBHOOK_PATH=/webhook/e5336198-9ef1-46e5-8746-4681e17aba1f/lead/lead`
-  (n8n's production webhook for workflow "ET-48 lead pipeline"). Never shorten it.
+  (n8n's production webhook for workflow "Eterna LeadCare pipeline"). Never shorten it.
 
 ## CRITICAL — do not break these
 

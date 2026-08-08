@@ -21,7 +21,7 @@ One page, five sections, ~400 words total. The one-pager mirrors the Next.js hom
 ### 1. Hero
 
 - Eyebrow (optional, mono type): `vstal@eterna:~/front-door`
-- Headline: "ET-48 OPS — automation command center"
+- Headline: "Eterna LeadCare OPS — automation command center"
 - One line: "Visitor lead form → HMAC-verified webhook → N8N → RDAP → Apps Script → live report card."
 - Status strip: a small line using the same vocabulary as `/ops` — CONFIGURED / PENDING / N/R — driven by the same facts as the live page. No fake liveness, no "live" claims the report card cannot back.
 

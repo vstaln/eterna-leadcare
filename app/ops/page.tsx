@@ -122,7 +122,7 @@ export default async function OpsPage() {
       <section className="bg-grid scanlines relative overflow-hidden pt-28 pb-12 sm:pt-36">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <p className="mb-6 font-mono text-xs uppercase tracking-widest text-muted">
-            ET-48 // OPS DASHBOARD — LIVE REPORT CARD
+            ETERNA LEADCARE // OPS DASHBOARD — LIVE REPORT CARD
           </p>
           <h1 className="max-w-3xl text-balance text-[clamp(2.25rem,5vw,3.75rem)] font-semibold leading-[1.05] tracking-tighter text-text">
             Operations Dashboard
