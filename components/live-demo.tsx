@@ -11,6 +11,48 @@ import SectionHeading from "@/components/section-heading";
 
 const WORKFLOW_URL = "/n8n/workflow/e5336198-9ef1-46e5-8746-4681e17aba1f";
 
+// One plain-English line per node in the workflow, in flow order — the
+// legend under the embed. Keep it jargon-light; the embed itself is the
+// source of truth.
+const NODES = [
+  {
+    name: "Lead",
+    desc: "The front door. The site's /api/lead POSTs every accepted submission here — first stop for a real lead.",
+  },
+  {
+    name: "Verify HMAC",
+    desc: "Re-derives the signature from executionId + nonce + timestamp using the shared secret, checks the timestamp is under 5 minutes old, and compares in constant time. Pure-JS on purpose: n8n's sandbox blocks require('crypto').",
+  },
+  {
+    name: "Signature OK?",
+    desc: "The gate. Wrong signature or stale timestamp → Respond 401, which the site records as a shield event (n8n_rejected) — an honest rejection, not a network error.",
+  },
+  {
+    name: "RDAP Enrich",
+    desc: "Looks up the email's domain on rdap.org: who registered it, when it was created/updated, its status and nameservers. If RDAP can't find the domain, the run continues anyway — a lead never dies because enrichment failed.",
+  },
+  {
+    name: "Map Log Params",
+    desc: "Shapes the enriched data into the log row (executionId, name, email, company, domain, registrar, created, updated, status, nameservers) for the next node.",
+  },
+  {
+    name: "Apps Script Log",
+    desc: "Token-gated GET to the Google Apps Script web app, which appends the row to a Google Sheet — the permanent, client-visible receipt.",
+  },
+  {
+    name: "Respond 200",
+    desc: "All good: answers the webhook with ok:true. The site marks the lead dispatched and prints the tracking number.",
+  },
+  {
+    name: "Respond Degraded",
+    desc: "The Sheets leg failed (e.g. APPS_SCRIPT_URL empty), but the workflow still answers 200 with ok:false — honest degraded, never a silent hang.",
+  },
+  {
+    name: "Respond 401",
+    desc: "The rejection path: bad signature or stale timestamp. The site records it as n8n_rejected in the shield log.",
+  },
+];
+
 // Chrome hiding for the n8n editor iframe (same-origin, so the parent page can
 // inject CSS into the iframe). Selectors were discovered on the live editor
 // page (n8n 1.123) with headless Chrome:
@@ -180,6 +222,27 @@ export default function LiveDemo() {
             Open in a new tab ↗
           </a>
         </div>
+      </div>
+
+      <div className="mt-8 border border-border bg-surface">
+        <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
+          <span className="led-live" aria-hidden="true" />
+          <span>NODES</span>
+          <span className="caret" aria-hidden="true" />
+        </div>
+        <ol className="divide-y divide-border">
+          {NODES.map((node, i) => (
+            <li
+              key={node.name}
+              className="flex flex-col gap-1 px-4 py-3 sm:flex-row sm:items-baseline sm:gap-6"
+            >
+              <span className="shrink-0 font-mono text-sm font-semibold tabular-nums text-text sm:w-44">
+                {String(i + 1).padStart(2, "0")} {node.name}
+              </span>
+              <span className="font-mono text-xs leading-relaxed text-muted">{node.desc}</span>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );
