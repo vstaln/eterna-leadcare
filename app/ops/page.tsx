@@ -26,12 +26,6 @@ const stateColor: Record<string, string> = {
   DEGRADED: "text-err",
 };
 
-type UserGatedItem = { label: string; note: string };
-
-const userGatedItems: UserGatedItem[] = [
-  { label: "5678 EXPOSURE", note: "(user-gated — OCI security list)" },
-];
-
 type LedgerItem = {
   title: string;
   ready: boolean;
@@ -176,24 +170,9 @@ export default async function OpsPage() {
                 </span>
               </li>
             ))}
-          </ul>
-          <div className="border-t border-border bg-surface px-4 py-3">
-            <p className="mb-2 font-mono text-xs uppercase tracking-widest text-muted">
-              User-gated items
-            </p>
-            <ul className="space-y-1.5 font-mono text-xs tabular-nums">
-              {userGatedItems.map((item) => (
-                <li key={item.label} className="flex flex-wrap items-center gap-2">
-                  <span className="led-warn" aria-hidden="true" />
-                  <span className="text-text">{item.label}</span>
-                  <span className="text-warn">PENDING</span>
-                  <span className="text-muted">{item.note}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
+    </ul>
+  </div>
+</section>
 
       <section id="chart" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="TRAFFIC // executions per day" title="What actually came in?" />
