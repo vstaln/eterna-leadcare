@@ -1,14 +1,15 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { House, Gauge, Clock, PaperPlaneTilt } from "@phosphor-icons/react";
+import { House, Gauge, Clock, GitBranch, PaperPlaneTilt } from "@phosphor-icons/react";
 import Magnet from "@/components/Magnet";
 import TourTrigger from "@/components/tour";
 
 const links = [
-  { label: "Home", href: "/", live: true, icon: House },
-  { label: "Live", href: "/live", live: true, icon: Clock },
-  { label: "Ops", href: "/ops", live: true, icon: Gauge },
+  { label: "Home", href: "/", live: true, icon: House, external: false },
+  { label: "Live", href: "/live", live: true, icon: Clock, external: false },
+  { label: "Ops", href: "/ops", live: true, icon: Gauge, external: false },
+  { label: "n8n", href: "/n8n/workflow/e5336198-9ef1-46e5-8746-4681e17aba1f", live: true, icon: GitBranch, external: true },
 ];
 
 export default function Nav() {
@@ -20,7 +21,7 @@ export default function Nav() {
           <Link
             href="/"
             aria-label="Leadcare — home"
-            className="flex items-center gap-2 font-serif text-sm font-semibold tracking-widest text-muted"
+            className="flex items-center gap-2 font-mono text-sm font-semibold tracking-widest text-muted"
           >
             <span>Leadcare</span>
           </Link>
@@ -32,6 +33,8 @@ export default function Nav() {
                   <Link
                     href={link.href}
                     aria-current={pathname === link.href ? "page" : undefined}
+                    target={link.external ? "_blank" : undefined}
+                    rel={link.external ? "noreferrer" : undefined}
                     className="flex items-center gap-1.5 text-sm font-medium text-text transition-colors duration-150 hover:text-muted focus-visible:outline-2 focus-visible:outline-live"
                   >
                     <Icon className="h-4 w-4 text-muted" aria-hidden="true" />

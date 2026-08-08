@@ -136,7 +136,7 @@ export default function LiveDemo() {
         </div>
         <div className="relative">
           {session === "loading" ? (
-            <div className="flex h-[520px] items-center justify-center sm:h-[640px]">
+            <div className="flex h-[400px] items-center justify-center sm:h-[480px]">
               <p className="font-mono text-xs text-muted">opening the live session…</p>
             </div>
           ) : (
@@ -145,7 +145,7 @@ export default function LiveDemo() {
               id="eterna-workflow-iframe"
               src={WORKFLOW_URL}
               title="Leadcare pipeline in n8n — view only"
-              className="h-[520px] w-full border-0 sm:h-[640px]"
+              className="h-[400px] w-full border-0 sm:h-[480px]"
               onLoad={(e) => {
                 const doc = e.currentTarget.contentDocument;
                 if (doc) stripEditorChrome(doc);
