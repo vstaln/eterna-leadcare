@@ -51,3 +51,6 @@ data/
 # SDD plan workspaces (ledgers, briefs, review packages)
 .superpowers/
 data/shield.json
+# renamed Next build dirs — never let Tailwind's auto-source scan see compiled bundles
+/.next-old
+/.next-fresh-build

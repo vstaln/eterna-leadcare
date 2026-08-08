@@ -6,12 +6,15 @@ import CountUp from "@/components/CountUp";
 import ShinyText from "@/components/ShinyText";
 import Magnet from "@/components/Magnet";
 import FaultyTerminal from "@/components/FaultyTerminal";
-import ScrollStack from "@/components/ScrollStack";
+import PipelineDemo from "@/components/pipeline-demo";
 import AnimatedContent from "@/components/AnimatedContent";
 import Beams from "@/components/Beams";
+import LiveDemo from "@/components/live-demo";
 import { listExecutions } from "@/lib/store";
 import { shieldCounts } from "@/lib/shield";
 import { stageStates } from "@/lib/stages";
+import { shortIso } from "@/lib/time";
+import { trackingId } from "@/lib/tracking";
 
 export const dynamic = "force-dynamic";
 
@@ -108,6 +111,12 @@ export default async function HomePage() {
   const shield = await shieldCounts();
   const stages = await stageStates();
 
+  const latestAccepted = ring.find((r) => r.status !== "failed") ?? ring[0] ?? null;
+  const tracking = latestAccepted ? trackingId(latestAccepted.id) : null;
+  const lastLeadText = latestAccepted
+    ? `${trackingId(latestAccepted.id)} · ${latestAccepted.status} · ${shortIso(latestAccepted.created_at)}`
+    : null;
+
   const totals = {
     n: ring.length,
     received: ring.filter((r) => r.status === "received").length,
@@ -151,6 +160,8 @@ export default async function HomePage() {
           </p>
         </div>
       </section>
+
+      <LiveDemo />
 
       <section id="dossier" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="THE APPLICATION" title="About me" />
@@ -328,26 +339,11 @@ export default async function HomePage() {
 
       <section id="pipeline" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="THE PIPELINE" title="The path every lead travels" />
-        <ScrollStack
-          items={stages.map((stage, i) => (
-            <div key={stage.num} className="flex min-h-[45vh] flex-col p-8 md:min-h-[55vh] md:p-12">
-              {cornerPositions.map((pos) => (
-                <span key={pos} aria-hidden="true" className={`pointer-events-none absolute ${pos} px-1 font-mono text-xs text-muted/40`}>
-                  +
-                </span>
-              ))}
-              <div className="flex flex-wrap items-center gap-3">
-                <span className={`led-${stage.led}`} aria-hidden="true" />
-                <span className="font-mono text-xs uppercase tracking-widest text-muted">STAGE {stage.num}</span>
-                <span className={`font-mono text-xs ${stateColor[stage.state]}`}>{stage.state}</span>
-              </div>
-              <h3 className="mt-5 text-3xl font-semibold tracking-tight text-text md:text-4xl">{stage.name}</h3>
-              <p className="mt-3 font-mono text-xs text-muted">
-                sub={["web form", "honeypot", "n8n · rdap", "store", "dashboard"][i]} · source={stage.source}
-              </p>
-              <p className="mt-auto pt-6 font-mono text-xs leading-relaxed text-muted">{stage.note}</p>
-            </div>
-          ))}
+        <PipelineDemo
+          stages={stages}
+          tracking={tracking}
+          shieldBlocked={shield.honeypot}
+          lastLeadText={lastLeadText}
         />
         <p className="mt-3 font-mono text-xs text-muted">
           The same five lockstep stages as the ops dashboard — one vocabulary.

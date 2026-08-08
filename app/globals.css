@@ -417,6 +417,65 @@
   }
 }
 
+/* pipeline-demo — the animated LeadCare pipeline (components/pipeline-demo.tsx) */
+@keyframes pipeline-token-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-live) 55%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 8px transparent;
+  }
+}
+
+.pipeline-token {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  background: var(--color-live);
+  animation: pipeline-token-pulse 1.6s ease-out infinite;
+}
+
+@keyframes pipeline-here-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) rotate(45deg);
+  }
+  60% {
+    transform: scale(1.08) rotate(45deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(45deg);
+  }
+}
+
+.pipeline-here {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border: 2px solid var(--color-live);
+  animation: pipeline-here-pop 350ms var(--ease-smooth-out) both;
+}
+
+@keyframes pipeline-caption-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.pipeline-caption {
+  animation: pipeline-caption-in 300ms var(--ease-smooth-out) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .shiny-text {
     animation: none;
@@ -429,6 +488,15 @@
     transition: none;
   }
   .caret {
+    animation: none;
+  }
+  .pipeline-token {
+    animation: none;
+  }
+  .pipeline-here {
+    animation: none;
+  }
+  .pipeline-caption {
     animation: none;
   }
 }
