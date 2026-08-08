@@ -20,7 +20,7 @@ export default function Nav() {
           <Link
             href="/"
             aria-label="Leadcare — home"
-            className="flex items-center gap-2 font-prompt text-sm font-semibold tracking-widest text-muted"
+            className="flex items-center gap-2 font-serif text-sm font-semibold tracking-widest text-muted"
           >
             <span>Leadcare</span>
           </Link>
