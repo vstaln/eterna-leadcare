@@ -10,7 +10,7 @@ LeadCare is presented as a lead-handling product Eterna could ship: every form s
 
 ## Branch B — front door (phone-only operator decision)
 
-The operator runs this build phone-only (Termux, no GUI browser, no local Docker). The front door is therefore a **hand-coded Next.js app** — the interactive dashboard, `/ops`, and `/behind-the-scenes` live inside it. **Webflow = a template one-pager + written migration plan only, no iframe.** (The JD is Webflow-first; the one-pager proves the Webflow leg, the hand-coded app is the automation depth.)
+The operator runs this build phone-only (Termux, no GUI browser, no local Docker). The front door is therefore a **hand-coded Next.js app** — the interactive dashboard and `/ops` live inside it. **Webflow = a template one-pager + written migration plan only, no iframe.** (The JD is Webflow-first; the one-pager proves the Webflow leg, the hand-coded app is the automation depth.)
 
 ## Data flow (this slice)
 

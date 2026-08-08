@@ -126,11 +126,6 @@ export default async function OpsPage() {
         <div className="mb-6">
           <OpsTotals n={totals.n} received={totals.received} dispatched={totals.dispatched} failed={totals.failed} />
         </div>
-        <div className="mb-6 border border-border bg-surface px-4 py-3 font-mono text-xs leading-relaxed text-muted tabular-nums">
-          <span className="text-text">REALITY KEY</span> — every LOG row is
-          rendered from the real execution store; every other datum is a
-          labeled env reading — nothing is simulated.
-        </div>
         <div className="border border-border bg-surface">
           <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
             <span className="led-ok" aria-hidden="true" />
@@ -171,8 +166,8 @@ export default async function OpsPage() {
       <section id="shield" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="SHIELD LOG // rejected attempts" title="What the shield blocked" />
         <p className="mb-4 border border-border bg-surface px-4 py-3 font-mono text-xs leading-relaxed text-muted tabular-nums">
-          <span className="text-text">TOTALS</span> — honeypot: {shield.honeypot} · malformed
-          requests: {shield.intake_400} · signed-dispatch rejected: {shield.n8n_rejected}
+          <span className="text-text">TOTALS</span> — bots blocked: {shield.honeypot} · bad
+          requests: {shield.intake_400} · rejected by workflow: {shield.n8n_rejected}
         </p>
         <div className="border border-border bg-surface">
           <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">

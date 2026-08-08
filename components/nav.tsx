@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { House, Gauge, Clock, Eye, PaperPlaneTilt } from "@phosphor-icons/react";
+import { House, Gauge, Clock, PaperPlaneTilt } from "@phosphor-icons/react";
 import LiveBadge from "@/components/live-badge";
 import Magnet from "@/components/Magnet";
 import TourTrigger from "@/components/tour";
@@ -11,7 +11,6 @@ const links = [
   { label: "Home", href: "/", live: true, icon: House },
   { label: "Live", href: "/live", live: true, icon: Clock },
   { label: "Ops", href: "/ops", live: true, icon: Gauge },
-  { label: "Behind the Scenes", href: "/behind-the-scenes", live: true, icon: Eye },
 ];
 
 export default function Nav() {
@@ -23,7 +22,7 @@ export default function Nav() {
           <Link
             href="/"
             aria-label="Eterna LeadCare — home"
-            className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted"
+            className="flex items-center gap-2 font-serif text-sm font-semibold uppercase tracking-widest text-muted"
           >
             <span className="led-ok" aria-hidden="true" />
             <span>Eterna LeadCare</span>

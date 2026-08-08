@@ -10,7 +10,6 @@ Built in 48 hours, $0/month free tier, from a phone, with AI pair-programming. E
 
 - Main app: https://eterna.vstal.in
 - Live ops dashboard (real executions): https://eterna.vstal.in/ops
-- Behind the Scenes (git log + CI + AI_LOG + $0 cost): /behind-the-scenes
 - Webflow one-pager: `webflow/one-pager.html` (template; designer build is a user-gated browser step — see docs/webflow-migration.md)
 
 ## Versions

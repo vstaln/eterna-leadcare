@@ -36,8 +36,6 @@ const fitItems = [
   ["Design intelligent workflows with N8N and Google Apps Script", "This site runs the pattern live: intake, honeypot shield, signed dispatch, storage, report card."],
   ["Manage cloud hosting and lead initiatives on Google Cloud / AWS", "I deploy and operate this production site myself, Docker on Oracle Cloud."],
   ["Use AI-enhanced systems to accelerate development", "I build with AI tools daily — this codebase is the evidence."],
-  ["Translate business needs into automated solutions", "This page explains the pipeline in plain English for a non-technical reader."],
-  ["Explore new tools and present innovative solutions", "Self-directed learner — Behind the Scenes documents how this site was built."],
 ];
 
 const cornerPositions = [
@@ -93,7 +91,7 @@ export default async function HomePage() {
                   <a href="/ops" className="stamp stamp-red press text-sm">View live dashboard</a>
                 </Magnet>
                 <Magnet className="inline-flex" padding={10} activeStrength={2}>
-                  <a href="#about" className="press inline-flex items-center gap-2 border border-border px-5 py-3 text-sm font-medium text-text transition hover:border-live focus-visible:outline-2 focus-visible:outline-live">
+                  <a href="#pipeline" className="press inline-flex items-center gap-2 border border-border px-5 py-3 text-sm font-medium text-text transition hover:border-live focus-visible:outline-2 focus-visible:outline-live">
                     How it works
                   </a>
                 </Magnet>
@@ -110,11 +108,7 @@ export default async function HomePage() {
                 <ApplicationForm />
               </div>
               <div className="border-t border-border px-4 py-3 font-mono text-xs leading-relaxed text-muted">
-                Submit → get a tracking number → watch it move on{" "}
-                <a href="/ops" className="underline decoration-ok underline-offset-4 hover:text-text">
-                  /ops
-                </a>
-                .
+                Submit → the receipt prints right here, instantly — tracking number included.
               </div>
             </div>
           </div>
@@ -125,13 +119,15 @@ export default async function HomePage() {
 
       <section id="dossier" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="THE APPLICATION" title="About me" />
-        <div className="mt-10 grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,19rem)] md:items-start">
-          <p className="measure text-base leading-relaxed text-muted">
-            I&apos;m Vstalin — I build web experiences, connect them with automation, and ship with AI
-            tools. This site is my application for the Lead Automation &amp; Web Engineer role at
-            Eterna Indonesia; the live pipeline below is the evidence.
-          </p>
-          <figure className="border border-border bg-surface p-3">
+        <div className="mt-10 grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,19rem)] md:items-stretch">
+          <div className="flex flex-col justify-center">
+            <p className="measure text-base leading-relaxed text-muted">
+              I&apos;m Vstalin — I build web experiences, connect them with automation, and ship with AI
+              tools. This site is my application for the Lead Automation &amp; Web Engineer role at
+              Eterna Indonesia; the live pipeline below is the evidence.
+            </p>
+          </div>
+          <figure className="border border-border bg-surface p-3 md:self-start">
             <img
               src="/vstalingrady.webp"
               alt="Portrait of Vstalin Grady"
@@ -189,14 +185,14 @@ export default async function HomePage() {
         <AnimatedContent distance={16} duration={0.6}>
           <div className="mt-2 flex flex-col gap-2 border border-border bg-surface px-5 py-4 font-mono text-xs tabular-nums text-muted sm:flex-row sm:items-center sm:justify-between">
           <span>
-            <span className="text-text">SHIELD</span> — honeypot: {shield.honeypot} · malformed:{" "}
-            {shield.intake_400} · signed-dispatch rejected: {shield.n8n_rejected}
+            <span className="text-text">SHIELD</span> — bots blocked: {shield.honeypot} · bad requests:{" "}
+            {shield.intake_400} · rejected by workflow: {shield.n8n_rejected}
           </span>
           <span className="stamp stamp-red" aria-hidden="true">BLOCKED, COUNTED</span>
         </div>
         </AnimatedContent>
         <p className="mt-3 font-mono text-xs text-muted">
-          RETAINED RING (LAST 100) — counts of retained rows only, not all-time · every figure store-derived.
+          Last 100 submissions — real numbers, not all-time.
         </p>
       </section>
 
@@ -229,7 +225,7 @@ export default async function HomePage() {
           lastLeadText={lastLeadText}
         />
         <p className="mt-3 font-mono text-xs text-muted">
-          The same five lockstep stages as the ops dashboard — one vocabulary.
+          The same five stages as the ops dashboard.
         </p>
       </section>
 
