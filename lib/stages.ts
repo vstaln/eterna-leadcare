@@ -95,10 +95,12 @@ export async function stageStates(): Promise<Stage[]> {
       name: "LOGGED",
       state: n8nLog.reachable ? "LIVE" : "N/R",
       led: n8nLog.reachable ? "ok" : "warn",
-      source: n8nLog.reachable ? "n8n executions API" : "workflow definition",
+      source: n8nLog.reachable ? "n8n executions API" : "env",
       note: n8nLog.reachable
         ? `n8n execution log live-verified — ${n8nLog.count} record${n8nLog.count === 1 ? "" : "s"}`
-        : "runs inside n8n (docs/n8n-workflow.json); no runtime readout reachable",
+        : !env.N8N_API_KEY
+          ? "N8N_API_KEY empty — create an owner API key in n8n settings (user-gated); the log still records inside n8n"
+          : "n8n execution log unreachable — check N8N_API_KEY and reachability",
     },
     {
       num: "05",
@@ -107,8 +109,8 @@ export async function stageStates(): Promise<Stage[]> {
       led: appsScriptConfigured ? "ok" : "warn",
       source: "env",
       note: appsScriptConfigured
-        ? "APPS_SCRIPT_URL present — deployed outside this device"
-        : "user deploy (docs/apps-script-setup.md) — APPS_SCRIPT_URL empty; the log leg answers 200-degraded until deployed",
+        ? "APPS_SCRIPT_URL present — the receipt leg is deployed"
+        : "APPS_SCRIPT_URL empty — the Sheets receipt leg is not deployed (user-gated, docs/apps-script-setup.md); the dashboard itself is live",
     },
   ];
 }
