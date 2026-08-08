@@ -65,8 +65,8 @@ function fitFlowToCanvas(doc: Document) {
   const bw = maxX - minX;
   const bh = maxY - minY;
   if (!(bw > 0) || !(bh > 0)) return;
-  const pad = 60;
-  const ns = Math.min(1, Math.min((r.width - pad) / bw, (r.height - pad) / bh));
+  const pad = 80;
+  const ns = Math.min((r.width - pad) / bw, (r.height - pad) / bh);
   if (ns <= 0) return;
   const ntx = (r.width - bw * ns) / 2 - minX * ns;
   const nty = (r.height - bh * ns) / 2 - minY * ns;

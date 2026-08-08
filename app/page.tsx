@@ -132,7 +132,7 @@ export default async function HomePage() {
 
   return (
     <div>
-      <section id="hero" className="ledger-lines relative overflow-hidden pt-24 pb-20 sm:pt-32 sm:pb-24">
+      <section id="hero" className="ledger-lines relative flex min-h-screen items-center overflow-hidden py-16 sm:py-20">
         <Beams className="absolute inset-0" />
         <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
           <div className="grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-14 lg:items-start">
@@ -192,6 +192,8 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      <LiveDemo />
 
       <section id="dossier" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="THE APPLICATION" title="About me" />
@@ -380,7 +382,6 @@ export default async function HomePage() {
         </p>
       </section>
 
-      <LiveDemo />
 
     </div>
   );
