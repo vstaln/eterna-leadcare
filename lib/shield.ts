@@ -4,7 +4,7 @@
 // The LeadCare promise is "nothing simulated". If the pipeline rejects a
 // submission (spam bot caught by the honeypot, malformed request, n8n
 // rejecting our signed dispatch), that event MUST be recorded somewhere —
-// otherwise the ops dashboard cannot honestly say "N blocked".
+// otherwise the dashboard cannot honestly say "N blocked".
 //
 // DESIGN DECISIONS:
 // 1. Separate sidecar file (data/shield.json), NOT a new status in the
@@ -58,7 +58,7 @@ export async function listShield(limit = 20): Promise<ShieldEntry[]> {
   return (await readShield()).slice(0, limit);
 }
 
-// Counts per reason — the honest "N blocked" the ops page renders.
+// Counts per reason — the honest "N blocked" the dashboard renders.
 export async function shieldCounts(): Promise<Record<ShieldReason, number>> {
   const list = await readShield();
   return {

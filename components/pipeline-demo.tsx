@@ -13,7 +13,7 @@
 // "pipeline-demo" block.
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowClockwise, Play } from "@phosphor-icons/react";
+import type { CSSProperties } from "react";
 import { useInView, useReducedMotion } from "motion/react";
 
 export type PipelineStageProp = {
@@ -66,8 +66,8 @@ const STAGE_COPY: Record<string, { what: string; internals: string }> = {
     internals: "Apps Script → Google Sheets · ELC-2026-XXXXX",
   },
   LIVE: {
-    what: "You watch it live. The ops dashboard renders every row and every state honestly — nothing simulated.",
-    internals: "/ops dashboard",
+    what: "You watch it live. The dashboard on the home page renders every row and every state honestly — nothing simulated.",
+    internals: "home dashboard",
   },
 };
 
@@ -77,7 +77,7 @@ const CAPTIONS: string[] = [
   "Bots get blocked and counted; the signed dispatch is verified.",
   "n8n looks up who's writing — the email domain, via RDAP.",
   "The lead is written down with its tracking number.",
-  "Live on the ops dashboard — every row real, nothing simulated.",
+  "Live on the dashboard — every row real, nothing simulated.",
 ];
 
 const cornerPositions = [
@@ -90,6 +90,11 @@ const cornerPositions = [
 // Center of stage i in a row of n stages, in percent of track width.
 const center = (i: number, n: number) => ((i + 0.5) / n) * 100;
 
+// The demo scenarios: what a visitor can watch happen to a lead. The happy
+// path is the real pipeline (stages come from live server probes); the spam
+// and failure runs stop at the stage where they're actually caught.
+type Scenario = "accepted" | "spam" | "failed";
+
 export default function PipelineDemo({
   stages,
   tracking,
@@ -101,6 +106,7 @@ export default function PipelineDemo({
   const reduced = useReducedMotion();
 
   const [phase, setPhase] = useState(-1);
+  const [scenario, setScenario] = useState<Scenario>("accepted");
   const [runId, setRunId] = useState(0);
   const timers = useRef<number[]>([]);
   const tokenRef = useRef<HTMLDivElement>(null);
@@ -111,17 +117,20 @@ export default function PipelineDemo({
     timers.current = [];
   }, []);
 
-  const startRun = useCallback(() => {
+  const runScenario = useCallback((next: Scenario) => {
     stopRun();
     // Hard-reset (no transition) so a replay snaps back instead of sliding.
     if (tokenRef.current) tokenRef.current.style.transition = "none";
     if (progressRef.current) progressRef.current.style.transition = "none";
+    setScenario(next);
     setPhase(-1);
     setRunId((n) => n + 1);
     requestAnimationFrame(() => {
       if (tokenRef.current) tokenRef.current.style.transition = "";
       if (progressRef.current) progressRef.current.style.transition = "";
-      for (let i = 0; i < stages.length; i++) {
+      // Where each scenario stops on the track.
+      const end = next === "spam" ? 1 : next === "failed" ? 2 : stages.length - 1;
+      for (let i = 0; i <= end; i++) {
         timers.current.push(
           window.setTimeout(() => setPhase(i), HOLD_MS + i * HOP_MS)
         );
@@ -133,20 +142,66 @@ export default function PipelineDemo({
     if (!inView || reduced) return;
     // Defer so setState never happens synchronously in the effect body
     // (react-hooks/set-state-in-effect); the run is driven by its own timers.
-    const id = window.setTimeout(startRun, 100);
+    const id = window.setTimeout(() => runScenario("accepted"), 100);
     return () => window.clearTimeout(id);
-  }, [inView, reduced, startRun]);
+  }, [inView, reduced, runScenario]);
+
+  // The form can ask the pipeline to show where a just-sent lead goes:
+  // scrolls here and plays the happy path. Custom event keeps the two
+  // islands decoupled (no prop drilling through the server page).
+  useEffect(() => {
+    const onDemo = () => runScenario("accepted");
+    window.addEventListener("leadcare:demo-run", onDemo);
+    return () => window.removeEventListener("leadcare:demo-run", onDemo);
+  }, [runScenario]);
 
   useEffect(() => stopRun, [stopRun]);
 
   const running = phase >= 0;
   const progress = running ? ((phase + 1) / stages.length) * 100 : 0;
+
+  const outcomes: Record<Scenario, { phase: number; caption: string; note: string }> = {
+    accepted: {
+      phase: stages.length - 1,
+      caption: tracking
+        ? `Shown live now — ${tracking}`
+        : "Logged with a tracking number, live on the dashboard.",
+      note: "Every accepted lead is written down with a tracking number.",
+    },
+    spam: {
+      phase: 1,
+      caption: "BLOCKED — the honeypot caught the bot before it became a lead. Counted, not logged.",
+      note: "SHIELD +1 BLOCKED · no tracking number issued",
+    },
+    failed: {
+      phase: 2,
+      caption: "REJECTED — n8n refused the dispatch (bad signature). Nothing written; counted as failed.",
+      note: "status: failed · no tracking number issued",
+    },
+  };
+
+  const outcome = outcomes[scenario];
+  const atEnd = running && phase >= outcome.phase;
   const caption = running
-    ? CAPTIONS[Math.max(0, phase)]
-    : "Pipeline idle — press run.";
+    ? atEnd
+      ? outcome.caption
+      : CAPTIONS[Math.max(0, phase)]
+    : "Pipeline idle — pick a scenario.";
   const note = running
-    ? stages[Math.max(0, phase)].note
-    : "Five lockstep stages — same vocabulary as the ops dashboard.";
+    ? atEnd
+      ? outcome.note
+      : stages[Math.max(0, phase)].note
+    : "Five lockstep stages — same vocabulary as the dashboard above.";
+
+  // The token's color follows the outcome: live for accepted, warn for a
+  // blocked bot, err for a failed dispatch.
+  const tokenColor =
+    scenario === "spam"
+      ? "var(--color-warn)"
+      : scenario === "failed"
+        ? "var(--color-err)"
+        : "var(--color-live)";
+  const trackStyle = { "--pipeline-token-color": tokenColor } as CSSProperties;
 
   const nodes = (
     <div className="relative grid grid-cols-1 gap-px bg-border md:grid-cols-5">
@@ -206,8 +261,11 @@ export default function PipelineDemo({
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
       <span className="flex items-center gap-2">
+        <span className="stamp stamp-red !p-0.5 !px-2 !text-[0.625rem]" aria-hidden="true">
+          DEMO
+        </span>
         <span className="led-live" aria-hidden="true" />
-        <span>PIPELINE // one real lead</span>
+        <span>PIPELINE // where a lead goes</span>
         <span className="caret" aria-hidden="true" />
       </span>
       <span className="tabular-nums">TRACKING {tracking ?? "—"}</span>
@@ -231,18 +289,24 @@ export default function PipelineDemo({
             ? ` · LAST ${lastLeadText}`
             : " · NO LEADS YET — submit a test lead below"}
         </span>
-        <button
-          type="button"
-          onClick={startRun}
-          className="inline-flex items-center gap-2 border border-border px-5 py-2.5 text-sm font-medium text-text transition hover:border-live focus-visible:outline-2 focus-visible:outline-live"
-        >
-          {running ? (
-            <ArrowClockwise size={14} weight="bold" aria-hidden="true" />
-          ) : (
-            <Play size={14} weight="bold" aria-hidden="true" />
-          )}
-          {running ? "RUN AGAIN" : "RUN PIPELINE"}
-        </button>
+      </div>
+      <div className="flex flex-wrap items-center gap-2 border-t border-border px-4 py-3">
+        <span className="mr-1 font-mono text-xs text-muted">TRY A SCENARIO</span>
+        {(["accepted", "spam", "failed"] as const).map((s) => (
+          <button
+            key={s}
+            type="button"
+            onClick={() => runScenario(s)}
+            aria-pressed={scenario === s}
+            className={`border px-3 py-1.5 font-mono text-xs transition focus-visible:outline-2 focus-visible:outline-live ${
+              scenario === s
+                ? "border-live text-text"
+                : "border-border text-muted hover:border-live hover:text-text"
+            }`}
+          >
+            {s === "accepted" ? "LEAD ACCEPTED" : s === "spam" ? "SPAM BLOCKED" : "FAILED DISPATCH"}
+          </button>
+        ))}
       </div>
     </div>
   );
@@ -257,7 +321,7 @@ export default function PipelineDemo({
             The five stages — rendered statically under reduced motion.
           </p>
           <p className="mt-1 font-mono text-xs leading-relaxed text-muted">
-            Five lockstep stages — same vocabulary as the ops dashboard.
+            Five lockstep stages — same vocabulary as the dashboard above.
           </p>
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-4 py-3">
@@ -276,6 +340,7 @@ export default function PipelineDemo({
     <div
       ref={ref}
       className="relative overflow-hidden border border-border bg-surface"
+      style={trackStyle}
     >
       {header}
       {/* the track — a real lead flows left → right */}
@@ -286,10 +351,11 @@ export default function PipelineDemo({
         />
         <div
           ref={progressRef}
-          className="absolute left-0 top-1/2 h-px -translate-y-1/2 bg-live"
+          className="absolute left-0 top-1/2 h-px -translate-y-1/2"
           style={{
             width: `${progress}%`,
             opacity: running ? 1 : 0,
+            backgroundColor: tokenColor,
             transition: "width 900ms var(--ease-smooth-out)",
           }}
           aria-hidden="true"

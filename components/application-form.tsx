@@ -1,7 +1,6 @@
 "use client";
 import { FormEvent, useState } from "react";
 import { CheckCircle } from "@phosphor-icons/react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,6 +10,18 @@ export default function ApplicationForm() {
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [message, setMessage] = useState("");
   const [sentTracking, setSentTracking] = useState<string | null>(null);
+  const [sentStatus, setSentStatus] = useState<string | null>(null);
+
+  // The five stops a lead makes — same vocabulary as the pipeline demo and
+  // the home dashboard. The first three are lit after a successful submit
+  // (captured → shield passed → signed dispatch to n8n); LOGGED + LIVE are
+  // where it lands next.
+  const JOURNEY = ["CAPTURED", "SHIELD", "N8N", "LOGGED", "LIVE"] as const;
+
+  function watchItMove() {
+    document.getElementById("pipeline")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.dispatchEvent(new CustomEvent("leadcare:demo-run"));
+  }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -34,12 +45,13 @@ export default function ApplicationForm() {
       if (!response.ok || !result.ok) throw new Error(result.error || "Submission failed");
       setState("sent");
       // LeadCare promise: every accepted lead gets a tracking number the
-      // visitor can follow on the ops dashboard. Fall back to the raw id
-      // if the API didn't return one (older deployments).
+      // terminal prints right here, instantly. Fall back to the raw id if
+      // the API didn't return one (older deployments).
       setSentTracking(result.tracking ?? null);
+      setSentStatus(result.status ?? "dispatched");
       setMessage(
         result.tracking
-          ? `Received — tracking number ${result.tracking}. Watch it move on the ops dashboard.`
+          ? `Received — shown live right here.`
           : `Received. Execution ID: ${result.executionId || "recorded"}`
       );
       form.reset();
@@ -123,14 +135,34 @@ export default function ApplicationForm() {
         <span>{message}</span>
       </p>
       {state === "sent" && sentTracking && (
-        <p className="mt-2">
-          <Link
-            href={`/live?tracking=${sentTracking}`}
-            className="font-mono text-xs underline decoration-ok underline-offset-4 hover:text-text"
+        <div className="mt-3 border border-border bg-base px-3 py-3">
+          <p className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs tabular-nums">
+            <span className="flex items-center gap-2">
+              <span className="led-ok" aria-hidden="true" />
+              <span className="text-muted">TRACKING</span>
+              <span className="text-text">{sentTracking}</span>
+            </span>
+            <span className="ml-auto text-ok">{sentStatus?.toUpperCase()}</span>
+          </p>
+          <p
+            className="mt-2 flex flex-wrap items-center gap-x-1.5 gap-y-1 font-mono text-xs"
+            aria-label="Where your lead goes next"
           >
-            Track it live on the ledger →
-          </Link>
-        </p>
+            {JOURNEY.map((stop, i) => (
+              <span key={stop} className={i < 3 ? "text-ok" : "text-muted"}>
+                {stop}
+                {i < JOURNEY.length - 1 ? " →" : ""}
+              </span>
+            ))}
+          </p>
+          <button
+            type="button"
+            onClick={watchItMove}
+            className="mt-2.5 inline-flex items-center gap-1.5 border border-border px-3 py-1.5 font-mono text-xs text-text transition hover:border-live focus-visible:outline-2 focus-visible:outline-live"
+          >
+            Watch it move on the pipeline ↓
+          </button>
+        </div>
       )}
     </form>
   );

@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Leadcare — track a lead",
   description:
-    "Enter the tracking number the form gave you and see where the lead is on the ledger — the same real store the ops dashboard renders.",
+    "Enter the tracking number the form gave you and see where the lead is on the ledger — the same real store the dashboard renders.",
 };
 
 const statusTone: Record<string, string> = {
@@ -27,13 +27,16 @@ export default async function LivePage({
   const target = (tracking ?? "").trim().toUpperCase();
   const ring = await listExecutions(100);
   const row = target ? (ring.find((r) => trackingId(r.id) === target) ?? null) : null;
+  const latestCode = ring.find((r) => r.status !== "failed")?.id
+    ? trackingId(ring.find((r) => r.status !== "failed")!.id)
+    : null;
 
   return (
     <div className="mx-auto max-w-6xl px-6 pt-24 pb-20 sm:pt-32">
       <SectionHeading eyebrow="TRACK A LEAD" title="Your lead, on the ledger" />
       <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted">
         Enter the tracking number the capture terminal gave you — it looks up the same real store
-        the ops dashboard renders. No simulated statuses.
+        the dashboard on the home page renders. No simulated statuses.
       </p>
 
       <div className="mt-8 max-w-2xl">
@@ -44,8 +47,12 @@ export default async function LivePage({
         {!target && (
           <p className="border border-border bg-surface px-5 py-4 font-mono text-xs text-muted">
             Format: <span className="text-text">ELC-2026-XXXXX</span> — five digits, zero-padded.
-            Example from the demo:{" "}
-            <span className="text-text">ELC-2026-44691</span>.
+            {latestCode && (
+              <>
+                Latest on the ledger:{" "}
+                <span className="text-text">{latestCode}</span>.
+              </>
+            )}
           </p>
         )}
 
@@ -83,7 +90,7 @@ export default async function LivePage({
               )}
             </dl>
             <p className="border-t border-border px-5 py-3 font-mono text-xs text-muted">
-              Same ledger as /ops — if it shows here, it happened.
+              Same ledger as the home-page dashboard — if it shows here, it happened.
             </p>
           </div>
         )}

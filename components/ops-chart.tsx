@@ -1,8 +1,8 @@
 // ops-chart.tsx — recharts stacked bar of executions per day.
 //
 // Recharts components are client-only, so this is the one client island on
-// the otherwise server-rendered ops page. The DATA (series) is computed
-// server-side in app/ops/page.tsx from the real execution store and passed
+// the otherwise server-rendered home page. The DATA (series) is computed
+// server-side in app/page.tsx from the real execution store and passed
 // in as props — this component only renders. Every label on the page around
 // it ("RETAINED RING (LAST 100)", "not all-time") keeps the honesty promise:
 // the chart never fabricates history, and zero-filled days are rendered as

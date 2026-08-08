@@ -20,7 +20,7 @@ PENDING, DEGRADED) instead of hidden.
   a version switcher.
 - React Bits effects were added: DecryptedText headline, CountUp totals, ShinyText,
   Magnet CTAs, FaultyTerminal, ScrollStack, FallingText, ascii-art.
-- `/ops` = the honest report card (stages, totals, shield counts, tracking column).
+- The home page hosts the whole honest report card (stages, totals, shield counts, chart, ledger, tracking column); `/ops` redirects to `/#dashboard`.
 - CI on push to `main`: lint + typecheck + build + gitleaks. Keep it green.
 
 ## Infrastructure map (Oracle box, `oracle-old`, 168.110.203.180)
@@ -99,9 +99,10 @@ ssh oracle-old 'sudo cp -a /home/ubuntu/eterna-leadcare/. /opt/eterna-leadcare/ 
   `/opt/eterna/app/data`) and keep `/opt/eterna/app/.env` identical to
   `/opt/eterna-leadcare/.env` (including `N8N_API_KEY`). Deploying from
   `/opt/eterna-leadcare` is preferred.
-- Verify after deploy: `curl -s https://eterna.vstal.in/ops` (stages) and submit
+- Verify after deploy: `curl -s https://eterna.vstal.in/` (stages on the home dashboard) and submit
   a test lead (`POST https://eterna.vstal.in/api/lead`, `website` field empty =
-  honeypot must be empty) → expect a tracking number, then see it on `/ops`.
+  honeypot must be empty) → expect a tracking number, then see it on
+  `https://eterna.vstal.in/live?tracking=ELC-2026-XXXXX` and on the home dashboard.
 
 ## Remaining work (do these, in order)
 
@@ -110,7 +111,7 @@ ssh oracle-old 'sudo cp -a /home/ubuntu/eterna-leadcare/. /opt/eterna-leadcare/ 
    set it in `/opt/eterna-leadcare/.env` and recreate the app container.
 2. **`/live` tracking page** — nav shows "Live — soon". Build a page where a
    visitor enters their tracking number (`ELC-…`) and sees their lead's path.
-   Reuse `lib/store.ts` + the tracking column logic from `/ops`. Wire the form
+   Reuse `lib/store.ts` + the tracking column logic from the dashboard. Wire the form
    success message to link to it.
 3. Optional polish only after 1–2: anything else must keep the honest-ledger
    concept and the paper/terminal duality intact. No ET-48, no "PRODUCT DEMO"

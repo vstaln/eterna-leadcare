@@ -232,46 +232,6 @@
   }
 }
 
-.driver-popover {
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  color: var(--color-text);
-  font-family: var(--font-sans);
-}
-
-.driver-popover .driver-popover-title {
-  color: var(--color-text);
-  font-weight: 600;
-}
-
-.driver-popover .driver-popover-description {
-  color: var(--color-muted);
-}
-
-.driver-popover .driver-popover-progress-text {
-  color: var(--color-muted);
-}
-
-.driver-popover button {
-  background-color: var(--color-primary);
-  color: var(--color-primary-foreground);
-  border: none;
-  border-radius: 6px;
-  padding: 0.5rem 1rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.driver-popover button:hover {
-  filter: brightness(1.1);
-}
-
-.driver-popover .driver-popover-close-btn {
-  background: transparent;
-  color: var(--color-muted);
-  padding: 0.25rem;
-}
-
 /* ============ the operations ledger — one world ============ */
 
 .ledger-lines {
@@ -421,7 +381,7 @@
 @keyframes pipeline-token-pulse {
   0%,
   100% {
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-live) 55%, transparent);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--pipeline-token-color, var(--color-live)) 55%, transparent);
   }
   50% {
     box-shadow: 0 0 0 8px transparent;
@@ -433,7 +393,7 @@
   width: 14px;
   height: 14px;
   border-radius: 9999px;
-  background: var(--color-live);
+  background: var(--pipeline-token-color, var(--color-live));
   animation: pipeline-token-pulse 1.6s ease-out infinite;
 }
 
@@ -457,7 +417,7 @@
   right: 0.5rem;
   width: 0.5rem;
   height: 0.5rem;
-  border: 2px solid var(--color-live);
+  border: 2px solid var(--pipeline-token-color, var(--color-live));
   animation: pipeline-here-pop 350ms var(--ease-smooth-out) both;
 }
 

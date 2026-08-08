@@ -9,14 +9,14 @@ Built in 48 hours, $0/month free tier, from a phone, with AI pair-programming. E
 ## Live links
 
 - Main app: https://eterna.vstal.in
-- Live ops dashboard (real executions): https://eterna.vstal.in/ops
+- Live dashboard (real executions, on the home page): https://eterna.vstal.in/#dashboard
 - Webflow one-pager: `webflow/one-pager.html` (template; designer build is a user-gated browser step — see docs/webflow-migration.md)
 
 ## Versions
 
 - **v3 — The Operations Ledger** (default; `/` redirects here): the paper/print world — same pipeline, same real data, a deliberately different visual language. Design doc: `DESIGN-v3.md`.
 - **v2 — The terminal**: the dark console report card. `/v2`.
-- Version switcher in the nav and footer of both; `/ops` (the shared honest report card) and all API routes are version-independent.
+- Version switcher in the nav and footer of both; the home-page dashboard (the honest report card) and all API routes are version-independent.
 
 ## The pipeline (one vocabulary everywhere)
 
@@ -32,12 +32,12 @@ CAPTURED → SPAM SHIELD → RESEARCHED → LOGGED → LIVE
 | **Logged** | Execution store + Apps Script → Sheets | Permanent, client-visible record | LIVE / N/R |
 | **Live** | Ops dashboard | Watch every lead move, honestly | LIVE / DEGRADED |
 
-These five names are **lockstep** across the home page diagram, the ops dashboard, the ASCII art, and the Webflow one-pager — one vocabulary, never mixed.
+These five names are **lockstep** across the home page diagram, the dashboard, the ASCII art, and the Webflow one-pager — one vocabulary, never mixed.
 
 ## What it proves
 
-- **Every claim is verifiable.** The `/ops` page renders the real execution store; every other datum is a labeled env reading — nothing is simulated. Unreadable instruments show **N/R**, never green lights; pending pieces show **PENDING**; the pre-deploy state shows **DEGRADED** honestly.
-- **Every accepted lead gets a tracking number** (`ELC-2026-XXXXX`) shown in the form's success message and on the ops dashboard — the "like J&T tracking, but for leads" promise.
+- **Every claim is verifiable.** The dashboard on the home page renders the real execution store; every other datum is a labeled env reading — nothing is simulated. Unreadable instruments show **N/R**, never green lights; pending pieces show **PENDING**; the pre-deploy state shows **DEGRADED** honestly.
+- **Every accepted lead gets a tracking number** (`ELC-2026-XXXXX`) shown in the form's success message and on the dashboard — the "like J&T tracking, but for leads" promise.
 - **The shield records, it doesn't pretend.** Honeypot hits, malformed requests, and n8n rejections are logged to `data/shield.json` and shown in the SHIELD LOG section with honest counts.
 - **The chart never fabricates history.** The per-day stacked bar is bucketed from the retained ring (last 100), zero-filled, labeled "not all-time".
 

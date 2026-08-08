@@ -10,8 +10,8 @@ const jetbrainsMono = JetBrains_Mono({ weight: ["400", "500", "600", "700"], sub
 export const metadata: Metadata = {
   metadataBase: new URL("https://eterna.vstal.in"),
   title: "Leadcare — every lead, checked, logged, shown live",
-  description: "Leadcare: a live lead-handling demo — honeypot shield, signed dispatch, execution store, and an honest ops dashboard. Every lead gets a tracking number.",
-  openGraph: { title: "Leadcare — every lead, checked, logged, shown live", description: "Leadcare: a live lead-handling demo — honeypot shield, signed dispatch, execution store, and an honest ops dashboard. Every lead gets a tracking number.", url: "https://eterna.vstal.in", siteName: "Leadcare", locale: "en_US", type: "website" },
+  description: "Leadcare: a live lead-handling demo — honeypot shield, signed dispatch, execution store, and an honest dashboard. Every lead gets a tracking number.",
+  openGraph: { title: "Leadcare — every lead, checked, logged, shown live", description: "Leadcare: a live lead-handling demo — honeypot shield, signed dispatch, execution store, and an honest dashboard. Every lead gets a tracking number.", url: "https://eterna.vstal.in", siteName: "Leadcare", locale: "en_US", type: "website" },
 };
 
 const DialPanel = process.env.NODE_ENV !== "production" ? (await import("@/components/dial-panel")).default : null;

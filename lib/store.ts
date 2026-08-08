@@ -13,17 +13,18 @@ export type Execution = {
   error?: string;
 };
 
-let cache: Execution[] | null = null;
-
 async function load(): Promise<Execution[]> {
-  if (!cache) {
-    try {
-      cache = JSON.parse(await fs.readFile(FILE, "utf8")) as Execution[];
-    } catch {
-      cache = [];
-    }
+  // No module-level cache: Next.js may hold separate module instances for
+  // pages vs route handlers (and separate processes in multi-instance
+  // deploys). A stale in-memory copy made pages serve old rows forever —
+  // new leads never showed up on the dashboard and lookups said "no such
+  // tracking". The ring is capped at 100 rows (~KB), so a fresh read per
+  // call is cheap and always honest.
+  try {
+    return JSON.parse(await fs.readFile(FILE, "utf8")) as Execution[];
+  } catch {
+    return []; // missing or corrupt file = no executions yet (honest zero)
   }
-  return cache;
 }
 
 async function persist(list: Execution[]) {

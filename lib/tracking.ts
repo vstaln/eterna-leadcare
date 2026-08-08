@@ -8,7 +8,7 @@
 // Format: ELC-2026-XXXXX  (brand prefix + year + 5-digit hash fragment).
 // Deterministic: same UUID always yields the same code, on any renderer
 // (server or client), which is what lets the form's success message show
-// the exact same code the ops dashboard shows.
+// the exact same code the dashboard shows.
 
 export function trackingId(id: string): string {
   // Simple 32-bit FNV-1a-style hash over the UUID string.

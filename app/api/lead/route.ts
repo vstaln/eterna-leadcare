@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
     await updateExecution(executionId, { status: "dispatched", stage: "dispatched" });
     // Return the tracking code alongside the internal execution id — the
     // form's success message shows it to the visitor.
-    return NextResponse.json({ ok: true, executionId, tracking: trackingId(executionId) });
+    return NextResponse.json({ ok: true, executionId, tracking: trackingId(executionId), status: "dispatched" });
   } catch {
     await updateExecution(executionId, {
       status: "failed",
