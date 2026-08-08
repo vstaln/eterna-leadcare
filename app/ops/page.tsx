@@ -6,6 +6,7 @@ import { clock, relativeAge, shortIso } from "@/lib/time";
 import { trackingId } from "@/lib/tracking";
 import { listShield, shieldCounts } from "@/lib/shield";
 import OpsChart from "@/components/ops-chart";
+import OpsTotals from "@/components/ops-totals";
 
 export const dynamic = "force-dynamic";
 
@@ -208,50 +209,60 @@ export default async function OpsPage() {
         </div>
       </section>
 
-      <section id="signal" className="mx-auto max-w-6xl px-6 py-16">
+      <section id="signal" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="SIGNAL // pipeline status" title="Is it real?" />
+        <div className="mb-6">
+          <OpsTotals n={totals.n} received={totals.received} dispatched={totals.dispatched} failed={totals.failed} />
+        </div>
         <div className="mb-6 border border-border bg-surface px-4 py-3 font-mono text-xs leading-relaxed text-muted tabular-nums">
           <span className="text-text">REALITY KEY</span> — every LOG row is
           rendered from the real execution store; every other datum is a
           labeled env reading — nothing is simulated.
         </div>
-        <ul className="divide-y divide-border border border-border bg-surface">
-          {stages.map((stage) => (
-            <li
-              key={stage.num}
-              className="flex flex-col gap-1 px-4 py-3 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6 tabular-nums"
-            >
-              <span className="flex items-center gap-3 font-mono text-sm">
-                <span className={`led-${stage.led}`} aria-hidden="true" />
-                <span className="text-text">
-                  {stage.num} {stage.name}
+        <div className="border border-border bg-surface">
+          <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
+            <span className="led-ok" aria-hidden="true" />
+            <span>$ ./status</span>
+            <span className="caret" aria-hidden="true" />
+          </div>
+          <ul className="divide-y divide-border">
+            {stages.map((stage) => (
+              <li
+                key={stage.num}
+                className="flex flex-col gap-1 px-4 py-3 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6 tabular-nums"
+              >
+                <span className="flex items-center gap-3 font-mono text-sm">
+                  <span className={`led-${stage.led}`} aria-hidden="true" />
+                  <span className="text-text">
+                    {stage.num} {stage.name}
+                  </span>
+                  <span className={stateColor[stage.state]}>{stage.state}</span>
                 </span>
-                <span className={stateColor[stage.state]}>{stage.state}</span>
-              </span>
-              <span className="font-mono text-xs text-muted">
-                source={stage.source} · {stage.note}
-              </span>
-            </li>
-          ))}
-        </ul>
-        <div className="border-t border-border bg-surface px-4 py-3">
-          <p className="mb-2 font-mono text-xs uppercase tracking-widest text-muted">
-            User-gated items
-          </p>
-          <ul className="space-y-1.5 font-mono text-xs tabular-nums">
-            {userGatedItems.map((item) => (
-              <li key={item.label} className="flex flex-wrap items-center gap-2">
-                <span className="led-warn" aria-hidden="true" />
-                <span className="text-text">{item.label}</span>
-                <span className="text-warn">PENDING</span>
-                <span className="text-muted">{item.note}</span>
+                <span className="font-mono text-xs text-muted">
+                  source={stage.source} · {stage.note}
+                </span>
               </li>
             ))}
           </ul>
+          <div className="border-t border-border bg-surface px-4 py-3">
+            <p className="mb-2 font-mono text-xs uppercase tracking-widest text-muted">
+              User-gated items
+            </p>
+            <ul className="space-y-1.5 font-mono text-xs tabular-nums">
+              {userGatedItems.map((item) => (
+                <li key={item.label} className="flex flex-wrap items-center gap-2">
+                  <span className="led-warn" aria-hidden="true" />
+                  <span className="text-text">{item.label}</span>
+                  <span className="text-warn">PENDING</span>
+                  <span className="text-muted">{item.note}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 
-      <section id="chart" className="mx-auto max-w-6xl px-6 py-16">
+      <section id="chart" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="TRAFFIC // executions per day" title="What actually came in?" />
         <OpsChart series={series} total={totals.n} />
         <p className="mt-3 font-mono text-xs text-muted tabular-nums">
@@ -260,64 +271,78 @@ export default async function OpsPage() {
         </p>
       </section>
 
-      <section id="shield" className="mx-auto max-w-6xl px-6 py-16">
+      <section id="shield" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="SHIELD LOG // rejected attempts" title="What the shield blocked" />
         <p className="mb-4 border border-border bg-surface px-4 py-3 font-mono text-xs leading-relaxed text-muted tabular-nums">
           <span className="text-text">TOTALS</span> — honeypot: {shield.honeypot} · malformed
           requests: {shield.intake_400} · signed-dispatch rejected: {shield.n8n_rejected}
         </p>
-        {shieldRows.length === 0 ? (
-          <div className="border border-border bg-surface px-4 py-8 text-center font-mono text-sm text-muted">
-            SHIELD LOG EMPTY — no rejections recorded; the honeypot has never been triggered.
+        <div className="border border-border bg-surface">
+          <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
+            <span className="led-warn" aria-hidden="true" />
+            <span>$ ./shield --log</span>
+            <span className="caret" aria-hidden="true" />
           </div>
-        ) : (
-          <div className="overflow-x-auto border border-border bg-surface">
-            <table className="w-full min-w-[480px] text-left font-mono text-xs tabular-nums sm:text-sm">
-              <thead className="border-b border-border text-muted">
-                <tr>
-                  <th scope="col" className="px-4 py-2 font-medium">REASON</th>
-                  <th scope="col" className="px-4 py-2 font-medium">WHEN</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {shieldRows.map((entry) => (
-                  <tr key={entry.id}>
-                    <td className="px-4 py-2 text-warn">{entry.reason.toUpperCase()}</td>
-                    <td className="px-4 py-2 text-muted">{shortIso(entry.at)}</td>
+          {shieldRows.length === 0 ? (
+            <div className="px-4 py-8 text-center font-mono text-sm text-muted">
+              SHIELD LOG EMPTY — no rejections recorded; the honeypot has never been triggered.
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[480px] text-left font-mono text-xs tabular-nums sm:text-sm">
+                <thead className="border-b border-border text-muted">
+                  <tr>
+                    <th scope="col" className="px-4 py-2 font-medium">REASON</th>
+                    <th scope="col" className="px-4 py-2 font-medium">WHEN</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {shieldRows.map((entry) => (
+                    <tr key={entry.id}>
+                      <td className="px-4 py-2 text-warn">{entry.reason.toUpperCase()}</td>
+                      <td className="px-4 py-2 text-muted">{shortIso(entry.at)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
       </section>
 
-      <section id="ledger" className="mx-auto max-w-6xl px-6 py-16">
+      <section id="ledger" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="LEDGER // known unknowns" title="What&apos;s still missing?" />
-        <ul className="divide-y divide-border border border-border bg-surface">
-          {ledgerItems.map((item) => (
-            <li key={item.title} className="flex items-start gap-3 px-4 py-3">
-              <span
-                aria-hidden="true"
-                className="mt-0.5 h-3.5 w-3.5 shrink-0 border border-muted/50"
-              />
-              <div>
-                <p className="font-mono text-sm tabular-nums">
-                  <span className="text-text">{item.title}</span>
-                  {item.ready ? (
-                    <span className="ml-2 text-ok">CONFIGURED</span>
-                  ) : (
-                    <>
-                      <span className="ml-2 text-warn">PENDING</span>
-                      <span className="ml-2 text-muted">{item.note}</span>
-                    </>
-                  )}
-                </p>
-                <p className="mt-1 text-xs text-muted">{item.description}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <div className="border border-border bg-surface">
+          <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
+            <span className="led-warn" aria-hidden="true" />
+            <span>$ ./ledger --known-unknowns</span>
+            <span className="caret" aria-hidden="true" />
+          </div>
+          <ul className="divide-y divide-border">
+            {ledgerItems.map((item) => (
+              <li key={item.title} className="flex items-start gap-3 px-4 py-3">
+                <span
+                  aria-hidden="true"
+                  className="mt-0.5 h-3.5 w-3.5 shrink-0 border border-muted/50"
+                />
+                <div>
+                  <p className="font-mono text-sm tabular-nums">
+                    <span className="text-text">{item.title}</span>
+                    {item.ready ? (
+                      <span className="ml-2 text-ok">CONFIGURED</span>
+                    ) : (
+                      <>
+                        <span className="ml-2 text-warn">PENDING</span>
+                        <span className="ml-2 text-muted">{item.note}</span>
+                      </>
+                    )}
+                  </p>
+                  <p className="mt-1 text-xs text-muted">{item.description}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
         {appsScriptPending && (
           <div className="mt-4 border border-warn/40 bg-surface px-4 py-3 font-mono text-xs leading-relaxed text-muted tabular-nums">
             <span className="text-warn">DEGRADED</span> — Apps Script not
@@ -327,63 +352,70 @@ export default async function OpsPage() {
         )}
       </section>
 
-      <section id="log" className="mx-auto max-w-6xl px-6 py-16">
+      <section id="log" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="LOG // last 10 executions" title="What did it actually do?" />
         <p className="mb-4 border border-border bg-surface px-4 py-3 font-mono text-xs leading-relaxed text-muted tabular-nums sm:text-sm">
           <span className="text-text">TOTALS</span> — {statsLine} — retained
           ring (last 100, rotated); counts of retained rows only, not all-time.
         </p>
-        {rows.length === 0 ? (
-          <div className="border border-border bg-surface px-4 py-8 text-center font-mono text-sm text-muted">
-            LOG EMPTY — store has no executions yet; submit a lead (see docs)
-            or wait for real traffic.
+        <div className="border border-border bg-surface">
+          <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
+            <span className="led-ok" aria-hidden="true" />
+            <span>$ ./log --tail 10</span>
+            <span className="caret" aria-hidden="true" />
           </div>
-        ) : (
-          <div className="overflow-x-auto border border-border bg-surface">
-            <table className="w-full min-w-[640px] text-left font-mono text-xs tabular-nums sm:text-sm">
-              <thead className="border-b border-border text-muted">
-                <tr>
-                  <th scope="col" className="px-4 py-2 font-medium">TRACKING</th>
-                  <th scope="col" className="px-4 py-2 font-medium">STATE</th>
-                  <th scope="col" className="px-4 py-2 font-medium">STAGE</th>
-                  <th scope="col" className="px-4 py-2 font-medium">WHEN</th>
-                  <th scope="col" className="px-4 py-2 font-medium">ERR</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {rows.map((row) => (
-                  <tr key={row.id}>
-                    <td className="px-4 py-2 text-muted">{row.id.slice(0, 8)}</td>
-                    <td className="px-4 py-2 text-ok">{trackingId(row.id)}</td>
-                    <td
-                      className={
-                        row.status === "failed"
-                          ? "px-4 py-2 text-err"
-                          : row.status === "dispatched"
-                            ? "px-4 py-2 text-ok"
-                            : "px-4 py-2 text-muted"
-                      }
-                    >
-                      {row.status}
-                    </td>
-                    <td className="px-4 py-2 text-muted">{row.stage}</td>
-                    <td className="px-4 py-2 text-muted">
-                      <span className="text-text">
-                        {relativeAge(row.created_at, now)}
-                      </span>
-                      <span className="block text-[0.625rem]">
-                        {shortIso(row.created_at)}
-                      </span>
-                    </td>
-                    <td className="px-4 py-2 text-err">
-                      {row.error ? row.error.slice(0, 48) : "—"}
-                    </td>
+          {rows.length === 0 ? (
+            <div className="px-4 py-8 text-center font-mono text-sm text-muted">
+              LOG EMPTY — store has no executions yet; submit a lead (see docs)
+              or wait for real traffic.
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[640px] text-left font-mono text-xs tabular-nums sm:text-sm">
+                <thead className="border-b border-border text-muted">
+                  <tr>
+                    <th scope="col" className="px-4 py-2 font-medium">TRACKING</th>
+                    <th scope="col" className="px-4 py-2 font-medium">STATE</th>
+                    <th scope="col" className="px-4 py-2 font-medium">STAGE</th>
+                    <th scope="col" className="px-4 py-2 font-medium">WHEN</th>
+                    <th scope="col" className="px-4 py-2 font-medium">ERR</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {rows.map((row) => (
+                    <tr key={row.id}>
+                      <td className="px-4 py-2 text-muted">{row.id.slice(0, 8)}</td>
+                      <td className="px-4 py-2 text-ok">{trackingId(row.id)}</td>
+                      <td
+                        className={
+                          row.status === "failed"
+                            ? "px-4 py-2 text-err"
+                            : row.status === "dispatched"
+                              ? "px-4 py-2 text-ok"
+                              : "px-4 py-2 text-muted"
+                        }
+                      >
+                        {row.status}
+                      </td>
+                      <td className="px-4 py-2 text-muted">{row.stage}</td>
+                      <td className="px-4 py-2 text-muted">
+                        <span className="text-text">
+                          {relativeAge(row.created_at, now)}
+                        </span>
+                        <span className="block text-[0.625rem]">
+                          {shortIso(row.created_at)}
+                        </span>
+                      </td>
+                      <td className="px-4 py-2 text-err">
+                        {row.error ? row.error.slice(0, 48) : "—"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
         <p className="mt-3 font-mono text-xs text-muted tabular-nums">
           LAST FAILURE —{" "}
           {lastFailure
@@ -396,7 +428,7 @@ export default async function OpsPage() {
         </p>
       </section>
 
-      <section id="legend" className="mx-auto max-w-6xl px-6 py-16">
+      <section id="legend" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading
           eyebrow="PIPELINE LEGEND // the five honest stages"
           title="The five stages, honestly"

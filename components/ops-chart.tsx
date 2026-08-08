@@ -38,43 +38,49 @@ export default function OpsChart({
   series: OpsSeriesDay[];
   total: number;
 }) {
-  if (total === 0) {
-    return (
-      <div className="border border-border bg-surface px-4 py-8 text-center font-mono text-sm text-muted">
-        CHART EMPTY — submit a lead to see the first bar.
-      </div>
-    );
-  }
   return (
-    <div className="border border-border bg-surface p-4">
-      <ResponsiveContainer width="100%" height={240}>
-        <BarChart data={series} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
-          <XAxis
-            dataKey="day"
-            tick={{ fontSize: 10, fontFamily: "var(--font-mono)", fill: "var(--color-muted)" }}
-            stroke="var(--color-border)"
-          />
-          <YAxis
-            allowDecimals={false}
-            tick={{ fontSize: 10, fontFamily: "var(--font-mono)", fill: "var(--color-muted)" }}
-            stroke="var(--color-border)"
-          />
-          <Tooltip
-            contentStyle={{
-              background: "var(--color-surface)",
-              border: "1px solid var(--color-border)",
-              borderRadius: 0,
-              fontFamily: "var(--font-mono)",
-              fontSize: 12,
-            }}
-          />
-          <Legend wrapperStyle={{ fontFamily: "var(--font-mono)", fontSize: 11 }} />
-          <Bar dataKey="received" stackId="s" fill="#fbbf24" maxBarSize={48} name="received" />
-          <Bar dataKey="dispatched" stackId="s" fill="#4ade80" maxBarSize={48} name="dispatched" />
-          <Bar dataKey="failed" stackId="s" fill="#f87171" maxBarSize={48} name="failed" />
-        </BarChart>
-      </ResponsiveContainer>
+    <div className="border border-border bg-surface">
+      <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
+        <span className="led-ok" aria-hidden="true" />
+        <span>$ ./report --by-day</span>
+        <span className="caret" aria-hidden="true" />
+      </div>
+      {total === 0 ? (
+        <div className="px-4 py-8 text-center font-mono text-sm text-muted">
+          CHART EMPTY — submit a lead to see the first bar.
+        </div>
+      ) : (
+        <div className="p-4">
+          <ResponsiveContainer width="100%" height={240}>
+            <BarChart data={series} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+              <XAxis
+                dataKey="day"
+                tick={{ fontSize: 10, fontFamily: "var(--font-mono)", fill: "var(--color-muted)" }}
+                stroke="var(--color-border)"
+              />
+              <YAxis
+                allowDecimals={false}
+                tick={{ fontSize: 10, fontFamily: "var(--font-mono)", fill: "var(--color-muted)" }}
+                stroke="var(--color-border)"
+              />
+              <Tooltip
+                contentStyle={{
+                  background: "var(--color-surface)",
+                  border: "1px solid var(--color-border)",
+                  borderRadius: 0,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 12,
+                }}
+              />
+              <Legend wrapperStyle={{ fontFamily: "var(--font-mono)", fontSize: 11 }} />
+              <Bar dataKey="received" stackId="s" fill="#fbbf24" maxBarSize={48} name="received" />
+              <Bar dataKey="dispatched" stackId="s" fill="#4ade80" maxBarSize={48} name="dispatched" />
+              <Bar dataKey="failed" stackId="s" fill="#f87171" maxBarSize={48} name="failed" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      )}
     </div>
   );
 }

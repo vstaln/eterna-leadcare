@@ -7,13 +7,13 @@ import SplitText from "@/components/SplitText";
 export function HeroHeadline() {
   const reduced = useReducedMotion();
   const dial = useDialKit("SplitText", {
-    delay: [40, 0, 200],
-    duration: [0.5, 0.1, 1],
-    distance: [12, 0, 60],
+    delay: [30, 0, 180],
+    duration: [0.45, 0.1, 0.9],
+    distance: [10, 0, 40],
   });
   if (reduced) {
     return (
-      <h1 className="max-w-3xl text-balance text-[clamp(2.5rem,6vw,4.5rem)] font-semibold leading-[1.05] tracking-tighter text-text">
+      <h1 className="max-w-5xl text-balance text-[clamp(3rem,7vw,5.75rem)] font-semibold leading-[1.05] tracking-tighter text-text">
         Every lead, checked, logged, shown live.
       </h1>
     );
@@ -23,7 +23,7 @@ export function HeroHeadline() {
       text="Every lead, checked, logged, shown live."
       tag="h1"
       textAlign="left"
-      className="max-w-3xl text-balance text-[clamp(2.5rem,6vw,4.5rem)] font-semibold leading-[1.05] tracking-tighter text-text"
+      className="max-w-5xl text-balance text-[clamp(3rem,7vw,5.75rem)] font-semibold leading-[1.05] tracking-tighter text-text"
       splitType="words"
       delay={dial.delay}
       duration={dial.duration}

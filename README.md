@@ -13,6 +13,12 @@ Built in 48 hours, $0/month free tier, from a phone, with AI pair-programming. E
 - Behind the Scenes (git log + CI + AI_LOG + $0 cost): /behind-the-scenes
 - Webflow one-pager: `webflow/one-pager.html` (template; designer build is a user-gated browser step — see docs/webflow-migration.md)
 
+## Versions
+
+- **v3 — The Operations Ledger** (default; `/` redirects here): the paper/print world — same pipeline, same real data, a deliberately different visual language. Design doc: `DESIGN-v3.md`.
+- **v2 — The terminal**: the dark console report card. `/v2`.
+- Version switcher in the nav and footer of both; `/ops` (the shared honest report card) and all API routes are version-independent.
+
 ## The pipeline (one vocabulary everywhere)
 
 ```

@@ -1,4 +1,3 @@
-import { TerminalWindow } from "@phosphor-icons/react/dist/ssr";
 import { listExecutions } from "@/lib/store";
 import { relativeAge, clock, statusLed, statusColor } from "@/lib/time";
 
@@ -9,8 +8,10 @@ export default async function HeroDataPanel() {
   return (
     <div className="w-full border border-border bg-surface font-mono tabular-nums">
       <div className="flex items-center gap-2 border-b border-border px-4 py-2 text-xs text-muted">
-        <TerminalWindow className="h-4 w-4 text-ok" aria-hidden="true" />
+        <span className="led-live" aria-hidden="true" />
+        <span className="text-text">LIVE TRACE</span>
         <span>leadcare@eterna:~/ops $ tail -n 5 executions.json</span>
+        <span className="caret" aria-hidden="true" />
       </div>
       {rows.length === 0 ? (
         <p className="px-4 py-8 text-center text-xs leading-relaxed text-muted">
@@ -40,4 +41,3 @@ export default async function HeroDataPanel() {
     </div>
   );
 }
-

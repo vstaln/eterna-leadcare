@@ -17,5 +17,5 @@ export const metadata: Metadata = {
 const DialPanel = process.env.NODE_ENV !== "production" ? (await import("@/components/dial-panel")).default : null;
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} flex min-h-screen flex-col`}><a href="#main" className="skip-link">Skip to content</a><Nav /><main id="main" className="flex-1">{children}</main><SiteFooter />{DialPanel && <DialPanel />}</body></html>;
+  return <html lang="en"><body className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} flex min-h-screen flex-col`}><a href="#main" className="skip-link">Skip to content</a><Nav /><main id="main" className="flex-1 overflow-x-hidden">{children}</main><SiteFooter />{DialPanel && <DialPanel />}</body></html>;
 }

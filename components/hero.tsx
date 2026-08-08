@@ -29,7 +29,7 @@ export default async function Hero() {
             <div className="mt-10 flex flex-wrap items-center gap-4">
               <a
                 href="#demo"
-                className="inline-flex items-center gap-2 bg-ok px-6 py-3 text-sm font-semibold text-zinc-950 transition hover:brightness-110 focus-visible:outline-2 focus-visible:outline-live"
+                className="press inline-flex items-center gap-2 bg-ok px-6 py-3 text-sm font-semibold text-zinc-950 transition hover:brightness-110 focus-visible:outline-2 focus-visible:outline-live"
               >
                 <span>See it happen</span>
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -37,7 +37,7 @@ export default async function Hero() {
               <TourTrigger />
               <a
                 href="#contact"
-                className="inline-flex items-center gap-2 border border-border px-6 py-3 text-sm font-medium text-text transition hover:border-live focus-visible:outline-2 focus-visible:outline-live"
+                className="press inline-flex items-center gap-2 border border-border px-6 py-3 text-sm font-medium text-text transition hover:border-live focus-visible:outline-2 focus-visible:outline-live"
               >
                 Try it
               </a>

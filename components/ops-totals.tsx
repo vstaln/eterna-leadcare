@@ -23,7 +23,7 @@ export default function OpsTotals({ n, received, dispatched, failed }: OpsTotals
             {stat.label}
           </span>
           <span
-            className={`mt-1 block font-mono text-2xl font-medium tabular-nums ${stat.tone} number-pop`}
+            className={`mt-1 block font-mono text-4xl font-medium tabular-nums ${stat.tone} number-pop md:text-5xl`}
             style={{ animationDelay: `calc(${i} * var(--duration-stagger))` }}
           >
             {stat.value}
