@@ -1,5 +1,5 @@
 "use client";
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { CheckCircle } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,49 @@ export default function ApplicationForm() {
   const [message, setMessage] = useState("");
   const [sentTracking, setSentTracking] = useState<string | null>(null);
   const [sentStatus, setSentStatus] = useState<string | null>(null);
+
+  // Test-case presets: one click fills the form for a specific pipeline
+  // outcome — human (real dispatch), bot (honeypot decoy), spam (rejected).
+  // `website` is the honeypot field; only the bot case fills it.
+  const USE_CASES = {
+    human: {
+      label: "Human (success)",
+      name: "Vstalin Grady",
+      email: "vstalingrady@gmail.com",
+      message: "Interview slot request — testing the live pipeline.",
+      website: "",
+    },
+    bot: {
+      label: "Bot (honeypot)",
+      name: "Botty McBotface",
+      email: "bot@spam.example",
+      message: "great offer click here",
+      website: "http://spam.example",
+    },
+    spam: {
+      label: "Spam (invalid)",
+      name: "",
+      email: "not-an-email",
+      message: "FREE MONEY!!!",
+      website: "",
+    },
+  } as const;
+
+  const formRef = useRef<HTMLFormElement>(null);
+
+  function fillUseCase(uc: keyof typeof USE_CASES) {
+    const form = formRef.current;
+    if (!form) return;
+    const c = USE_CASES[uc];
+    (form.elements.namedItem("name") as HTMLInputElement).value = c.name;
+    (form.elements.namedItem("email") as HTMLInputElement).value = c.email;
+    (form.elements.namedItem("message") as HTMLTextAreaElement).value = c.message;
+    (form.elements.namedItem("website") as HTMLInputElement).value = c.website;
+    setState("idle");
+    setMessage("");
+    setSentTracking(null);
+    setSentStatus(null);
+  }
 
   // The five stops a lead makes — same vocabulary as the home dashboard.
   // The first three are lit after a successful submit
@@ -61,7 +104,7 @@ export default function ApplicationForm() {
   }
 
   return (
-    <form onSubmit={submit} className="border border-border bg-surface p-6">
+    <form ref={formRef} onSubmit={submit} className="border border-border bg-surface p-6">
       {/* Honeypot bait: hidden from humans (display:none + off-screen), but a
           naive bot will happily fill it. The server rejects anyone who does
           (see /api/lead) and logs the attempt in the shield sidecar. */}
@@ -74,6 +117,21 @@ export default function ApplicationForm() {
         className="hidden"
       />
       <p className="font-mono text-xs uppercase tracking-widest text-muted">Reach me directly</p>
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <span className="font-mono text-[0.625rem] uppercase tracking-widest text-muted">
+          test cases:
+        </span>
+        {(Object.keys(USE_CASES) as (keyof typeof USE_CASES)[]).map((uc) => (
+          <button
+            key={uc}
+            type="button"
+            onClick={() => fillUseCase(uc)}
+            className="border border-border bg-base px-2.5 py-1 font-mono text-[0.6875rem] uppercase tracking-widest text-text transition hover:border-live focus-visible:outline-2 focus-visible:outline-live"
+          >
+            {USE_CASES[uc].label}
+          </button>
+        ))}
+      </div>
       <div className="mt-5 space-y-5">
         <div className="space-y-2">
           <Label htmlFor="name" className="font-mono text-xs uppercase tracking-widest text-muted">

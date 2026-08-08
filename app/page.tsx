@@ -13,6 +13,7 @@ import ShinyText from "@/components/ShinyText";
 import Magnet from "@/components/Magnet";
 import AnimatedContent from "@/components/AnimatedContent";
 import HeroBackdrop from "@/components/hero-backdrop";
+import LiveDemo from "@/components/live-demo";
 import OpsChart from "@/components/ops-chart";
 import { listExecutions } from "@/lib/store";
 import { listShield, shieldCounts } from "@/lib/shield";
@@ -147,6 +148,8 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      <LiveDemo />
 
       <section id="dossier" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="THE APPLICATION" title="About me" />
