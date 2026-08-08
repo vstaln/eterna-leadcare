@@ -27,7 +27,7 @@ export default function Nav() {
             className="hidden items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted sm:flex"
           >
             <span className="led-ok" aria-hidden="true" />
-            <span>{isV3 ? "ET-48 // OPERATIONS LEDGER" : "ET-48 // ETERNA LEADCARE"}</span>
+            <span>{isV3 ? "Eterna LeadCare" : "ET-48 // ETERNA LEADCARE"}</span>
           </Link>
           <ul className="flex items-center gap-2.5 sm:gap-5">
             {links.map((link) => {

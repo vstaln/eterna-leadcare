@@ -5,6 +5,7 @@ import { listExecutions } from "@/lib/store";
 import { clock, relativeAge, shortIso } from "@/lib/time";
 import { trackingId } from "@/lib/tracking";
 import { listShield, shieldCounts } from "@/lib/shield";
+import { stageStates } from "@/lib/stages";
 import OpsChart from "@/components/ops-chart";
 import OpsTotals from "@/components/ops-totals";
 
@@ -15,73 +16,6 @@ export const metadata: Metadata = {
   description:
     "The honest report card of the LeadCare pipeline: real store rows, named stages, shield log, no simulated lights.",
 };
-
-type LedColor = "ok" | "warn" | "err";
-
-type Stage = {
-  num: string;
-  name: string;
-  state: string;
-  led: LedColor;
-  source: string;
-  note: string;
-};
-
-async function stageStates(): Promise<Stage[]> {
-  const n8nConfigured = Boolean(env.N8N_BASE_URL && env.WEBHOOK_TOKEN);
-  const appsScriptConfigured = Boolean(env.APPS_SCRIPT_URL);
-  const counts = await shieldCounts();
-  const shieldEvents = await listShield(1);
-  const firstShieldAt = shieldEvents.length > 0 ? shieldEvents[shieldEvents.length - 1].at : null;
-  return [
-    {
-      num: "01",
-      name: "CAPTURED",
-      state: "LIVE",
-      led: "ok",
-      source: "site repo",
-      note: "the form on the landing page posts here — every submission is captured with a timestamp",
-    },
-    {
-      num: "02",
-      name: "SPAM SHIELD",
-      state: "ENABLED",
-      led: "ok",
-      source: "data/shield.json",
-      note: `honeypot-gated · ${counts.honeypot} blocked${
-        firstShieldAt ? ` since ${shortIso(firstShieldAt)}` : " — no hits recorded"
-      }`,
-    },
-    {
-      num: "03",
-      name: "RESEARCHED",
-      state: n8nConfigured ? "CONFIGURED" : "PENDING",
-      led: n8nConfigured ? "ok" : "err",
-      source: "env",
-      note: n8nConfigured
-        ? "N8N_BASE_URL + WEBHOOK_TOKEN present; signed dispatch enabled — never live-verified from this device"
-        : "N8N_BASE_URL/WEBHOOK_TOKEN missing — lead intake is offline",
-    },
-    {
-      num: "04",
-      name: "LOGGED",
-      state: "N/R",
-      led: "warn",
-      source: "workflow definition",
-      note: "runs inside n8n (docs/n8n-workflow.json); no runtime readout reachable from this phone",
-    },
-    {
-      num: "05",
-      name: "LIVE",
-      state: appsScriptConfigured ? "LIVE" : "DEGRADED",
-      led: appsScriptConfigured ? "ok" : "warn",
-      source: "env",
-      note: appsScriptConfigured
-        ? "APPS_SCRIPT_URL present — deployed outside this phone"
-        : "user deploy (docs/apps-script-setup.md) — APPS_SCRIPT_URL empty; the log leg answers 200-degraded until deployed",
-    },
-  ];
-}
 
 const stateColor: Record<string, string> = {
   ENABLED: "text-ok",
@@ -96,7 +30,6 @@ type UserGatedItem = { label: string; note: string };
 
 const userGatedItems: UserGatedItem[] = [
   { label: "5678 EXPOSURE", note: "(user-gated — OCI security list)" },
-  { label: "OWNER API KEY", note: "(P5 — N8N_API_KEY)" },
 ];
 
 type LedgerItem = {

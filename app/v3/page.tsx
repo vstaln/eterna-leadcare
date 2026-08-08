@@ -3,10 +3,9 @@ import LiveTicker from "@/components/live-ticker";
 import PipelineDiagram from "@/components/pipeline-diagram";
 import ApplicationForm from "@/components/application-form";
 import LedgerHeadline from "@/components/ledger-headline";
-import { env } from "@/lib/env";
 import { listExecutions } from "@/lib/store";
-import { listShield, shieldCounts } from "@/lib/shield";
-import { shortIso } from "@/lib/time";
+import { shieldCounts } from "@/lib/shield";
+import { stageStates } from "@/lib/stages";
 
 export const dynamic = "force-dynamic";
 
@@ -15,73 +14,6 @@ export const metadata = {
   description:
     "v3 of the LeadCare demo: the operations ledger. Same pipeline, same real data — every lead checked, logged, and tracked, with nothing simulated.",
 };
-
-type LedColor = "ok" | "warn" | "err";
-
-type Stage = {
-  num: string;
-  name: string;
-  state: string;
-  led: LedColor;
-  source: string;
-  note: string;
-};
-
-async function stageStates(): Promise<Stage[]> {
-  const n8nConfigured = Boolean(env.N8N_BASE_URL && env.WEBHOOK_TOKEN);
-  const appsScriptConfigured = Boolean(env.APPS_SCRIPT_URL);
-  const counts = await shieldCounts();
-  const shieldEvents = await listShield(1);
-  const firstShieldAt = shieldEvents.length > 0 ? shieldEvents[shieldEvents.length - 1].at : null;
-  return [
-    {
-      num: "01",
-      name: "CAPTURED",
-      state: "LIVE",
-      led: "ok",
-      source: "site repo",
-      note: "the form on this page posts here — every submission is captured with a timestamp",
-    },
-    {
-      num: "02",
-      name: "SPAM SHIELD",
-      state: "ENABLED",
-      led: "ok",
-      source: "data/shield.json",
-      note: `honeypot-gated · ${counts.honeypot} blocked${
-        firstShieldAt ? ` since ${shortIso(firstShieldAt)}` : " — no hits recorded"
-      }`,
-    },
-    {
-      num: "03",
-      name: "RESEARCHED",
-      state: n8nConfigured ? "CONFIGURED" : "PENDING",
-      led: n8nConfigured ? "ok" : "err",
-      source: "env",
-      note: n8nConfigured
-        ? "N8N_BASE_URL + WEBHOOK_TOKEN present; signed dispatch enabled — never live-verified from this device"
-        : "N8N_BASE_URL/WEBHOOK_TOKEN missing — lead intake is offline",
-    },
-    {
-      num: "04",
-      name: "LOGGED",
-      state: "N/R",
-      led: "warn",
-      source: "workflow definition",
-      note: "runs inside n8n (docs/n8n-workflow.json); no runtime readout reachable from this phone",
-    },
-    {
-      num: "05",
-      name: "LIVE",
-      state: appsScriptConfigured ? "LIVE" : "DEGRADED",
-      led: appsScriptConfigured ? "ok" : "warn",
-      source: "env",
-      note: appsScriptConfigured
-        ? "APPS_SCRIPT_URL present — deployed outside this phone"
-        : "user deploy (docs/apps-script-setup.md) — APPS_SCRIPT_URL empty; the log leg answers 200-degraded until deployed",
-    },
-  ];
-}
 
 const stateColor: Record<string, string> = {
   ENABLED: "text-ok",
@@ -128,9 +60,9 @@ export default async function V3Page() {
     <div className="v3">
       <section id="ledger-hero" className="ledger-lines relative overflow-hidden pt-24 pb-20 sm:pt-32 sm:pb-24">
         <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
-          <p className="mb-6 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted">
+          <p className="mb-6 flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-muted">
             <span className="stamp stamp-red !p-0.5 !px-2 !text-[0.625rem]">LIVE</span>
-            ET-48 // OPERATIONS LEDGER // PRODUCT DEMO
+            Eterna LeadCare
           </p>
           <LedgerHeadline />
           <p className="mt-8 max-w-2xl text-balance text-lg leading-relaxed text-muted">
@@ -153,7 +85,7 @@ export default async function V3Page() {
       <LiveTicker />
 
       <section id="totals" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <SectionHeading eyebrow="LEDGER // real figures" title="What the ledger holds" />
+        <SectionHeading eyebrow="REAL FIGURES" title="What the ledger holds" />
         <div className="grid grid-cols-2 gap-px border border-border bg-border lg:grid-cols-4">
           {statCells.map((cell, i) => (
             <div key={cell.label} className="relative bg-surface p-6 md:p-8">
@@ -183,11 +115,11 @@ export default async function V3Page() {
       </section>
 
       <section id="stages" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <SectionHeading eyebrow="STAGES // real state, named sources" title="The five stages, honestly" />
+        <SectionHeading eyebrow="THE FIVE STAGES" title="The five stages, honestly" />
         <div className="border border-border bg-surface">
           <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
             <span className="led-live" aria-hidden="true" />
-            <span>$ ./status</span>
+            <span>STATUS — LIVE</span>
             <span className="caret" aria-hidden="true" />
           </div>
           <ul className="divide-y divide-border">
@@ -210,7 +142,7 @@ export default async function V3Page() {
       </section>
 
       <section id="trust" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <SectionHeading eyebrow="SEALS // why it can be trusted" title="Stamped, not claimed" />
+        <SectionHeading eyebrow="WHY IT CAN BE TRUSTED" title="Stamped, not claimed" />
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           {trustItems.map(([title, text, seal, sealTone]) => (
             <article key={title} className="relative border border-border bg-surface p-8">
@@ -228,11 +160,11 @@ export default async function V3Page() {
       </section>
 
       <section id="pipeline" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <SectionHeading eyebrow="FORM 12-A // the pipeline" title="The path every lead travels" />
+        <SectionHeading eyebrow="THE PIPELINE" title="The path every lead travels" />
         <div className="border border-border bg-surface">
           <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
             <span className="led-live" aria-hidden="true" />
-            <span>$ ./pipeline --live</span>
+            <span>THE PIPELINE — LIVE</span>
             <span className="caret" aria-hidden="true" />
           </div>
           <div className="p-4">
@@ -240,7 +172,7 @@ export default async function V3Page() {
           </div>
         </div>
         <p className="mt-3 font-mono text-xs text-muted">
-          FORM 12-A — the same five lockstep stages as v2 and the ops dashboard · one vocabulary.
+          The same five lockstep stages as v2 and the ops dashboard — one vocabulary.
         </p>
       </section>
 
@@ -265,7 +197,7 @@ export default async function V3Page() {
             </div>
             <ApplicationForm />
             <p className="px-6 pb-4 pt-0 font-mono text-xs text-muted">
-              {"// submits via POST /api/lead — honeypot-gated, tracked live on /ops"}
+              Submits via POST /api/lead — honeypot-gated, tracked live on /ops
             </p>
           </div>
         </div>

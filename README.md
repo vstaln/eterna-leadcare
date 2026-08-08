@@ -29,9 +29,9 @@ CAPTURED → SPAM SHIELD → RESEARCHED → LOGGED → LIVE
 |-------|------------------------|--------------|--------------|
 | **Captured** | Web form + typed `/api/lead` | The lead arrives with a timestamp | LIVE |
 | **Spam Shield** | Honeypot trap + signed dispatch | Bots are caught and *counted* (data/shield.json) | ENABLED |
-| **Researched** | n8n workflow + RDAP lookup | Who is contacting you — real company, real domain | CONFIGURED / PENDING |
-| **Logged** | Execution store + Apps Script → Sheets | Permanent, client-visible record | N/R / DEGRADED |
-| **Live** | Ops dashboard | Watch every lead move, honestly | DEGRADED until deploy |
+| **Researched** | n8n workflow + RDAP lookup | Who is contacting you — real company, real domain | LIVE / CONFIGURED / PENDING |
+| **Logged** | Execution store + Apps Script → Sheets | Permanent, client-visible record | LIVE / N/R |
+| **Live** | Ops dashboard | Watch every lead move, honestly | LIVE / DEGRADED |
 
 These five names are **lockstep** across the home page diagram, the ops dashboard, the ASCII art, and the Webflow one-pager — one vocabulary, never mixed.
 

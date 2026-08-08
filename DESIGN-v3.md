@@ -19,7 +19,7 @@ v3 of Eterna LeadCare. A different visual world over the same pipeline, the same
 ## Mechanics
 
 - Theme is a **scoped CSS variable override**: `.v3 { --color-base: ... }` etc. in `app/globals.css`. Every component consumes `var(--color-*)`, so one wrapper restyles the whole page — no v3-specific component forks. `.v3 .capture-terminal { ... }` restores the dark vars for the form.
-- Nav + footer detect the version via `usePathname()` and add the `v3` class to their own root; wordmark flips to `ET-48 // OPERATIONS LEDGER`.
+- Nav + footer detect the version via `usePathname()` and add the `v3` class to their own root; wordmark reads plain `Eterna LeadCare` (no console prefixes on the paper world).
 - Version switcher (`v2` ⇄ `v3`) in nav and footer, `aria-current` on the active one. `/` redirects to `/v3`.
 - All data is store-derived (same as v2): totals from the retained ring, shield counts from `data/shield.json`, stages from env + store.
 
