@@ -14,9 +14,9 @@ import { stageStates } from "@/lib/stages";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Vstalin — Application for Lead Automation & Web Engineer | Eterna Indonesia",
+  title: "Eterna LeadCare — every lead, checked, logged, shown live | Vstalin's application",
   description:
-    "My application for Eterna Indonesia's Lead Automation & Web Engineer role: the Operations Ledger — one honest record. Every lead checked by the spam shield, logged with a tracking number, and shown live — nothing simulated.",
+    "Eterna LeadCare, live: every submission checked by a spam shield, logged with a tracking number, and shown on a real dashboard. Built by Vstalin as an application for Eterna Indonesia.",
 };
 
 const stateColor: Record<string, string> = {
@@ -42,29 +42,29 @@ const skillCards: [string, string, string, string][] = [
     "01",
     "WEB ENGINEERING",
     "Sites that ship",
-    "Next.js, React, TypeScript, responsive UI, accessibility, and performance — the standard I would bring to Webflow.",
+    "Next.js, React, TypeScript, responsive, accessible, fast — the standard I'd bring to Webflow.",
   ],
   [
     "02",
     "AUTOMATION",
     "Workflows that run",
-    "Signed webhook intake, N8N-style orchestration, API integrations, and auditable execution states — live on this page.",
+    "Signed webhook intake, n8n orchestration, API integrations, auditable states — live on this page.",
   ],
   [
     "03",
     "CLOUD & AI",
     "Evidence, not claims",
-    "Docker on Oracle Cloud, production delivery, Git workflows, and daily work with AI coding tools.",
+    "Docker on Oracle Cloud, production delivery, Git workflows, daily AI-assisted build.",
   ],
 ];
 
 const fitItems = [
-  ["Build stunning, high-performance websites, primarily in Webflow", "I ship fast, polished web apps with Next.js and React today, and I am ready to bring that standard to Webflow."],
-  ["Design intelligent workflows with N8N and Google Apps Script", "This site runs the pattern live: intake, honeypot shield, signed dispatch, storage, and a report card."],
-  ["Manage cloud hosting and lead initiatives on Google Cloud / AWS", "I deploy and operate this production site myself with Docker on Oracle Cloud."],
-  ["Use AI-enhanced systems to accelerate development", "I build with AI tools daily and treat them as force multipliers; this codebase is the evidence."],
-  ["Translate business needs into automated solutions", "This very page explains an automation pipeline in plain English for a non-technical reader."],
-  ["Explore new tools and present innovative solutions", "I am a self-directed learner; Behind the Scenes documents exactly how this site was built."],
+  ["Build stunning, high-performance websites, primarily in Webflow", "I ship fast, polished web apps with Next.js and React — ready to bring that standard to Webflow."],
+  ["Design intelligent workflows with N8N and Google Apps Script", "This site runs the pattern live: intake, honeypot shield, signed dispatch, storage, report card."],
+  ["Manage cloud hosting and lead initiatives on Google Cloud / AWS", "I deploy and operate this production site myself, Docker on Oracle Cloud."],
+  ["Use AI-enhanced systems to accelerate development", "I build with AI tools daily — this codebase is the evidence."],
+  ["Translate business needs into automated solutions", "This page explains the pipeline in plain English for a non-technical reader."],
+  ["Explore new tools and present innovative solutions", "Self-directed learner — Behind the Scenes documents how this site was built."],
 ];
 
 const aboutCards: [string, string, string, string][] = [
@@ -72,26 +72,26 @@ const aboutCards: [string, string, string, string][] = [
     "01",
     "CAPTURE",
     "Lead capture",
-    "A typed intake API on this site. Every submission is checked by a honeypot shield that catches bots and records each blocked attempt — nothing silent, nothing hidden.",
+    "Typed intake API. Every submission is checked by a honeypot shield that counts each blocked bot.",
   ],
   [
     "02",
     "DISPATCH",
     "Automation",
-    "Accepted leads are dispatched onward through a signed workflow — the N8N-style orchestration Eterna runs for clients — with every state recorded.",
+    "Accepted leads go through a signed n8n workflow — every state recorded.",
   ],
   [
     "03",
     "REPORT",
     "Live reporting",
-    "The ops dashboard renders the real execution store: per-day chart, named stages, and a tracking number on every lead. No simulated lights.",
+    "The ops dashboard renders the real store: per-day chart, stages, and a tracking number per lead.",
   ],
 ];
 
 const trustItems = [
-  ["Real store, not a mockup", "Every row on the dashboard is a real submission that went through this pipeline. The store file is right here in the repo.", "VERIFIED", "stamp-green"],
-  ["Failures are named, not hidden", "If a step can't report, it says N/R — never a green light. If a piece is pending, the page says PENDING. Degraded states render DEGRADED.", "HONEST", "stamp-green"],
-  ["Open build", "The whole pipeline, the workflow definition, and the build log are documented behind the scenes — including what is still waiting on you.", "OPEN", "stamp-red"],
+  ["Real store, not a mockup", "Every row on the dashboard is a real submission that went through this pipeline.", "VERIFIED", "stamp-green"],
+  ["Failures are named, not hidden", "Can't report? It says N/R. Pending? PENDING. Degraded? DEGRADED — never a fake green light.", "HONEST", "stamp-green"],
+  ["Open build", "Pipeline, workflow, and build log are all documented behind the scenes.", "OPEN", "stamp-red"],
 ];
 
 const cornerPositions = [
@@ -124,19 +124,18 @@ export default async function HomePage() {
     <div>
       <section id="hero" className="ledger-lines relative overflow-hidden pt-24 pb-20 sm:pt-32 sm:pb-24">
         <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
-          <p className="mb-6 flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-muted">
+          <p className="mb-6 flex items-center gap-3 font-mono text-sm font-semibold uppercase tracking-widest text-text">
             <span className="stamp stamp-red !p-0.5 !px-2 !text-[0.625rem]">LIVE</span>
             <ShinyText text="Eterna LeadCare" />
           </p>
           <LedgerHeadline />
           <p className="mt-8 max-w-2xl text-balance text-lg leading-relaxed text-muted">
-            Eterna LeadCare keeps an honest record: every submission is checked by
-            the spam shield, logged with a tracking number, and shown to you live —
-            no simulated lights, no hidden steps.
+            Every submission is checked by a spam shield, logged with a tracking
+            number, and shown live on the ops dashboard — every row real, nothing simulated.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-4">
             <Magnet className="inline-flex" padding={10} activeStrength={2}>
-              <a href="/ops" className="stamp stamp-red press text-sm">Open the ledger</a>
+              <a href="/ops" className="stamp stamp-red press text-sm">View live dashboard</a>
             </Magnet>
             <Magnet className="inline-flex" padding={10} activeStrength={2}>
               <a href="#about" className="press inline-flex items-center gap-2 border border-border px-5 py-3 text-sm font-medium text-text transition hover:border-live focus-visible:outline-2 focus-visible:outline-live">
@@ -145,22 +144,17 @@ export default async function HomePage() {
             </Magnet>
           </div>
           <p className="mt-6 font-mono text-xs text-muted">
-            THE OPERATIONS LEDGER — one pipeline, one real data set, no versions.
-          </p>
-          <p className="mt-2 font-mono text-xs text-muted">
-            APPLICATION DOSSIER — Lead Automation &amp; Web Engineer · Eterna Indonesia · fully remote · Rp13M–Rp18M
+            ONE PIPELINE · ONE REAL DATA SET · APPLICATION FOR ETERNA&apos;S LEAD AUTOMATION &amp; WEB ENGINEER ROLE
           </p>
         </div>
       </section>
 
       <section id="dossier" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <SectionHeading eyebrow="THE APPLICATION" title="Who&apos;s behind the ledger" />
+        <SectionHeading eyebrow="THE APPLICATION" title="About me" />
         <p className="measure text-base leading-relaxed text-muted">
-          I am Vstalin, a developer who ships. I build with Next.js, React, and TypeScript, connect
-          systems with automation, and use AI coding tools every day to learn faster. I am applying
-          for the Lead Automation &amp; Web Engineer role because it is exactly the work I want to
-          grow into at Eterna Indonesia: Webflow experiences, N8N automations, cloud infrastructure,
-          and AI-enhanced delivery for global clients.
+          I&apos;m Vstalin — I build web experiences, connect them with automation, and ship with AI
+          tools. This site is my application for the Lead Automation &amp; Web Engineer role at
+          Eterna Indonesia; the live pipeline below is the evidence.
         </p>
         <div className="mt-10 grid grid-cols-2 gap-px border border-border bg-border lg:grid-cols-4">
           {roleFacts.map(([label, value]) => (
@@ -198,7 +192,7 @@ export default async function HomePage() {
       </section>
 
       <section id="about" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <SectionHeading eyebrow="WHAT LEADCARE DOES" title="Three steps, one ledger" />
+        <SectionHeading eyebrow="WHAT LEADCARE DOES" title="How it works" />
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           {aboutCards.map(([num, module, title, text]) => (
             <article key={module} className="relative border border-border bg-surface p-8">
@@ -219,7 +213,7 @@ export default async function HomePage() {
       <LiveTicker />
 
       <section id="totals" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <SectionHeading eyebrow="REAL FIGURES" title="What the ledger holds" />
+        <SectionHeading eyebrow="REAL FIGURES" title="Live figures" />
         <div className="grid grid-cols-2 gap-px border border-border bg-border lg:grid-cols-4">
           {statCells.map((cell, i) => (
             <div key={cell.label} className="relative bg-surface p-6 md:p-8">
@@ -278,7 +272,7 @@ export default async function HomePage() {
       </section>
 
       <section id="fit" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <SectionHeading eyebrow="WHY THE FIT" title="The role asks, the ledger answers" />
+        <SectionHeading eyebrow="WHY THE FIT" title="Why I&apos;m a strong fit" />
         <div className="grid gap-4 md:grid-cols-2">
           {fitItems.map(([ask, mine]) => (
             <article key={ask} className="relative border border-border bg-surface p-8">
@@ -350,12 +344,12 @@ export default async function HomePage() {
           <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start">
           <div>
             <p className="measure text-sm leading-relaxed text-muted">
-              Send a test lead — it travels the same path a real one would: checked, logged, and
-              tracked live on the ops dashboard. This form is a live demo, not Eterna&apos;s official application.
+              Send a test lead — it travels the same path a real one would and shows
+              up live on the ops dashboard. This form is a live demo, not Eterna&apos;s
+              official application.
             </p>
             <p className="mt-6 font-mono text-xs leading-relaxed text-muted">
-              Every other surface on this page is paper. This one stays a terminal on purpose —
-              the capture desk is the one place data enters the ledger.
+              Paper everywhere else — this terminal is the one place data enters the record.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <Magnet className="inline-flex" padding={10} activeStrength={2}>

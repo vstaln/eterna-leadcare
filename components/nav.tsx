@@ -23,7 +23,7 @@ export default function Nav() {
           <Link
             href="/"
             aria-label="Eterna LeadCare — home"
-            className="hidden items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted sm:flex"
+            className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-muted"
           >
             <span className="led-ok" aria-hidden="true" />
             <span>Eterna LeadCare</span>
