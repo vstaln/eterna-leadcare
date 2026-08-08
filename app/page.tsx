@@ -135,32 +135,63 @@ export default async function HomePage() {
       <section id="hero" className="ledger-lines relative overflow-hidden pt-24 pb-20 sm:pt-32 sm:pb-24">
         <Beams className="absolute inset-0" />
         <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
-          <p className="mb-6 flex items-center gap-3 font-mono text-sm font-semibold uppercase tracking-widest text-text">
-            <span className="stamp stamp-red !p-0.5 !px-2 !text-[0.625rem]">LIVE</span>
-            <ShinyText text="Eterna LeadCare" />
-          </p>
-          <LedgerHeadline />
-          <p className="mt-8 max-w-2xl text-balance text-lg leading-relaxed text-muted">
-            Every submission is checked by a spam shield, logged with a tracking
-            number, and shown live on the ops dashboard — every row real, nothing simulated.
-          </p>
-          <div className="mt-10 flex flex-wrap items-center gap-4">
-            <Magnet className="inline-flex" padding={10} activeStrength={2}>
-              <a href="/ops" className="stamp stamp-red press text-sm">View live dashboard</a>
-            </Magnet>
-            <Magnet className="inline-flex" padding={10} activeStrength={2}>
-              <a href="#about" className="press inline-flex items-center gap-2 border border-border px-5 py-3 text-sm font-medium text-text transition hover:border-live focus-visible:outline-2 focus-visible:outline-live">
-                How it works
-              </a>
-            </Magnet>
+          <div className="grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-14 lg:items-start">
+            <div>
+              <p className="mb-6 flex items-center gap-3 font-mono text-sm font-semibold uppercase tracking-widest text-text">
+                <span className="stamp stamp-red !p-0.5 !px-2 !text-[0.625rem]">LIVE</span>
+                <ShinyText text="Eterna LeadCare" />
+              </p>
+              <LedgerHeadline />
+              <p className="mt-8 max-w-2xl text-balance text-lg leading-relaxed text-muted">
+                Every submission is checked by a spam shield, logged with a tracking
+                number, and shown live on the ops dashboard — every row real, nothing simulated.
+              </p>
+              <div className="mt-10 flex flex-wrap items-center gap-4">
+                <Magnet className="inline-flex" padding={10} activeStrength={2}>
+                  <a href="/ops" className="stamp stamp-red press text-sm">View live dashboard</a>
+                </Magnet>
+                <Magnet className="inline-flex" padding={10} activeStrength={2}>
+                  <a href="#about" className="press inline-flex items-center gap-2 border border-border px-5 py-3 text-sm font-medium text-text transition hover:border-live focus-visible:outline-2 focus-visible:outline-live">
+                    How it works
+                  </a>
+                </Magnet>
+              </div>
+              <p className="mt-6 font-mono text-xs text-muted">
+                ONE PIPELINE · ONE REAL DATA SET · APPLICATION FOR ETERNA&apos;S LEAD AUTOMATION &amp; WEB ENGINEER ROLE
+              </p>
+            </div>
+
+            <div id="try" className="flex flex-col border border-border bg-surface">
+              <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
+                <span className="led-warn" aria-hidden="true" />
+                <span>DROP A LEAD — IT RUNS THE PIPELINE FOR REAL</span>
+                <span className="caret" aria-hidden="true" />
+              </div>
+              <div className="flex-1 p-4 sm:p-6">
+                <ApplicationForm />
+              </div>
+              <div className="border-t border-border px-4 py-3 font-mono text-xs leading-relaxed text-muted">
+                Every submission hits POST /api/lead → n8n webhook and moves through the
+                flow chart at the bottom of this page. Follow the tracking number on{" "}
+                <a href="/ops" className="underline decoration-ok underline-offset-4 hover:text-text">
+                  /ops
+                </a>
+                .
+                <div className="mt-3">
+                  <a
+                    href={officialUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="stamp stamp-red press text-sm"
+                  >
+                    OFFICIAL POSTING
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
-          <p className="mt-6 font-mono text-xs text-muted">
-            ONE PIPELINE · ONE REAL DATA SET · APPLICATION FOR ETERNA&apos;S LEAD AUTOMATION &amp; WEB ENGINEER ROLE
-          </p>
         </div>
       </section>
-
-      <LiveDemo />
 
       <section id="dossier" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="THE APPLICATION" title="About me" />
@@ -348,6 +379,8 @@ export default async function HomePage() {
           The same five lockstep stages as the ops dashboard — one vocabulary.
         </p>
       </section>
+
+      <LiveDemo />
 
     </div>
   );

@@ -61,7 +61,7 @@ const steps = [
     },
   },
   {
-    element: "#contact",
+    element: "#try",
     popover: {
       title: "Try it",
       description:
