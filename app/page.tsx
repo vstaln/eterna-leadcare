@@ -207,7 +207,6 @@ export default async function HomePage() {
           <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
             <span className="led-ok" aria-hidden="true" />
             <span>PIPELINE STATUS</span>
-            <span className="caret" aria-hidden="true" />
           </div>
           <ul className="divide-y divide-border">
             {stages.map((stage) => (
@@ -249,7 +248,6 @@ export default async function HomePage() {
             <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
               <span className="led-warn" aria-hidden="true" />
               <span>SHIELD LOG</span>
-              <span className="caret" aria-hidden="true" />
             </div>
             {shieldRows.length === 0 ? (
               <div className="px-4 py-8 text-center font-mono text-sm text-muted">

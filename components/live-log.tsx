@@ -89,7 +89,6 @@ export default function LiveLog({ initial }: { initial: LiveLogPayload }) {
       <div className="border border-border bg-surface">
         <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
           <span className={live ? "led-live" : "led-warn"} aria-hidden="true" />
-          <span className="caret" aria-hidden="true" />
         </div>
         {executions.length === 0 ? (
           <div className="px-4 py-8 text-center font-mono text-sm text-muted">

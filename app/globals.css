@@ -172,23 +172,6 @@
 .led-live {
   background-color: var(--color-live);
   box-shadow: 0 0 8px color-mix(in srgb, var(--color-live) 25%, transparent);
-  animation: led-pulse 2s ease-in-out infinite;
-}
-
-@keyframes led-pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.35;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .led-live {
-    animation: none;
-  }
 }
 
 @keyframes success-check {
@@ -305,26 +288,6 @@
   filter: brightness(0.97);
 }
 
-.caret {
-  display: inline-block;
-  width: 0.55em;
-  height: 1em;
-  margin-left: 2px;
-  background: var(--color-live);
-  animation: caret-blink 1.1s steps(1) infinite;
-}
-
-@keyframes caret-blink {
-  0%,
-  49% {
-    opacity: 1;
-  }
-  50%,
-  100% {
-    opacity: 0;
-  }
-}
-
 /* shiny-text — moving sheen clipped to the glyphs (React Bits ShinyText) */
 .shiny-text {
   background-image: linear-gradient(
@@ -408,9 +371,6 @@
   }
   .press {
     transition: none;
-  }
-  .caret {
-    animation: none;
   }
   .hero-backdrop::before,
   .hero-backdrop::after {

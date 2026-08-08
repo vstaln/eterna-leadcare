@@ -181,7 +181,6 @@ export default function LiveDemo() {
           >
             VIEW ONLY
           </span>
-          <span className="caret" aria-hidden="true" />
         </div>
         <div className="relative">
           {session === "loading" ? (
@@ -228,7 +227,6 @@ export default function LiveDemo() {
         <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
           <span className="led-live" aria-hidden="true" />
           <span>NODES</span>
-          <span className="caret" aria-hidden="true" />
         </div>
         <ol className="divide-y divide-border">
           {NODES.map((node, i) => (
