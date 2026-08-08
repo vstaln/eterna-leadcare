@@ -2,7 +2,6 @@ import SectionHeading from "@/components/section-heading";
 import LiveTicker from "@/components/live-ticker";
 import ApplicationForm from "@/components/application-form";
 import LedgerHeadline from "@/components/ledger-headline";
-import CountUp from "@/components/CountUp";
 import ShinyText from "@/components/ShinyText";
 import Magnet from "@/components/Magnet";
 import PipelineDemo from "@/components/pipeline-demo";
@@ -10,7 +9,6 @@ import AnimatedContent from "@/components/AnimatedContent";
 import Beams from "@/components/Beams";
 import LiveDemo from "@/components/live-demo";
 import OpsChart from "@/components/ops-chart";
-import { env } from "@/lib/env";
 import { listExecutions } from "@/lib/store";
 import { listShield, shieldCounts } from "@/lib/shield";
 import { stageStates } from "@/lib/stages";
@@ -56,29 +54,6 @@ const stateColor: Record<string, string> = {
   DEGRADED: "text-err",
 };
 
-type LedgerItem = {
-  title: string;
-  ready: boolean;
-  note: string;
-  description: string;
-};
-
-const ledgerItems: LedgerItem[] = [
-  {
-    title: "OCI SECURITY LIST CLEANUP",
-    ready: false,
-    note: "(user-gated — Oracle Cloud console)",
-    description:
-      "Delete the stale TCP 5678 ingress rule. Nothing listens on it anymore — n8n is HTTPS-only via eterna.vstal.in/n8n.",
-  },
-];
-
-const resolvedItems = [
-  ["N8N OWNER API KEY", "Created — stage 04 LOGGED is LIVE"],
-  ["RECEIPT LEG", "Deployed box-side — stage 05 LIVE, receipts log for real"],
-  ["5678 EXPOSURE", "Closed — n8n moved behind HTTPS on the domain"],
-];
-
 export default async function HomePage() {
   const ring = await listExecutions(100);
   const rows = ring.slice(0, 10);
@@ -86,7 +61,6 @@ export default async function HomePage() {
   const shield = await shieldCounts();
   const stages = await stageStates();
   const { now, iso: nowIso } = clock();
-  const appsScriptPending = !env.APPS_SCRIPT_URL;
 
   const latestAccepted = ring.find((r) => r.status !== "failed") ?? ring[0] ?? null;
   const tracking = latestAccepted ? trackingId(latestAccepted.id) : null;
@@ -100,13 +74,6 @@ export default async function HomePage() {
     dispatched: ring.filter((r) => r.status === "dispatched").length,
     failed: ring.filter((r) => r.status === "failed").length,
   };
-
-  const statCells = [
-    { label: "TOTAL ENTRIES", value: totals.n, tone: "text-text", stamp: null },
-    { label: "RECEIVED", value: totals.received, tone: "text-ok", stamp: ["stamp-green", "RECEIVED"] },
-    { label: "DISPATCHED", value: totals.dispatched, tone: "text-ok", stamp: ["stamp-green", "DISPATCHED"] },
-    { label: "FAILED", value: totals.failed, tone: "text-err", stamp: ["stamp-red", "FAILED"] },
-  ];
 
   const firstAt = ring.length > 0 ? ring[ring.length - 1].created_at : null;
   const lastFailure = rows.find((r) => r.status === "failed") ?? null;
@@ -224,42 +191,6 @@ export default async function HomePage() {
 
       <LiveTicker />
 
-      <section id="totals" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <SectionHeading eyebrow="REAL FIGURES" title="Live figures" />
-        <AnimatedContent distance={16} duration={0.6}>
-          <div className="grid grid-cols-2 gap-px border border-border bg-border lg:grid-cols-4">
-          {statCells.map((cell, i) => (
-            <div key={cell.label} className="relative bg-surface p-6 md:p-8">
-              <p className="font-mono text-xs uppercase tracking-widest text-muted">{cell.label}</p>
-              <p
-                className="number-pop mt-2 font-mono text-4xl font-medium tabular-nums md:text-5xl"
-                style={{ animationDelay: `calc(${i} * var(--duration-stagger))` }}
-              >
-                <CountUp to={cell.value} className={cell.tone} />
-              </p>
-              {cell.stamp && (
-                <span className={`stamp mt-4 ${cell.stamp[0]}`} aria-hidden="true">
-                  {cell.stamp[1]}
-                </span>
-              )}
-            </div>
-          ))}
-          </div>
-        </AnimatedContent>
-        <AnimatedContent distance={16} duration={0.6}>
-          <div className="mt-2 flex flex-col gap-2 border border-border bg-surface px-5 py-4 font-mono text-xs tabular-nums text-muted sm:flex-row sm:items-center sm:justify-between">
-          <span>
-            <span className="text-text">SHIELD</span> — bots blocked: {shield.honeypot} · bad requests:{" "}
-            {shield.intake_400} · rejected by workflow: {shield.n8n_rejected}
-          </span>
-          <span className="stamp stamp-red" aria-hidden="true">BLOCKED, COUNTED</span>
-        </div>
-        </AnimatedContent>
-        <p className="mt-3 font-mono text-xs text-muted">
-          Last 100 submissions — real numbers, not all-time.
-        </p>
-      </section>
-
       <section id="dashboard" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="SIGNAL // pipeline status" title="Is it real?" />
         <div className="border border-border bg-surface">
@@ -337,70 +268,6 @@ export default async function HomePage() {
           </div>
         </div>
 
-        <div className="mt-10">
-          <SectionHeading eyebrow="LEDGER // known unknowns" title="What&apos;s still missing?" />
-          <div className="border border-border bg-surface">
-            <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
-              <span className="led-warn" aria-hidden="true" />
-              <span>$ ./ledger --known-unknowns</span>
-              <span className="caret" aria-hidden="true" />
-            </div>
-            <ul className="divide-y divide-border">
-              {ledgerItems.map((item) => (
-                <li key={item.title} className="flex items-start gap-3 px-4 py-3">
-                  <span
-                    aria-hidden="true"
-                    className="mt-0.5 h-3.5 w-3.5 shrink-0 border border-muted/50"
-                  />
-                  <div>
-                    <p className="font-mono text-sm tabular-nums">
-                      <span className="text-text">{item.title}</span>
-                      {item.ready ? (
-                        <span className="ml-2 text-ok">CONFIGURED</span>
-                      ) : (
-                        <>
-                          <span className="ml-2 text-warn">PENDING</span>
-                          <span className="ml-2 text-muted">{item.note}</span>
-                        </>
-                      )}
-                    </p>
-                    <p className="mt-1 text-xs text-muted">{item.description}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="mt-2 border border-border bg-surface">
-            <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
-              <span className="led-ok" aria-hidden="true" />
-              <span>RESOLVED THIS WEEK</span>
-            </div>
-            <ul className="divide-y divide-border">
-              {resolvedItems.map(([title, note]) => (
-                <li key={title} className="flex items-start gap-3 px-4 py-3">
-                  <span
-                    aria-hidden="true"
-                    className="mt-0.5 h-3.5 w-3.5 shrink-0 border border-ok/50"
-                  />
-                  <div>
-                    <p className="font-mono text-sm tabular-nums">
-                      <span className="text-text">{title}</span>
-                      <span className="ml-2 text-ok">DONE</span>
-                    </p>
-                    <p className="mt-1 text-xs text-muted">{note}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-          {appsScriptPending && (
-            <div className="mt-4 border border-warn/40 bg-surface px-4 py-3 font-mono text-xs leading-relaxed text-muted tabular-nums">
-              <span className="text-warn">DEGRADED</span> — Apps Script not
-              deployed: executions return 200-degraded until the user deploys
-              (docs/apps-script-setup.md) — the honest pre-deploy state.
-            </div>
-          )}
-        </div>
       </section>
 
       <section id="log" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
