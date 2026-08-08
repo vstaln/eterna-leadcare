@@ -5,7 +5,6 @@ import LedgerHeadline from "@/components/ledger-headline";
 import CountUp from "@/components/CountUp";
 import ShinyText from "@/components/ShinyText";
 import Magnet from "@/components/Magnet";
-import FaultyTerminal from "@/components/FaultyTerminal";
 import PipelineDemo from "@/components/pipeline-demo";
 import AnimatedContent from "@/components/AnimatedContent";
 import Beams from "@/components/Beams";
@@ -33,8 +32,8 @@ const stateColor: Record<string, string> = {
   DEGRADED: "text-err",
 };
 
-const officialUrl = "https://www.eternaindonesia.com/jobs/lead-automation-web-engineer";
 
+const officialUrl = "https://www.eternaindonesia.com/jobs/lead-automation-web-engineer";
 const roleFacts = [
   ["Role", "Lead Automation & Web Engineer"],
   ["Salary", "Rp13.000.000 – Rp18.000.000"],
@@ -350,46 +349,6 @@ export default async function HomePage() {
         </p>
       </section>
 
-      <section id="try" className="relative mx-auto max-w-6xl overflow-hidden px-6 py-24 md:py-32">
-        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-          <FaultyTerminal className="absolute bottom-0 right-0 max-h-full overflow-hidden text-right text-ok/10" />
-        </div>
-        <div className="relative">
-          <SectionHeading eyebrow="TRY IT" title="Send a test lead" />
-          <AnimatedContent distance={16} duration={0.6}>
-          <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start">
-          <div>
-            <p className="measure text-sm leading-relaxed text-muted">
-              Send a test lead — it travels the same path a real one would and shows
-              up live on the ops dashboard. This form is a live demo, not Eterna&apos;s
-              official application.
-            </p>
-            <p className="mt-6 font-mono text-xs leading-relaxed text-muted">
-              Paper everywhere else — this terminal is the one place data enters the record.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Magnet className="inline-flex" padding={10} activeStrength={2}>
-                <a href={officialUrl} target="_blank" rel="noreferrer" className="stamp stamp-red press text-sm">
-                  OFFICIAL POSTING
-                </a>
-              </Magnet>
-            </div>
-          </div>
-          <div className="capture-terminal">
-            <div className="flex items-center gap-2 border-b border-border bg-surface px-4 py-2 font-mono text-xs text-muted">
-              <span className="led-live" aria-hidden="true" />
-              <span>CAPTURE TERMINAL</span>
-              <span className="caret" aria-hidden="true" />
-            </div>
-            <ApplicationForm />
-            <p className="px-6 pb-4 pt-0 font-mono text-xs text-muted">
-              Submits via POST /api/lead — honeypot-gated, tracked live on /ops
-            </p>
-          </div>
-        </div>
-          </AnimatedContent>
-        </div>
-      </section>
     </div>
   );
 }
