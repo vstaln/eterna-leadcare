@@ -35,33 +35,18 @@ type LedgerItem = {
 
 const ledgerItems: LedgerItem[] = [
   {
-    title: "5678 EXPOSURE",
+    title: "OCI SECURITY LIST CLEANUP",
     ready: false,
-    note: "(user-gated — OCI security list)",
+    note: "(user-gated — Oracle Cloud console)",
     description:
-      "Open TCP 5678 inbound on the box; until then n8n is reachable only from the box itself.",
+      "Delete the stale TCP 5678 ingress rule. Nothing listens on it anymore — n8n is HTTPS-only via eterna.vstal.in/n8n.",
   },
-  {
-    title: "APPS SCRIPT DEPLOY",
-    ready: Boolean(env.APPS_SCRIPT_URL),
-    note: "(user-gated — docs/apps-script-setup.md)",
-    description:
-      "Deploy the web app and set APPS_SCRIPT_URL in .env.local; the pipeline upgrades from degraded to full after deploy.",
-  },
-  {
-    title: "N8N OWNER API KEY",
-    ready: Boolean(env.N8N_API_KEY),
-    note: "(P5)",
-    description:
-      "Created in the n8n settings UI; needed for the P5 stage callbacks, not for the current slice.",
-  },
-  {
-    title: "TELEGRAM NOTIFY",
-    ready: false,
-    note: "(P5 — documented, deferred)",
-    description:
-      "Live delivery notifications land in the documented P5 phase; the report card already records everything the bot would send.",
-  },
+];
+
+const resolvedItems = [
+  ["N8N OWNER API KEY", "Created — stage 04 LOGGED is LIVE"],
+  ["RECEIPT LEG", "Deployed box-side — stage 05 LIVE, receipts log for real"],
+  ["5678 EXPOSURE", "Closed — n8n moved behind HTTPS on the domain"],
 ];
 
 export default async function OpsPage() {
@@ -250,6 +235,29 @@ export default async function OpsPage() {
                     )}
                   </p>
                   <p className="mt-1 text-xs text-muted">{item.description}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="mt-2 border border-border bg-surface">
+          <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
+            <span className="led-ok" aria-hidden="true" />
+            <span>RESOLVED THIS WEEK</span>
+          </div>
+          <ul className="divide-y divide-border">
+            {resolvedItems.map(([title, note]) => (
+              <li key={title} className="flex items-start gap-3 px-4 py-3">
+                <span
+                  aria-hidden="true"
+                  className="mt-0.5 h-3.5 w-3.5 shrink-0 border border-ok/50"
+                />
+                <div>
+                  <p className="font-mono text-sm tabular-nums">
+                    <span className="text-text">{title}</span>
+                    <span className="ml-2 text-ok">DONE</span>
+                  </p>
+                  <p className="mt-1 text-xs text-muted">{note}</p>
                 </div>
               </li>
             ))}
