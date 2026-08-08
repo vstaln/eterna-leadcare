@@ -175,7 +175,8 @@ export default async function HomePage() {
               rel="noreferrer"
               className="mt-6 block border border-[#27272a] bg-[#09090b] p-4 transition hover:border-live focus-visible:outline-2 focus-visible:outline-live"
             >
-              <p className="font-mono text-[0.625rem] uppercase tracking-widest text-[#c6c6cc]">
+              <p className="flex items-center gap-2 font-mono text-[0.625rem] uppercase tracking-widest text-[#c6c6cc]">
+                <img src="/eterna-silhouette.svg" alt="" aria-hidden="true" className="h-3.5 w-auto" />
                 the company — eterna indonesia
               </p>
               <img
@@ -313,6 +314,42 @@ export default async function HomePage() {
           ))}
           </div>
         </AnimatedContent>
+
+        <div className="mt-10 border border-border bg-surface">
+          <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
+            <span className="led-ok" aria-hidden="true" />
+            <span>BUILT WITH</span>
+          </div>
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-4 px-6 py-5">
+            <a
+              href="https://zed.dev"
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-2.5 text-text transition hover:text-muted"
+            >
+              <img src="/built-with/zed.png" alt="" aria-hidden="true" className="h-6 w-6" />
+              <span className="font-mono text-sm">Zed</span>
+            </a>
+            <a
+              href="https://codex.openai.com"
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-2.5 text-text transition hover:text-muted"
+            >
+              <img src="/built-with/codex.svg" alt="" aria-hidden="true" className="h-5 w-auto" />
+              <span className="font-mono text-sm">Codex</span>
+            </a>
+            <a
+              href="https://opencode.ai"
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-2.5 text-text transition hover:text-muted"
+            >
+              <img src="/built-with/opencode.svg" alt="" aria-hidden="true" className="h-5 w-auto" />
+              <span className="font-mono text-sm">OpenCode</span>
+            </a>
+          </div>
+        </div>
       </section>
 
     </div>
