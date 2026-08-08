@@ -67,14 +67,15 @@ function fitFlowToCanvas(doc: Document) {
   if (!(bw > 0) || !(bh > 0)) return;
   const pad = 80;
   const ns = Math.min((r.width - pad) / bw, (r.height - pad) / bh);
-  if (ns <= 0) return;
+  if (ns <= 0) return false;
   const ntx = (r.width - bw * ns) / 2 - minX * ns;
   const nty = (r.height - bh * ns) / 2 - minY * ns;
   pane.style.transform = `translate(${ntx.toFixed(2)}px, ${nty.toFixed(2)}px) scale(${ns.toFixed(4)})`;
+  return true;
 }
 
-function stripEditorChrome(doc: Document) {
-  if (!doc.head) return;
+function stripEditorChrome(doc: Document): boolean {
+  if (!doc.head) return false;
   let style = doc.getElementById("eterna-chrome-hider") as HTMLStyleElement | null;
   if (!style) {
     style = doc.createElement("style");
@@ -83,9 +84,11 @@ function stripEditorChrome(doc: Document) {
   }
   style.textContent = HIDE_CHROME_CSS;
   try {
-    fitFlowToCanvas(doc);
+    // once the whole flow fits, stop re-fitting so the visitor can pan/zoom
+    return fitFlowToCanvas(doc) === true;
   } catch {
     // the editor mounts async — the interval below re-applies until it settles
+    return false;
   }
 }
 
@@ -107,8 +110,8 @@ export default function LiveDemo() {
       ) as HTMLIFrameElement | null;
       const doc = iframe?.contentDocument;
       if (doc && doc.getElementById("n8n-app")) {
-        stripEditorChrome(doc);
-        if (++ticks > 40) clearInterval(timer);
+        const settled = stripEditorChrome(doc);
+        if (settled || ++ticks > 40) clearInterval(timer);
       } else if (++ticks > 80) {
         clearInterval(timer);
       }
@@ -149,7 +152,6 @@ export default function LiveDemo() {
               }}
             />
           )}
-          <div className="absolute inset-0 z-10" aria-hidden="true" />
           {session === "failed" && (
             <div className="absolute inset-0 z-20 flex items-center justify-center bg-surface/85 p-6 text-center">
               <p className="max-w-sm font-mono text-xs leading-relaxed text-muted">
@@ -166,7 +168,7 @@ export default function LiveDemo() {
           )}
         </div>
         <div className="flex flex-col gap-2 border-t border-border px-4 py-3 font-mono text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
-          <span>Real instance — the same one the pipeline runs on. Read-only, nothing clickable.</span>
+          <span>Real instance — the same one the pipeline runs on. Viewer session: pan and zoom the flow freely, edits stay locked.</span>
           <a href={WORKFLOW_URL} className="underline decoration-ok underline-offset-4 hover:text-text">
             Open in a new tab ↗
           </a>

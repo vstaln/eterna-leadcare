@@ -197,11 +197,24 @@ export default async function HomePage() {
 
       <section id="dossier" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="THE APPLICATION" title="About me" />
-        <p className="measure text-base leading-relaxed text-muted">
-          I&apos;m Vstalin — I build web experiences, connect them with automation, and ship with AI
-          tools. This site is my application for the Lead Automation &amp; Web Engineer role at
-          Eterna Indonesia; the live pipeline below is the evidence.
-        </p>
+        <div className="mt-10 grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,19rem)] md:items-start">
+          <p className="measure text-base leading-relaxed text-muted">
+            I&apos;m Vstalin — I build web experiences, connect them with automation, and ship with AI
+            tools. This site is my application for the Lead Automation &amp; Web Engineer role at
+            Eterna Indonesia; the live pipeline below is the evidence.
+          </p>
+          <figure className="border border-border bg-surface p-3">
+            <img
+              src="/vstalingrady.webp"
+              alt="Portrait of Vstalin Grady"
+              className="aspect-square w-full object-cover"
+            />
+            <figcaption className="mt-3 flex items-center gap-2 font-mono text-xs text-muted">
+              <span className="led-live" aria-hidden="true" />
+              <span>VSTALIN GRADY — THE OPERATOR</span>
+            </figcaption>
+          </figure>
+        </div>
         <AnimatedContent distance={16} duration={0.6}>
           <div className="mt-10 grid grid-cols-2 gap-px border border-border bg-border lg:grid-cols-4">
             {roleFacts.map(([label, value]) => (
