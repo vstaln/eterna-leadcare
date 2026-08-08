@@ -23,43 +23,12 @@ export const metadata = {
     "Eterna LeadCare, live: every submission checked by a spam shield, logged with a tracking number, and shown on a real dashboard. Built by Vstalin as an application for Eterna Indonesia.",
 };
 
-const stateColor: Record<string, string> = {
-  ENABLED: "text-ok",
-  CONFIGURED: "text-ok",
-  LIVE: "text-ok",
-  "N/R": "text-warn",
-  PENDING: "text-warn",
-  DEGRADED: "text-err",
-};
-
-
 const officialUrl = "https://www.eternaindonesia.com/jobs/lead-automation-web-engineer";
 const roleFacts = [
   ["Role", "Lead Automation & Web Engineer"],
   ["Salary", "Rp13.000.000 – Rp18.000.000"],
   ["Employment", "Full time · Fully remote"],
   ["Client", "U.S.-based client"],
-];
-
-const skillCards: [string, string, string, string][] = [
-  [
-    "01",
-    "WEB ENGINEERING",
-    "Sites that ship",
-    "Next.js, React, TypeScript, responsive, accessible, fast — the standard I'd bring to Webflow.",
-  ],
-  [
-    "02",
-    "AUTOMATION",
-    "Workflows that run",
-    "Signed webhook intake, n8n orchestration, API integrations, auditable states — live on this page.",
-  ],
-  [
-    "03",
-    "CLOUD & AI",
-    "Evidence, not claims",
-    "Docker on Oracle Cloud, production delivery, Git workflows, daily AI-assisted build.",
-  ],
 ];
 
 const fitItems = [
@@ -69,33 +38,6 @@ const fitItems = [
   ["Use AI-enhanced systems to accelerate development", "I build with AI tools daily — this codebase is the evidence."],
   ["Translate business needs into automated solutions", "This page explains the pipeline in plain English for a non-technical reader."],
   ["Explore new tools and present innovative solutions", "Self-directed learner — Behind the Scenes documents how this site was built."],
-];
-
-const aboutCards: [string, string, string, string][] = [
-  [
-    "01",
-    "CAPTURE",
-    "Lead capture",
-    "Typed intake API. Every submission is checked by a honeypot shield that counts each blocked bot.",
-  ],
-  [
-    "02",
-    "DISPATCH",
-    "Automation",
-    "Accepted leads go through a signed n8n workflow — every state recorded.",
-  ],
-  [
-    "03",
-    "REPORT",
-    "Live reporting",
-    "The ops dashboard renders the real store: per-day chart, stages, and a tracking number per lead.",
-  ],
-];
-
-const trustItems = [
-  ["Real store, not a mockup", "Every row on the dashboard is a real submission that went through this pipeline.", "VERIFIED", "stamp-green"],
-  ["Failures are named, not hidden", "Can't report? It says N/R. Pending? PENDING. Degraded? DEGRADED — never a fake green light.", "HONEST", "stamp-green"],
-  ["Open build", "Pipeline, workflow, and build log are all documented behind the scenes.", "OPEN", "stamp-red"],
 ];
 
 const cornerPositions = [
@@ -156,9 +98,6 @@ export default async function HomePage() {
                   </a>
                 </Magnet>
               </div>
-              <p className="mt-6 font-mono text-xs text-muted">
-                ONE PIPELINE · ONE REAL DATA SET · APPLICATION FOR ETERNA&apos;S LEAD AUTOMATION &amp; WEB ENGINEER ROLE
-              </p>
             </div>
 
             <div id="try" className="flex flex-col border border-border bg-surface">
@@ -171,22 +110,11 @@ export default async function HomePage() {
                 <ApplicationForm />
               </div>
               <div className="border-t border-border px-4 py-3 font-mono text-xs leading-relaxed text-muted">
-                Every submission hits POST /api/lead → n8n webhook and moves through the
-                flow chart at the bottom of this page. Follow the tracking number on{" "}
+                Submit → get a tracking number → watch it move on{" "}
                 <a href="/ops" className="underline decoration-ok underline-offset-4 hover:text-text">
                   /ops
                 </a>
                 .
-                <div className="mt-3">
-                  <a
-                    href={officialUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="stamp stamp-red press text-sm"
-                  >
-                    OFFICIAL POSTING
-                  </a>
-                </div>
               </div>
             </div>
           </div>
@@ -225,54 +153,13 @@ export default async function HomePage() {
             ))}
           </div>
         </AnimatedContent>
-        <AnimatedContent distance={16} duration={0.6}>
-          <div className="mt-6 grid gap-6 md:grid-cols-3">
-          {skillCards.map(([num, module, title, text]) => (
-            <article key={module} className="relative border border-border bg-surface p-8">
-              {cornerPositions.map((pos) => (
-                <span key={pos} aria-hidden="true" className={`pointer-events-none absolute ${pos} px-1 font-mono text-xs text-muted/40`}>
-                  +
-                </span>
-              ))}
-              <span className="ledger-no" aria-hidden="true">{num}</span>
-              <p className="mt-4 font-mono text-xs uppercase tracking-widest text-muted">{module}</p>
-              <h3 className="mt-2 font-semibold text-text">{title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted">{text}</p>
-            </article>
-          ))}
-          </div>
-        </AnimatedContent>
         <div className="mt-8 flex flex-wrap items-center gap-4">
           <Magnet className="inline-flex" padding={10} activeStrength={2}>
             <a href={officialUrl} target="_blank" rel="noreferrer" className="stamp stamp-red press text-sm">
               OFFICIAL POSTING
             </a>
           </Magnet>
-          <span className="font-mono text-xs text-muted">
-            submitted through Eterna&apos;s official process — this site is the supporting evidence
-          </span>
         </div>
-      </section>
-
-      <section id="about" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <SectionHeading eyebrow="WHAT LEADCARE DOES" title="How it works" />
-        <AnimatedContent distance={16} duration={0.6}>
-          <div className="mt-8 grid gap-6 md:grid-cols-3">
-          {aboutCards.map(([num, module, title, text]) => (
-            <article key={module} className="relative border border-border bg-surface p-8">
-              {cornerPositions.map((pos) => (
-                <span key={pos} aria-hidden="true" className={`pointer-events-none absolute ${pos} px-1 font-mono text-xs text-muted/40`}>
-                  +
-                </span>
-              ))}
-              <span className="ledger-no" aria-hidden="true">{num}</span>
-              <p className="mt-4 font-mono text-xs uppercase tracking-widest text-muted">{module}</p>
-              <h3 className="mt-2 font-semibold text-text">{title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted">{text}</p>
-            </article>
-          ))}
-          </div>
-        </AnimatedContent>
       </section>
 
       <LiveTicker />
@@ -313,35 +200,6 @@ export default async function HomePage() {
         </p>
       </section>
 
-      <section id="stages" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <SectionHeading eyebrow="THE FIVE STAGES" title="The five stages, honestly" />
-        <AnimatedContent distance={16} duration={0.6}>
-          <div className="border border-border bg-surface">
-          <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
-            <span className="led-live" aria-hidden="true" />
-            <span>STATUS — LIVE</span>
-            <span className="caret" aria-hidden="true" />
-          </div>
-          <ul className="divide-y divide-border">
-            {stages.map((stage) => (
-              <li key={stage.num} className="flex flex-col gap-1 px-5 py-4 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6 tabular-nums">
-                <span className="flex items-center gap-3 font-mono text-sm">
-                  <span className={`led-${stage.led}`} aria-hidden="true" />
-                  <span className="text-text">{stage.num} {stage.name}</span>
-                  <span className={stateColor[stage.state]}>{stage.state}</span>
-                </span>
-                <span className="font-mono text-xs text-muted">source={stage.source} · {stage.note}</span>
-              </li>
-            ))}
-          </ul>
-          </div>
-        </AnimatedContent>
-        <p className="mt-3 font-mono text-xs leading-relaxed text-muted">
-          STATE VOCABULARY — PENDING awaiting an action · N/R no reading available · CONFIGURED env
-          present, never live-verified · DEGRADED the log leg answers 200-degraded while APPS_SCRIPT_URL is empty.
-        </p>
-      </section>
-
       <section id="fit" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="WHY THE FIT" title="Why I&apos;m a strong fit" />
         <AnimatedContent distance={16} duration={0.6}>
@@ -356,26 +214,6 @@ export default async function HomePage() {
               <p className="font-mono text-[0.65rem] uppercase tracking-widest text-muted">THE ROLE ASKS</p>
               <h3 className="mt-2 font-semibold text-text">{ask}</h3>
               <p className="mt-3 text-sm leading-relaxed text-muted">{mine}</p>
-            </article>
-          ))}
-          </div>
-        </AnimatedContent>
-      </section>
-
-      <section id="trust" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <SectionHeading eyebrow="WHY IT CAN BE TRUSTED" title="Stamped, not claimed" />
-        <AnimatedContent distance={16} duration={0.6}>
-          <div className="mt-8 grid gap-6 md:grid-cols-3">
-          {trustItems.map(([title, text, seal, sealTone]) => (
-            <article key={title} className="relative border border-border bg-surface p-8">
-              {cornerPositions.map((pos) => (
-                <span key={pos} aria-hidden="true" className={`pointer-events-none absolute ${pos} px-1 font-mono text-xs text-muted/40`}>
-                  +
-                </span>
-              ))}
-              <h3 className="font-semibold text-text">{title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted">{text}</p>
-              <span className={`stamp mt-6 ${sealTone}`} aria-hidden="true">{seal}</span>
             </article>
           ))}
           </div>
