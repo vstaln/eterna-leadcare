@@ -37,8 +37,10 @@ async function probeN8nUp(): Promise<boolean> {
 async function probeN8nLog(): Promise<{ reachable: boolean; count: number }> {
   if (!env.N8N_BASE_URL || !env.N8N_API_KEY) return { reachable: false, count: 0 };
   try {
+    const headers = new Headers();
+    headers.set("X-N8N-API-KEY", env.N8N_API_KEY);
     const res = await fetch(`${env.N8N_BASE_URL.replace(/\/+$/, "")}/api/v1/executions?limit=100`, {
-      headers: { "X-N8N-API-KEY": env.N8N_API_KEY },
+      headers,
       signal: AbortSignal.timeout(3000),
       cache: "no-store",
     });
