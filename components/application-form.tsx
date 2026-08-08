@@ -1,6 +1,7 @@
 "use client";
 import { FormEvent, useState } from "react";
 import { CheckCircle } from "@phosphor-icons/react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 export default function ApplicationForm() {
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [message, setMessage] = useState("");
+  const [sentTracking, setSentTracking] = useState<string | null>(null);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -33,6 +35,7 @@ export default function ApplicationForm() {
       // LeadCare promise: every accepted lead gets a tracking number the
       // visitor can follow on the ops dashboard. Fall back to the raw id
       // if the API didn't return one (older deployments).
+      setSentTracking(result.tracking ?? null);
       setMessage(
         result.tracking
           ? `Received — tracking number ${result.tracking}. Watch it move on the ops dashboard.`
@@ -118,6 +121,16 @@ export default function ApplicationForm() {
         )}
         <span>{message}</span>
       </p>
+      {state === "sent" && sentTracking && (
+        <p className="mt-2">
+          <Link
+            href={`/live?tracking=${sentTracking}`}
+            className="font-mono text-xs underline decoration-ok underline-offset-4 hover:text-text"
+          >
+            Track it live on the ledger →
+          </Link>
+        </p>
+      )}
     </form>
   );
 }
