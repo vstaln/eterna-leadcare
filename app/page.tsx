@@ -1,13 +1,18 @@
+// page.tsx — the home page: one server-rendered "honest report card".
+//
+// Everything on it is store-derived or a labeled env reading: the stage
+// states come from live probes (lib/stages.ts), the totals/chart/shield
+// log come from data/executions.json + data/shield.json, and the tracking
+// number is derived deterministically from each execution id. Nothing is
+// simulated; unreadable instruments render as N/R, not green lights.
+// force-dynamic because the store is a file that changes per submission.
 import SectionHeading from "@/components/section-heading";
-import LiveTicker from "@/components/live-ticker";
 import ApplicationForm from "@/components/application-form";
 import LedgerHeadline from "@/components/ledger-headline";
 import ShinyText from "@/components/ShinyText";
 import Magnet from "@/components/Magnet";
-import PipelineDemo from "@/components/pipeline-demo";
 import AnimatedContent from "@/components/AnimatedContent";
-import Beams from "@/components/Beams";
-import LiveDemo from "@/components/live-demo";
+import HeroBackdrop from "@/components/hero-backdrop";
 import OpsChart from "@/components/ops-chart";
 import { listExecutions } from "@/lib/store";
 import { listShield, shieldCounts } from "@/lib/shield";
@@ -23,6 +28,9 @@ export const metadata = {
     "Leadcare, live: every submission checked by a spam shield, logged with a tracking number, and shown on a real dashboard — all on one page. Built by Vstalin as an application for Eterna Indonesia.",
 };
 
+// Static copy for the dossier section (job facts) and the fit grid (the
+// role's asks vs. what this repo demonstrates). Keeping them as data
+// arrays keeps the JSX below declarative.
 const officialUrl = "https://www.eternaindonesia.com/jobs/lead-automation-web-engineer";
 const roleFacts = [
   ["Role", "Lead Automation & Web Engineer"],
@@ -61,12 +69,6 @@ export default async function HomePage() {
   const shield = await shieldCounts();
   const stages = await stageStates();
   const { now, iso: nowIso } = clock();
-
-  const latestAccepted = ring.find((r) => r.status !== "failed") ?? ring[0] ?? null;
-  const tracking = latestAccepted ? trackingId(latestAccepted.id) : null;
-  const lastLeadText = latestAccepted
-    ? `${trackingId(latestAccepted.id)} · ${latestAccepted.status} · ${shortIso(latestAccepted.created_at)}`
-    : null;
 
   const totals = {
     n: ring.length,
@@ -112,7 +114,7 @@ export default async function HomePage() {
   return (
     <div>
       <section id="hero" className="ledger-lines relative flex min-h-screen items-center overflow-hidden py-16 sm:py-20">
-        <Beams className="absolute inset-0" />
+        <HeroBackdrop />
         <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
           <div className="grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-14 lg:items-start">
             <div>
@@ -130,8 +132,8 @@ export default async function HomePage() {
                   <a href="#dashboard" className="stamp stamp-red press text-sm">View live dashboard</a>
                 </Magnet>
                 <Magnet className="inline-flex" padding={10} activeStrength={2}>
-                  <a href="#pipeline" className="press inline-flex items-center gap-2 border border-border px-5 py-3 text-sm font-medium text-text transition hover:border-live focus-visible:outline-2 focus-visible:outline-live">
-                    How it works
+                  <a href="#log" className="press inline-flex items-center gap-2 border border-border px-5 py-3 text-sm font-medium text-text transition hover:border-live focus-visible:outline-2 focus-visible:outline-live">
+                    See the log
                   </a>
                 </Magnet>
               </div>
@@ -145,8 +147,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
-      <LiveDemo />
 
       <section id="dossier" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="THE APPLICATION" title="About me" />
@@ -188,8 +188,6 @@ export default async function HomePage() {
           </Magnet>
         </div>
       </section>
-
-      <LiveTicker />
 
       <section id="dashboard" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="SIGNAL // pipeline status" title="Is it real?" />
@@ -343,50 +341,6 @@ export default async function HomePage() {
         <p className="mt-1 font-mono text-xs text-muted tabular-nums">
           RENDERED {nowIso} — data as of last store write; relative ages
           computed at render time.
-        </p>
-      </section>
-
-      <section id="legend" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <SectionHeading
-          eyebrow="PIPELINE LEGEND // the five honest stages"
-          title="The five stages, honestly"
-        />
-        <ol className="flex flex-wrap items-center gap-x-2 gap-y-4 font-mono text-sm tabular-nums">
-          {stages.map((stage, i) => (
-            <li key={stage.num} className="flex items-center gap-2">
-              <span className="border border-border bg-surface px-3 py-2 text-center">
-                <span className="block text-text">
-                  {stage.num} {stage.name}
-                </span>
-                <span className={stateColor[stage.state]}>{stage.state}</span>
-              </span>
-              {i < stages.length - 1 && (
-                <span className="text-muted" aria-hidden="true">
-                  →
-                </span>
-              )}
-            </li>
-          ))}
-        </ol>
-        <p className="mt-6 font-mono text-xs leading-relaxed text-muted">
-          STATE VOCABULARY — PENDING awaiting an action · USER-GATED needs a
-          browser/account step the phone cannot do · N/R no reading available ·
-          CONFIGURED env present, never live-verified · DEGRADED 200-degraded
-          path while APPS_SCRIPT_URL is empty · P5 deferred to documented phase
-          5.
-        </p>
-      </section>
-
-      <section id="pipeline" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <SectionHeading eyebrow="THE PIPELINE" title="The path every lead travels" />
-        <PipelineDemo
-          stages={stages}
-          tracking={tracking}
-          shieldBlocked={shield.honeypot}
-          lastLeadText={lastLeadText}
-        />
-        <p className="mt-3 font-mono text-xs text-muted">
-          The same five stages as the live dashboard above.
         </p>
       </section>
 

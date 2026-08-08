@@ -1,3 +1,8 @@
+// ledger-headline.tsx — the hero H1: "Every lead, checked, logged, shown live."
+//
+// Renders the DecryptedText scramble when motion is allowed; a static H1
+// under prefers-reduced-motion (the real string either way — no SEO or
+// a11y cost, since DecryptedText keeps the full text as its aria-label).
 "use client";
 import { useReducedMotion } from "motion/react";
 import DecryptedText from "@/components/DecryptedText";

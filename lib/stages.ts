@@ -1,6 +1,6 @@
 // stages.ts — the five lockstep LeadCare stages with honest, live-verified state.
 //
-// Shared by the dashboard and both landing versions (v2/v3) so the
+// Shared by the dashboard and the landing page so the
 // vocabulary and the states stay lockstep everywhere. Now that the app runs
 // beside its own n8n (Oracle box), RESEARCHED and LOGGED are live-probed
 // instead of guessed: n8n /healthz for reachability, the executions API

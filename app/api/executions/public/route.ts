@@ -1,3 +1,10 @@
+// /api/executions/public — PII-stripped mirror of the execution store.
+//
+// Deliberately public (the home-page dashboard and the Webflow one-pager
+// both consume it). It exposes ONLY id prefix, tracking code, status,
+// stage, and created_at — never name/email/company/message. The tracking
+// code is derived from the id via lib/tracking.ts so it stays deterministic
+// across renders.
 import { NextResponse } from "next/server";
 import { listExecutions } from "@/lib/store";
 import { trackingId } from "@/lib/tracking";

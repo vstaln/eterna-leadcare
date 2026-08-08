@@ -18,8 +18,7 @@ PENDING, DEGRADED) instead of hidden.
   paper world (light palette), ledger lines, rubber-stamp motifs, capture-terminal
   form (kept dark on purpose). `/v2` and `/v3` are 404s/redirects — do not recreate
   a version switcher.
-- React Bits effects were added: DecryptedText headline, CountUp totals, ShinyText,
-  Magnet CTAs, FaultyTerminal, ScrollStack, FallingText, ascii-art.
+- React Bits effects: DecryptedText headline, ShinyText, Magnet CTAs, FallingText, ascii-art.
 - The home page hosts the whole honest report card (stages, totals, shield counts, chart, ledger, tracking column); `/ops` redirects to `/#dashboard`.
 - CI on push to `main`: lint + typecheck + build + gitleaks. Keep it green.
 
@@ -121,7 +120,7 @@ ssh oracle-old 'sudo cp -a /home/ubuntu/eterna-leadcare/. /opt/eterna-leadcare/ 
 
 - Next.js App Router, Tailwind v4, TS strict (typecheck must pass), no comments
   in code unless asked.
-- Palette is theme-token driven in `app/globals.css` (`:root` + `.v3` overrides;
+- Palette is theme-token driven in `app/globals.css` (`:root` ledger tokens;
   the capture-terminal restores dark vars locally). Keep it that way.
 - Commit on `main` with identity `vstaln <vstaln@users.noreply.github.com>`.
 - If you change anything about n8n paths or nginx, test all five prefixes:

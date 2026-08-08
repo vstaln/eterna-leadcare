@@ -12,15 +12,14 @@ export default function ApplicationForm() {
   const [sentTracking, setSentTracking] = useState<string | null>(null);
   const [sentStatus, setSentStatus] = useState<string | null>(null);
 
-  // The five stops a lead makes — same vocabulary as the pipeline demo and
-  // the home dashboard. The first three are lit after a successful submit
+  // The five stops a lead makes — same vocabulary as the home dashboard.
+  // The first three are lit after a successful submit
   // (captured → shield passed → signed dispatch to n8n); LOGGED + LIVE are
   // where it lands next.
   const JOURNEY = ["CAPTURED", "SHIELD", "N8N", "LOGGED", "LIVE"] as const;
 
   function watchItMove() {
-    document.getElementById("pipeline")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    window.dispatchEvent(new CustomEvent("leadcare:demo-run"));
+    document.getElementById("log")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -160,7 +159,7 @@ export default function ApplicationForm() {
             onClick={watchItMove}
             className="mt-2.5 inline-flex items-center gap-1.5 border border-border px-3 py-1.5 font-mono text-xs text-text transition hover:border-live focus-visible:outline-2 focus-visible:outline-live"
           >
-            Watch it move on the pipeline ↓
+            Watch it on the log ↓
           </button>
         </div>
       )}

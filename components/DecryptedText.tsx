@@ -1,3 +1,11 @@
+// DecryptedText.tsx — "decrypting" text effect (React Bits pattern):
+// random chars scramble until the real text resolves.
+//
+// Modes: sequential (reveals left→right), reverse (right→left), or the
+// default probabilistic reveal (each char resolves with growing chance as
+// progress → 1). Triggers on view (IntersectionObserver) or hover. When
+// done, the real text stays — no looping. The aria-label always holds the
+// real text, so screen readers never hear the scramble.
 "use client";
 import { useEffect, useRef, useState } from "react";
 

@@ -12,12 +12,6 @@ Built in 48 hours, $0/month free tier, from a phone, with AI pair-programming. E
 - Live dashboard (real executions, on the home page): https://eterna.vstal.in/#dashboard
 - Webflow one-pager: `webflow/one-pager.html` (template; designer build is a user-gated browser step — see docs/webflow-migration.md)
 
-## Versions
-
-- **v3 — The Operations Ledger** (default; `/` redirects here): the paper/print world — same pipeline, same real data, a deliberately different visual language. Design doc: `DESIGN-v3.md`.
-- **v2 — The terminal**: the dark console report card. `/v2`.
-- Version switcher in the nav and footer of both; the home-page dashboard (the honest report card) and all API routes are version-independent.
-
 ## The pipeline (one vocabulary everywhere)
 
 ```
@@ -32,7 +26,7 @@ CAPTURED → SPAM SHIELD → RESEARCHED → LOGGED → LIVE
 | **Logged** | Execution store + Apps Script → Sheets | Permanent, client-visible record | LIVE / N/R |
 | **Live** | Ops dashboard | Watch every lead move, honestly | LIVE / DEGRADED |
 
-These five names are **lockstep** across the home page diagram, the dashboard, the ASCII art, and the Webflow one-pager — one vocabulary, never mixed.
+These five names are **lockstep** across the dashboard, the ASCII art, and the Webflow one-pager — one vocabulary, never mixed.
 
 ## What it proves
 
@@ -54,6 +48,7 @@ N8N / Google Apps Script / React / Next.js / Node.js / TypeScript / Recharts / D
 
 ## Docs
 
+- `DESIGN.md` — the art direction (paper world, stamps, motion, bans)
 - `docs/leadcare-hr-script.md` — the 60-second pitch + objection handling (HR-safe)
 - `docs/design-tokens.md` — tokens (only `led-live` pulses; ok/warn/err LEDs are static)
 - `docs/n8n-workflow.md` — the workflow definition

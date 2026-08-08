@@ -1,3 +1,5 @@
+// section-heading.tsx — consistent eyebrow + title for every section,
+// wrapped in a scroll-triggered fade/slide (AnimatedContent).
 import AnimatedContent from "@/components/AnimatedContent";
 
 export default function SectionHeading({

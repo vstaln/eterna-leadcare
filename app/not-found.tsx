@@ -1,3 +1,6 @@
+// not-found.tsx — the 404 page, in the site's own voice: a falling-text
+// "command not found" and a way back to the front door. /v2 and /v3 (the
+// old split) resolve here as plain 404s — the split is gone.
 import Link from "next/link";
 import FallingText from "@/components/FallingText";
 

@@ -1,3 +1,11 @@
+// live/page.tsx — /live?tracking=ELC-2026-XXXXX: look a lead up in the
+// ledger.
+//
+// Reads the SAME real store as the home dashboard (lib/store.ts) and finds
+// the row whose deterministic tracking code matches the query param.
+// Nothing is simulated: if a code isn't in the store it's an honest "no
+// such tracking". force-dynamic because the store is a file that changes
+// per submission — never cache this page.
 import SectionHeading from "@/components/section-heading";
 import LiveLookup from "@/components/live-lookup";
 import { listExecutions } from "@/lib/store";
@@ -23,6 +31,8 @@ export default async function LivePage({
 }: {
   searchParams: Promise<{ tracking?: string }>;
 }) {
+  // Next.js 16: searchParams is a Promise — await it. The tracking code is
+  // normalized (trim + upper) because the form field auto-capitalizes.
   const { tracking } = await searchParams;
   const target = (tracking ?? "").trim().toUpperCase();
   const ring = await listExecutions(100);

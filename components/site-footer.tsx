@@ -1,3 +1,5 @@
+// site-footer.tsx — the footer: wordmark + copyright line. No version
+// switcher, no links out — deliberately minimal.
 export default function SiteFooter() {
   return (
     <footer className="border-t border-border">

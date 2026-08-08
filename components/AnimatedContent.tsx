@@ -1,3 +1,10 @@
+// AnimatedContent.tsx — scroll-triggered fade/slide-in wrapper (GSAP).
+//
+// Animates its children once when they enter the viewport (ScrollTrigger,
+// start 'top 90%', once: true). A 3s fallback timer plays the animation if
+// ScrollTrigger never fires, and prefers-reduced-motion renders content
+// statically. The dialkit hook (useDialKit) lets the dev dial tune the
+// default distance/duration live; explicit props win.
 "use client";
 import React, { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';

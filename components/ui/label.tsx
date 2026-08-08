@@ -1,3 +1,5 @@
+// ui/label.tsx — shadcn-style Label (radix-ui Root wrapper) for form
+// fields. Marks itself disabled when inside a disabled group/peer.
 "use client"
 
 import * as React from "react"

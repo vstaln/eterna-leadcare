@@ -1,3 +1,10 @@
+// /api/executions — the FULL execution store, bearer-gated.
+//
+// Unlike the public mirror (/api/executions/public), this returns complete
+// rows (id, status, stage, timestamps, error). It is protected by an HMAC
+// of the EXECUTIONS_AUTH_TOKEN (see lib/crypto.ts) so the raw store is
+// never exposed to the public dashboard. The dashboard itself renders the
+// PII-stripped mirror instead.
 import { NextRequest, NextResponse } from "next/server";
 import { listExecutions } from "@/lib/store";
 import { env } from "@/lib/env";

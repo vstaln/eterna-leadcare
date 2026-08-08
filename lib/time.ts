@@ -1,3 +1,10 @@
+// time.ts — small time-presentation helpers shared by the dashboard rows,
+// the shield log, and the /live tracking page.
+//
+// All take an ISO string and render a human string; they never touch the
+// store. `now` is passed in as an argument (not read internally) so every
+// row on a page renders against the same clock tick — honest relative ages.
+
 export type StatusKey = "received" | "dispatched" | "failed";
 
 export function relativeAge(iso: string, now: number): string {
@@ -19,6 +26,9 @@ export function clock() {
   return { now: Date.now(), iso: new Date().toISOString() };
 }
 
+// Per-status LED + text color classes, so the whole app colors a lead's
+// state the same way: received = amber (in flight), dispatched = green
+// (done), failed = red.
 export const statusLed: Record<StatusKey, string> = {
   received: "led-warn",
   dispatched: "led-ok",

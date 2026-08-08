@@ -1,3 +1,8 @@
+// nav.tsx — fixed top nav: wordmark, primary links, WhatsApp CTA.
+//
+// links[] is data-driven; `live: false` entries render as disabled
+// "soon" items (kept for future nav additions). aria-current marks the
+// active route. The n8n link is external (the live editor behind nginx).
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

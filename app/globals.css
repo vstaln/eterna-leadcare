@@ -349,91 +349,56 @@
   }
 }
 
-/* faulty-terminal — ghost glitch lines (React Bits FaultyTerminal, aria-hidden decoration) */
-.glitch-line {
-  display: inline-block;
-  animation: glitch-jitter 2.4s steps(2, jump-none) infinite;
-  animation-delay: calc(var(--glitch-delay, 0) * 1s);
-}
-
-@keyframes glitch-jitter {
-  0%,
-  91%,
-  100% {
-    transform: translateX(0);
-    filter: none;
-  }
-  92% {
-    transform: translateX(-2px) skewX(4deg);
-    filter: brightness(1.4);
-  }
-  94% {
-    transform: translateX(1px) skewX(-3deg);
-    filter: brightness(0.8);
-  }
-  96% {
-    transform: translateX(0) skewX(0);
-    filter: none;
-  }
-}
-
-/* pipeline-demo — the animated LeadCare pipeline (components/pipeline-demo.tsx) */
-@keyframes pipeline-token-pulse {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--pipeline-token-color, var(--color-live)) 55%, transparent);
-  }
-  50% {
-    box-shadow: 0 0 0 8px transparent;
-  }
-}
-
-.pipeline-token {
-  display: block;
-  width: 14px;
-  height: 14px;
-  border-radius: 9999px;
-  background: var(--pipeline-token-color, var(--color-live));
-  animation: pipeline-token-pulse 1.6s ease-out infinite;
-}
-
-@keyframes pipeline-here-pop {
-  0% {
-    opacity: 0;
-    transform: scale(0.6) rotate(45deg);
-  }
-  60% {
-    transform: scale(1.08) rotate(45deg);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) rotate(45deg);
-  }
-}
-
-.pipeline-here {
+/* hero-backdrop — CSS-only hero effect: faint console dot grid + slow
+   drifting glows. No canvas, no JS loop; disabled for reduced motion. */
+.hero-backdrop {
   position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  width: 0.5rem;
-  height: 0.5rem;
-  border: 2px solid var(--pipeline-token-color, var(--color-live));
-  animation: pipeline-here-pop 350ms var(--ease-smooth-out) both;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    color-mix(in srgb, var(--color-text) 16%, transparent) 1px,
+    transparent 1.6px
+  );
+  background-size: 26px 26px;
+  -webkit-mask-image: radial-gradient(ellipse 90% 75% at 50% 35%, black 25%, transparent 78%);
+  mask-image: radial-gradient(ellipse 90% 75% at 50% 35%, black 25%, transparent 78%);
 }
 
-@keyframes pipeline-caption-in {
+.hero-backdrop::before,
+.hero-backdrop::after {
+  content: "";
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(70px);
+  opacity: 0.4;
+  animation: hero-glow-drift 18s ease-in-out infinite alternate;
+}
+
+.hero-backdrop::before {
+  width: 44vw;
+  height: 44vw;
+  top: -12%;
+  left: -10%;
+  background: color-mix(in srgb, var(--color-live) 26%, transparent);
+}
+
+.hero-backdrop::after {
+  width: 36vw;
+  height: 36vw;
+  bottom: -14%;
+  right: -8%;
+  background: color-mix(in srgb, var(--color-ok) 22%, transparent);
+  animation-delay: -9s;
+}
+
+@keyframes hero-glow-drift {
   from {
-    opacity: 0;
-    transform: translateY(4px);
+    transform: translate3d(0, 0, 0) scale(1);
   }
   to {
-    opacity: 1;
-    transform: none;
+    transform: translate3d(4vw, 3vh, 0) scale(1.18);
   }
-}
-
-.pipeline-caption {
-  animation: pipeline-caption-in 300ms var(--ease-smooth-out) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -441,22 +406,14 @@
     animation: none;
     background-image: none;
   }
-  .glitch-line {
-    animation: none;
-  }
   .press {
     transition: none;
   }
   .caret {
     animation: none;
   }
-  .pipeline-token {
-    animation: none;
-  }
-  .pipeline-here {
-    animation: none;
-  }
-  .pipeline-caption {
+  .hero-backdrop::before,
+  .hero-backdrop::after {
     animation: none;
   }
 }

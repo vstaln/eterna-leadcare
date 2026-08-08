@@ -1,3 +1,5 @@
+// ui/textarea.tsx — shadcn-style multi-line text input (field-sizing-content
+// lets the box grow with its content).
 import * as React from "react"
 
 import { cn } from "@/lib/utils"

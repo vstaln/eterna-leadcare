@@ -1,3 +1,5 @@
+// ui/input.tsx — shadcn-style text input, styled with project tokens
+// (border-input, focus ring, dark:bg-input/30).
 import * as React from "react"
 
 import { cn } from "@/lib/utils"

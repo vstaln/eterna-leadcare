@@ -1,3 +1,6 @@
+// ui/button.tsx — shadcn-style Button with cva variants (default,
+// destructive, outline, secondary, ghost, link; sizes xs→lg/icon). Wired to
+// the project tokens via cn() + the @theme colors in globals.css.
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { Slot } from "radix-ui"

@@ -1,3 +1,12 @@
+// env.ts — typed, fail-fast access to process.env for the whole app.
+//
+// WHY: the pipeline's honesty depends on known configuration. REQUIRED_DEFS
+// (N8N_BASE_URL, WEBHOOK_TOKEN, EXECUTIONS_AUTH_TOKEN) are enforced in
+// production — if any is missing the app refuses to boot rather than run
+// half-configured. Everything else (APPS_SCRIPT_URL, N8N_API_KEY,
+// N8N_WEBHOOK_PATH) is optional and degrades honestly (stage probes report
+// N/R / CONFIGURED / DEGRADED instead of faking green).
+
 const REQUIRED_DEFS = {
   N8N_BASE_URL: "",
   WEBHOOK_TOKEN: "",
@@ -35,4 +44,6 @@ export function validateEnv() {
   return values;
 }
 
+// readEnv() snapshots process.env ONCE at module load. In Next.js that is
+// per-process, which is fine: env is static at runtime for a given container.
 export const env = readEnv();

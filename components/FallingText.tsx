@@ -1,3 +1,10 @@
+// FallingText.tsx — letters fall in/out one by one (motion/react).
+//
+// Used on the 404 page ("command not found"). Each glyph animates down
+// (or up) with a stagger; `continuous` repeats as a loop, otherwise it
+// plays once on trigger (view / hover / always). Honors
+// prefers-reduced-motion by rendering plain text, and always renders an
+// sr-only copy of the full string for assistive tech.
 "use client";
 import { motion, useInView, useReducedMotion } from "motion/react";
 import { useRef, useState } from "react";

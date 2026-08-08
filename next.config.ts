@@ -1,3 +1,5 @@
+// next.config.ts — Next.js config: standalone output (for the Docker
+// runner image) and route redirects.
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {

@@ -1,3 +1,7 @@
+// live-lookup.tsx — the tracking-number input on the /live page.
+//
+// Normalizes the code (trim + upper) and pushes to
+// /live?tracking=<CODE> — the server page does the actual store lookup.
 "use client";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";

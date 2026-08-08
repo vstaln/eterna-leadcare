@@ -1,3 +1,9 @@
+// Magnet.tsx — wrapper that makes its children "stick" toward the cursor.
+//
+// The child translates a few px toward the pointer (strength = inverse
+// distance factor; stronger when hovered). Pointer-fine devices only, and
+// completely inert under prefers-reduced-motion or when disabled — it
+// degrades to a plain div so layout never shifts.
 "use client";
 import { useRef, useState } from "react";
 import { useReducedMotion } from "motion/react";

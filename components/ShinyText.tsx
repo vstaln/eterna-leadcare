@@ -1,3 +1,6 @@
+// ShinyText.tsx — a moving sheen across text (CSS-only, see
+// .shiny-text in globals.css). Degrades to plain text when disabled or
+// under prefers-reduced-motion.
 "use client";
 import { useReducedMotion } from "motion/react";
 
