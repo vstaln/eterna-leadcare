@@ -7,7 +7,7 @@ const steps = [
   {
     element: "#hero",
     popover: {
-      title: "This is Eterna LeadCare",
+      title: "This is Leadcare",
       description:
         "A lead-handling add-on for client websites: every form submission is checked, logged, and tracked live. This panel shows real data.",
     },

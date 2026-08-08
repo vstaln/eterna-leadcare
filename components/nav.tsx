@@ -2,10 +2,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { House, Gauge, Clock, PaperPlaneTilt } from "@phosphor-icons/react";
-import LiveBadge from "@/components/live-badge";
 import Magnet from "@/components/Magnet";
 import TourTrigger from "@/components/tour";
-import UtcClock from "@/components/utc-clock";
 
 const links = [
   { label: "Home", href: "/", live: true, icon: House },
@@ -21,11 +19,10 @@ export default function Nav() {
         <div className="flex items-center gap-3 sm:gap-5">
           <Link
             href="/"
-            aria-label="Eterna LeadCare — home"
-            className="flex items-center gap-2 font-serif text-sm font-semibold uppercase tracking-widest text-muted"
+            aria-label="Leadcare — home"
+            className="flex items-center gap-2 font-prompt text-sm font-semibold tracking-widest text-muted"
           >
-            <span className="led-ok" aria-hidden="true" />
-            <span>Eterna LeadCare</span>
+            <span>Leadcare</span>
           </Link>
           <ul className="flex items-center gap-2.5 sm:gap-5">
             {links.map((link) => {
@@ -63,16 +60,15 @@ export default function Nav() {
           <TourTrigger variant="nav" />
           <Magnet className="inline-flex" padding={6} activeStrength={2}>
             <Link
-              href="/#try"
+              href="https://wa.me/6281585034712"
+              target="_blank"
+              rel="noreferrer"
               className="press hidden items-center gap-1.5 bg-ok px-4 py-2 text-sm font-semibold text-zinc-950 transition hover:brightness-110 focus-visible:outline-2 focus-visible:outline-live sm:inline-flex"
             >
               <PaperPlaneTilt className="h-4 w-4" aria-hidden="true" />
-              <span>Contact us</span>
+              <span>Contact me</span>
             </Link>
           </Magnet>
-          <LiveBadge />
-          <UtcClock />
-          <span className="caret" aria-hidden="true" />
         </div>
       </nav>
     </header>

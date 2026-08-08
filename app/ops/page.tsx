@@ -12,7 +12,7 @@ import OpsTotals from "@/components/ops-totals";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Ops — Eterna LeadCare",
+  title: "Ops — Leadcare",
   description:
     "The honest report card of the LeadCare pipeline: real store rows, named stages, shield log, no simulated lights.",
 };
@@ -106,8 +106,8 @@ export default async function OpsPage() {
     <div>
       <section className="bg-grid scanlines relative overflow-hidden pt-28 pb-12 sm:pt-36">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <p className="mb-6 font-mono text-xs uppercase tracking-widest text-muted">
-            ETERNA LEADCARE // OPS DASHBOARD — LIVE REPORT CARD
+          <p className="mb-6 font-mono text-xs tracking-widest text-muted">
+            Leadcare // ops dashboard — live report card
           </p>
           <h1 className="max-w-3xl text-balance text-[clamp(2.25rem,5vw,3.75rem)] font-semibold leading-[1.05] tracking-tighter text-text">
             Operations Dashboard

@@ -125,7 +125,7 @@ export default function LiveDemo() {
       <div className="mt-8 border border-border bg-surface">
         <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
           <span className="led-live" aria-hidden="true" />
-          <span>N8N — WORKFLOW: ETERNA LEADCARE PIPELINE</span>
+          <span>N8N — WORKFLOW: Leadcare pipeline</span>
           <span
             className="stamp stamp-red ml-auto !px-2 !py-0.5 !text-[0.625rem]"
             aria-hidden="true"
@@ -144,7 +144,7 @@ export default function LiveDemo() {
               key={session}
               id="eterna-workflow-iframe"
               src={WORKFLOW_URL}
-              title="Eterna LeadCare pipeline in n8n — view only"
+              title="Leadcare pipeline in n8n — view only"
               className="h-[520px] w-full border-0 sm:h-[640px]"
               onLoad={(e) => {
                 const doc = e.currentTarget.contentDocument;

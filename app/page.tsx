@@ -18,9 +18,9 @@ import { trackingId } from "@/lib/tracking";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Eterna LeadCare — every lead, checked, logged, shown live | Vstalin's application",
+  title: "Leadcare — every lead, checked, logged, shown live | Vstalin's application",
   description:
-    "Eterna LeadCare, live: every submission checked by a spam shield, logged with a tracking number, and shown on a real dashboard. Built by Vstalin as an application for Eterna Indonesia.",
+    "Leadcare, live: every submission checked by a spam shield, logged with a tracking number, and shown on a real dashboard. Built by Vstalin as an application for Eterna Indonesia.",
 };
 
 const officialUrl = "https://www.eternaindonesia.com/jobs/lead-automation-web-engineer";
@@ -77,9 +77,9 @@ export default async function HomePage() {
         <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
           <div className="grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-14 lg:items-start">
             <div>
-              <p className="mb-6 flex items-center gap-3 font-mono text-sm font-semibold uppercase tracking-widest text-text">
+              <p className="mb-6 flex items-center gap-3 font-mono text-sm font-semibold tracking-widest text-text">
                 <span className="stamp stamp-red !p-0.5 !px-2 !text-[0.625rem]">LIVE</span>
-                <ShinyText text="Eterna LeadCare" />
+                <ShinyText text="Leadcare" />
               </p>
               <LedgerHeadline />
               <p className="mt-8 max-w-2xl text-balance text-lg leading-relaxed text-muted">

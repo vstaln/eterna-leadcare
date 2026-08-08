@@ -7,7 +7,7 @@ import { shortIso } from "@/lib/time";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Eterna LeadCare — track a lead",
+  title: "Leadcare — track a lead",
   description:
     "Enter the tracking number the form gave you and see where the lead is on the ledger — the same real store the ops dashboard renders.",
 };
