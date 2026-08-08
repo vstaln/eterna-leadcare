@@ -7,8 +7,9 @@ export default function SiteFooter() {
           <span className="caret" aria-hidden="true" />
         </p>
         <p className="text-sm text-muted">
-          © {new Date().getFullYear()} Built by Vstalin — every row on the ops dashboard is a
-          real execution, nothing simulated.
+          © {new Date().getFullYear()} Built by Vstalin — application for Lead Automation &amp; Web
+          Engineer at Eterna Indonesia. Every row on the ops dashboard is a real execution, nothing
+          simulated.
         </p>
       </div>
     </footer>

@@ -14,9 +14,9 @@ import { stageStates } from "@/lib/stages";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Eterna LeadCare — The Operations Ledger",
+  title: "Vstalin — Application for Lead Automation & Web Engineer | Eterna Indonesia",
   description:
-    "The LeadCare demo: one honest record. Every lead checked by the spam shield, logged with a tracking number, and shown live — nothing simulated.",
+    "My application for Eterna Indonesia's Lead Automation & Web Engineer role: the Operations Ledger — one honest record. Every lead checked by the spam shield, logged with a tracking number, and shown live — nothing simulated.",
 };
 
 const stateColor: Record<string, string> = {
@@ -27,6 +27,45 @@ const stateColor: Record<string, string> = {
   PENDING: "text-warn",
   DEGRADED: "text-err",
 };
+
+const officialUrl = "https://www.eternaindonesia.com/jobs/lead-automation-web-engineer";
+
+const roleFacts = [
+  ["Role", "Lead Automation & Web Engineer"],
+  ["Salary", "Rp13.000.000 – Rp18.000.000"],
+  ["Employment", "Full time · Fully remote"],
+  ["Client", "U.S.-based client"],
+];
+
+const skillCards: [string, string, string, string][] = [
+  [
+    "01",
+    "WEB ENGINEERING",
+    "Sites that ship",
+    "Next.js, React, TypeScript, responsive UI, accessibility, and performance — the standard I would bring to Webflow.",
+  ],
+  [
+    "02",
+    "AUTOMATION",
+    "Workflows that run",
+    "Signed webhook intake, N8N-style orchestration, API integrations, and auditable execution states — live on this page.",
+  ],
+  [
+    "03",
+    "CLOUD & AI",
+    "Evidence, not claims",
+    "Docker on Oracle Cloud, production delivery, Git workflows, and daily work with AI coding tools.",
+  ],
+];
+
+const fitItems = [
+  ["Build stunning, high-performance websites, primarily in Webflow", "I ship fast, polished web apps with Next.js and React today, and I am ready to bring that standard to Webflow."],
+  ["Design intelligent workflows with N8N and Google Apps Script", "This site runs the pattern live: intake, honeypot shield, signed dispatch, storage, and a report card."],
+  ["Manage cloud hosting and lead initiatives on Google Cloud / AWS", "I deploy and operate this production site myself with Docker on Oracle Cloud."],
+  ["Use AI-enhanced systems to accelerate development", "I build with AI tools daily and treat them as force multipliers; this codebase is the evidence."],
+  ["Translate business needs into automated solutions", "This very page explains an automation pipeline in plain English for a non-technical reader."],
+  ["Explore new tools and present innovative solutions", "I am a self-directed learner; Behind the Scenes documents exactly how this site was built."],
+];
 
 const aboutCards: [string, string, string, string][] = [
   [
@@ -108,6 +147,53 @@ export default async function HomePage() {
           <p className="mt-6 font-mono text-xs text-muted">
             THE OPERATIONS LEDGER — one pipeline, one real data set, no versions.
           </p>
+          <p className="mt-2 font-mono text-xs text-muted">
+            APPLICATION DOSSIER — Lead Automation &amp; Web Engineer · Eterna Indonesia · fully remote · Rp13M–Rp18M
+          </p>
+        </div>
+      </section>
+
+      <section id="dossier" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
+        <SectionHeading eyebrow="THE APPLICATION" title="Who&apos;s behind the ledger" />
+        <p className="measure text-base leading-relaxed text-muted">
+          I am Vstalin, a developer who ships. I build with Next.js, React, and TypeScript, connect
+          systems with automation, and use AI coding tools every day to learn faster. I am applying
+          for the Lead Automation &amp; Web Engineer role because it is exactly the work I want to
+          grow into at Eterna Indonesia: Webflow experiences, N8N automations, cloud infrastructure,
+          and AI-enhanced delivery for global clients.
+        </p>
+        <div className="mt-10 grid grid-cols-2 gap-px border border-border bg-border lg:grid-cols-4">
+          {roleFacts.map(([label, value]) => (
+            <div key={label} className="relative bg-surface p-6">
+              <p className="font-mono text-xs uppercase tracking-widest text-muted">{label}</p>
+              <p className="mt-2 font-semibold text-text">{value}</p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-6 grid gap-6 md:grid-cols-3">
+          {skillCards.map(([num, module, title, text]) => (
+            <article key={module} className="relative border border-border bg-surface p-8">
+              {cornerPositions.map((pos) => (
+                <span key={pos} aria-hidden="true" className={`pointer-events-none absolute ${pos} px-1 font-mono text-xs text-muted/40`}>
+                  +
+                </span>
+              ))}
+              <span className="ledger-no" aria-hidden="true">{num}</span>
+              <p className="mt-4 font-mono text-xs uppercase tracking-widest text-muted">{module}</p>
+              <h3 className="mt-2 font-semibold text-text">{title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted">{text}</p>
+            </article>
+          ))}
+        </div>
+        <div className="mt-8 flex flex-wrap items-center gap-4">
+          <Magnet className="inline-flex" padding={10} activeStrength={2}>
+            <a href={officialUrl} target="_blank" rel="noreferrer" className="stamp stamp-red press text-sm">
+              OFFICIAL POSTING
+            </a>
+          </Magnet>
+          <span className="font-mono text-xs text-muted">
+            submitted through Eterna&apos;s official process — this site is the supporting evidence
+          </span>
         </div>
       </section>
 
@@ -191,6 +277,24 @@ export default async function HomePage() {
         </p>
       </section>
 
+      <section id="fit" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
+        <SectionHeading eyebrow="WHY THE FIT" title="The role asks, the ledger answers" />
+        <div className="grid gap-4 md:grid-cols-2">
+          {fitItems.map(([ask, mine]) => (
+            <article key={ask} className="relative border border-border bg-surface p-8">
+              {cornerPositions.map((pos) => (
+                <span key={pos} aria-hidden="true" className={`pointer-events-none absolute ${pos} px-1 font-mono text-xs text-muted/40`}>
+                  +
+                </span>
+              ))}
+              <p className="font-mono text-[0.65rem] uppercase tracking-widest text-muted">THE ROLE ASKS</p>
+              <h3 className="mt-2 font-semibold text-text">{ask}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted">{mine}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <section id="trust" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="WHY IT CAN BE TRUSTED" title="Stamped, not claimed" />
         <div className="mt-8 grid gap-6 md:grid-cols-3">
@@ -253,6 +357,13 @@ export default async function HomePage() {
               Every other surface on this page is paper. This one stays a terminal on purpose —
               the capture desk is the one place data enters the ledger.
             </p>
+            <div className="mt-8 flex flex-wrap items-center gap-4">
+              <Magnet className="inline-flex" padding={10} activeStrength={2}>
+                <a href={officialUrl} target="_blank" rel="noreferrer" className="stamp stamp-red press text-sm">
+                  OFFICIAL POSTING
+                </a>
+              </Magnet>
+            </div>
           </div>
           <div className="capture-terminal">
             <div className="flex items-center gap-2 border-b border-border bg-surface px-4 py-2 font-mono text-xs text-muted">
