@@ -14,19 +14,20 @@ export default function ApplicationForm() {
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const form = event.currentTarget;
     setState("sending");
     setMessage("");
-    const form = new FormData(event.currentTarget);
+    const formData = new FormData(event.currentTarget);
     try {
       const response = await fetch("/api/lead", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          name: form.get("name"),
-          email: form.get("email"),
+          name: formData.get("name"),
+          email: formData.get("email"),
           company: "Eterna hiring team",
-          message: form.get("message"),
-          website: form.get("website"), // honeypot — normally empty string
+          message: formData.get("message"),
+          website: formData.get("website"), // honeypot — normally empty string
         }),
       });
       const result = await response.json();
@@ -41,7 +42,7 @@ export default function ApplicationForm() {
           ? `Received — tracking number ${result.tracking}. Watch it move on the ops dashboard.`
           : `Received. Execution ID: ${result.executionId || "recorded"}`
       );
-      event.currentTarget.reset();
+      form.reset();
     } catch (error) {
       setState("error");
       setMessage(error instanceof Error ? error.message : "Unable to submit right now");
