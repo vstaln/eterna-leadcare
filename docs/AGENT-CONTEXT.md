@@ -27,23 +27,32 @@ PENDING, DEGRADED) instead of hidden.
 
 | Thing | Where |
 |---|---|
-| App container | `deploy-app-1`, `127.0.0.1:3101`, compose `deploy/app-compose.yml` in `/opt/eterna-leadcare` |
-| App env | `/opt/eterna-leadcare/.env` — plain `KEY=value`, no spaces around `=` |
-| Store (executions + shield) | `/opt/eterna-leadcare/data/` (`executions.json`, `shield.json`) |
+| App container | `deploy-app-1`, `127.0.0.1:3101`, compose `deploy/app-compose.yml` in `/opt/eterna-leadcare` (canonical deploy source) |
+| App env | `/opt/eterna-leadcare/.env` — plain `KEY=value`, no spaces around `=` — **mirrored** in `/opt/eterna/app/.env` (another working copy; keep both in sync) |
+| Store (executions + shield) | `/opt/eterna-leadcare/data/` (`executions.json`, `shield.json`) — the ONLY store. The container mount MUST be `/opt/eterna-leadcare/data:/app/data` |
 | n8n | `eterna-n8n-1`, compose `/opt/eterna/compose.yml`, image `n8nio/n8n:1.123.69` |
 | n8n data | Docker volume `eterna_n8n_data` (SQLite) — never delete/recreate it |
 | nginx | `/etc/nginx/sites-enabled/eterna.vstal.in.conf` — let's-encrypt, proxies `eterna.vstal.in` → app, and `/n8n/…` → n8n |
 
 ### n8n is now HTTPS-only behind nginx
-- Public URL: `https://eterna.vstal.in/n8n` (editor + `/n8n/rest/*`).
+- Public URL: `https://eterna.vstal.in/n8n` (editor + signin; REST is **stripped**, see below).
 - n8n runs with `N8N_PATH=/n8n/`, `N8N_HOST=eterna.vstal.in`, `N8N_PROTOCOL=https`,
   `N8N_PORT=443` → it **listens on 443 inside the container**, published as
-  `127.0.0.1:5678:443` (localhost only — the old public `:5678` exposure is closed).
-- n8n mounts **only the editor + `/rest/*` under `/n8n/`**. The public JSON API,
-  healthz, webhooks and static assets live at the **root** (`/api/v1/...`,
-  `/healthz`, `/webhook/...`, `/static/...`, `/assets/...`). nginx compensates with
-  prefix-stripping locations (already in place — do not remove):
-  `/n8n/api/`, `/n8n/healthz`, `/n8n/webhook/`, `/n8n/static/`, `/n8n/assets/`.
+  `127.0.0.1:5678:443` (nginx) **and** `172.17.0.1:5678:443` (docker0, for the app
+  container's internal dispatch — both are private, the old public `:5678` is closed).
+- n8n mounts **only the editor HTML under `/n8n/`**. Everything else — the REST API,
+  public JSON API, healthz, webhooks, static assets, types — lives at the **root**
+  (`/rest/*`, `/api/v1/...`, `/healthz`, `/webhook/...`, `/static/...`, `/assets/...`,
+  `/types/*`). nginx compensates with prefix-stripping locations (already in place —
+  do not remove): `/n8n/rest/`, `/n8n/api/`, `/n8n/healthz`, `/n8n/webhook/`,
+  `/n8n/static/`, `/n8n/assets/`, `/n8n/types/`, `= /n8n/favicon.ico`,
+  `/n8n/oauth2-credential/`.
+  **If `/n8n/rest/` loses its strip-location the editor white-screens** (it computes
+  `/n8n/rest` from `BASE_PATH` but n8n serves `/rest` at root).
+- **App → n8n dispatch is INTERNAL, not via the public URL.** `N8N_BASE_URL` in the
+  app `.env` is `http://host.docker.internal:5678` (docker0 bind). The public https
+  path caused pooled-connection hangs (Cloudflare hairpin) → dispatch 502s. Never
+  point `N8N_BASE_URL` back at the public URL.
 - Owner account exists (created programmatically): email `admin@vstal.in`,
   password shared in chat by the user — tell them to change it in
   Settings → Users. An API key with full owner scopes exists: it lives in the app
@@ -63,10 +72,15 @@ PENDING, DEGRADED) instead of hidden.
    `sudo chown -R 100:101 /opt/eterna-leadcare/data && sudo chmod 770 /opt/eterna-leadcare/data`
 2. **Never delete or recreate the `eterna_n8n_data` volume** — it holds the
    workflow, executions, and the owner account.
-3. **Keep the stage states honest** (`lib/stages.ts` probes n8n live:
+3. **Never point `N8N_BASE_URL` back at the public URL** (`https://eterna.vstal.in/n8n`)
+   — it must stay `http://host.docker.internal:5678` or dispatch hangs (Cloudflare
+   hairpin) and every lead 502s.
+4. **Keep the stage states honest** (`lib/stages.ts` probes n8n live:
    `/healthz` + `/api/v1/executions` with `X-N8N-API-KEY`). No hardcoded greens.
    Vocabulary: LIVE / CONFIGURED / N/R / PENDING / DEGRADED.
-4. `.env` edits: plain `KEY=value`. After editing, recreate the app container:
+5. `.env` edits: plain `KEY=value`; edit **both** `/opt/eterna-leadcare/.env` and
+   `/opt/eterna/app/.env` (keep them identical — a deploy from `/opt/eterna/app`
+   picks up its own `.env`). After editing, recreate the app container:
    `cd /opt/eterna-leadcare && sudo docker compose -f deploy/app-compose.yml up -d`.
 
 ## Deploy procedure (releases)
@@ -80,6 +94,11 @@ ssh oracle-old 'sudo cp -a /home/ubuntu/eterna-leadcare/. /opt/eterna-leadcare/ 
   cd /opt/eterna-leadcare && sudo docker compose -f deploy/app-compose.yml up -d --build'
 ```
 - The rsync **must exclude `data`** — the store lives only on the box.
+- If you deploy from `/opt/eterna/app` instead: keep the compose mount
+  `/opt/eterna-leadcare/data:/app/data` (absolute canonical path — never
+  `/opt/eterna/app/data`) and keep `/opt/eterna/app/.env` identical to
+  `/opt/eterna-leadcare/.env` (including `N8N_API_KEY`). Deploying from
+  `/opt/eterna-leadcare` is preferred.
 - Verify after deploy: `curl -s https://eterna.vstal.in/ops` (stages) and submit
   a test lead (`POST https://eterna.vstal.in/api/lead`, `website` field empty =
   honeypot must be empty) → expect a tracking number, then see it on `/ops`.
