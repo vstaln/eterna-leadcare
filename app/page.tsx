@@ -169,6 +169,21 @@ export default async function HomePage() {
               tools. This site is my application for the Lead Automation &amp; Web Engineer role at
               Eterna Indonesia; the live pipeline below is the evidence.
             </p>
+            <a
+              href={officialUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-6 block border border-[#27272a] bg-[#09090b] p-4 transition hover:border-live focus-visible:outline-2 focus-visible:outline-live"
+            >
+              <p className="font-mono text-[0.625rem] uppercase tracking-widest text-[#c6c6cc]">
+                the company — eterna indonesia
+              </p>
+              <img
+                src="/eterna-logo-light.png"
+                alt="Eterna Indonesia logo"
+                className="mt-3 h-10 w-auto"
+              />
+            </a>
           </div>
           <figure className="border border-border bg-surface p-3 md:self-start">
             <img
