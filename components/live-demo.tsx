@@ -5,12 +5,12 @@ import SectionHeading from "@/components/section-heading";
 const WORKFLOW_URL = "/n8n/workflow/e5336198-9ef1-46e5-8746-4681e17aba1f";
 
 export default function LiveDemo() {
-  const [authed, setAuthed] = useState<boolean | null>(null);
+  const [session, setSession] = useState<"loading" | "ok" | "failed">("loading");
 
   useEffect(() => {
-    fetch("/n8n/rest/settings", { credentials: "include" })
-      .then((r) => setAuthed(r.ok))
-      .catch(() => setAuthed(false));
+    fetch("/api/demo-session", { cache: "no-store" })
+      .then((r) => setSession(r.ok ? "ok" : "failed"))
+      .catch(() => setSession("failed"));
   }, []);
 
   return (
@@ -26,22 +26,28 @@ export default function LiveDemo() {
           <span className="caret" aria-hidden="true" />
         </div>
         <div className="relative">
-          <iframe
-            src={WORKFLOW_URL}
-            title="Eterna LeadCare pipeline in n8n — view only"
-            className="h-[440px] w-full border-0 sm:h-[520px]"
-            loading="lazy"
-          />
+          {session === "loading" ? (
+            <div className="flex h-[440px] items-center justify-center sm:h-[520px]">
+              <p className="font-mono text-xs text-muted">opening the live session…</p>
+            </div>
+          ) : (
+            <iframe
+              key={session}
+              src={WORKFLOW_URL}
+              title="Eterna LeadCare pipeline in n8n — view only"
+              className="h-[440px] w-full border-0 sm:h-[520px]"
+              loading="lazy"
+            />
+          )}
           <div className="absolute inset-0 z-10" aria-hidden="true" />
-          {authed === false && (
+          {session === "failed" && (
             <div className="absolute inset-0 z-20 flex items-center justify-center bg-surface/85 p-6 text-center">
               <p className="max-w-sm font-mono text-xs leading-relaxed text-muted">
-                The live editor needs a one-time sign-in.
+                The live view could not open a session right now.
                 <br />
                 <a href="/n8n" className="underline decoration-ok underline-offset-4 hover:text-text">
-                  Log in to n8n
-                </a>{" "}
-                — then this frame shows the workflow, running.
+                  Open n8n directly
+                </a>
               </p>
             </div>
           )}
