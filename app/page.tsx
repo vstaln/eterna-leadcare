@@ -14,11 +14,12 @@ import Magnet from "@/components/Magnet";
 import AnimatedContent from "@/components/AnimatedContent";
 import HeroBackdrop from "@/components/hero-backdrop";
 import LiveDemo from "@/components/live-demo";
+import LiveLog, { type LiveLogPayload } from "@/components/live-log";
 import OpsChart from "@/components/ops-chart";
 import { listExecutions } from "@/lib/store";
 import { listShield, shieldCounts } from "@/lib/shield";
 import { stageStates } from "@/lib/stages";
-import { clock, relativeAge, shortIso } from "@/lib/time";
+import { shortIso } from "@/lib/time";
 import { trackingId } from "@/lib/tracking";
 
 export const dynamic = "force-dynamic";
@@ -65,11 +66,10 @@ const stateColor: Record<string, string> = {
 
 export default async function HomePage() {
   const ring = await listExecutions(100);
-  const rows = ring.slice(0, 10);
   const shieldRows = await listShield(10);
   const shield = await shieldCounts();
   const stages = await stageStates();
-  const { now, iso: nowIso } = clock();
+  const nowIso = new Date().toISOString();
 
   const totals = {
     n: ring.length,
@@ -79,7 +79,6 @@ export default async function HomePage() {
   };
 
   const firstAt = ring.length > 0 ? ring[ring.length - 1].created_at : null;
-  const lastFailure = rows.find((r) => r.status === "failed") ?? null;
 
   // Chart series: bucket the retained ring by day (created_at date), count
   // per status, and ZERO-FILL every day between first and last so absence
@@ -105,12 +104,22 @@ export default async function HomePage() {
           return out;
         })();
 
-  const statsLine =
-    totals.n === 0
-      ? "N=0 received=0 dispatched=0 failed=0 — store empty"
-      : `N=${totals.n} received=${totals.received} dispatched=${totals.dispatched} failed=${totals.failed} since ${
-          firstAt ? shortIso(firstAt) : "—"
-        }`;
+  // Initial snapshot for the live log — same shape as /api/executions/public,
+  // so the client component can swap in fresh polled data seamlessly.
+  const initialLog: LiveLogPayload = {
+    ok: true,
+    ts: nowIso,
+    totals,
+    firstAt,
+    executions: ring.slice(0, 10).map((r) => ({
+      id: r.id.slice(0, 8),
+      tracking: trackingId(r.id),
+      status: r.status,
+      stage: r.stage,
+      created_at: r.created_at,
+      error: r.error ?? null,
+    })),
+  };
 
   return (
     <div>
@@ -271,81 +280,7 @@ export default async function HomePage() {
 
       </section>
 
-      <section id="log" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <SectionHeading eyebrow="LOG // last 10 executions" title="What did it actually do?" />
-        <p className="mb-4 border border-border bg-surface px-4 py-3 font-mono text-xs leading-relaxed text-muted tabular-nums sm:text-sm">
-          <span className="text-text">TOTALS</span> — {statsLine} — retained
-          ring (last 100, rotated); counts of retained rows only, not all-time.
-        </p>
-        <div className="border border-border bg-surface">
-          <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
-            <span className="led-ok" aria-hidden="true" />
-            <span>$ ./log --tail 10</span>
-            <span className="caret" aria-hidden="true" />
-          </div>
-          {rows.length === 0 ? (
-            <div className="px-4 py-8 text-center font-mono text-sm text-muted">
-              LOG EMPTY — store has no executions yet; submit a lead (see docs)
-              or wait for real traffic.
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[640px] text-left font-mono text-xs tabular-nums sm:text-sm">
-                <thead className="border-b border-border text-muted">
-                  <tr>
-                    <th scope="col" className="px-4 py-2 font-medium">TRACKING</th>
-                    <th scope="col" className="px-4 py-2 font-medium">STATE</th>
-                    <th scope="col" className="px-4 py-2 font-medium">STAGE</th>
-                    <th scope="col" className="px-4 py-2 font-medium">WHEN</th>
-                    <th scope="col" className="px-4 py-2 font-medium">ERR</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {rows.map((row) => (
-                    <tr key={row.id}>
-                      <td className="px-4 py-2 text-muted">{row.id.slice(0, 8)}</td>
-                      <td className="px-4 py-2 text-ok">{trackingId(row.id)}</td>
-                      <td
-                        className={
-                          row.status === "failed"
-                            ? "px-4 py-2 text-err"
-                            : row.status === "dispatched"
-                              ? "px-4 py-2 text-ok"
-                              : "px-4 py-2 text-muted"
-                        }
-                      >
-                        {row.status}
-                      </td>
-                      <td className="px-4 py-2 text-muted">{row.stage}</td>
-                      <td className="px-4 py-2 text-muted">
-                        <span className="text-text">
-                          {relativeAge(row.created_at, now)}
-                        </span>
-                        <span className="block text-[0.625rem]">
-                          {shortIso(row.created_at)}
-                        </span>
-                      </td>
-                      <td className="px-4 py-2 text-err">
-                        {row.error ? row.error.slice(0, 48) : "—"}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-        <p className="mt-3 font-mono text-xs text-muted tabular-nums">
-          LAST FAILURE —{" "}
-          {lastFailure
-            ? `${lastFailure.id.slice(0, 8)} ${relativeAge(lastFailure.created_at, now)}: ${(lastFailure.error ?? "n/a").slice(0, 48)}`
-            : "none in last 10"}
-        </p>
-        <p className="mt-1 font-mono text-xs text-muted tabular-nums">
-          RENDERED {nowIso} — data as of last store write; relative ages
-          computed at render time.
-        </p>
-      </section>
+      <LiveLog initial={initialLog} />
 
       <section id="fit" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="WHY THE FIT" title="Why I&apos;m a strong fit" />
