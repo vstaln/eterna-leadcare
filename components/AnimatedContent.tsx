@@ -62,7 +62,9 @@ const AnimatedContent: React.FC<AnimatedContentProps> = ({
       onEnter: play
     });
 
-    const fallbackId = window.setTimeout(play, 3000);
+    const fallbackId = window.setTimeout(() => {
+      if (el.getBoundingClientRect().top < window.innerHeight) play();
+    }, 3000);
 
     return () => {
       window.clearTimeout(fallbackId);

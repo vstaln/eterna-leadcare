@@ -7,6 +7,8 @@ import ShinyText from "@/components/ShinyText";
 import Magnet from "@/components/Magnet";
 import FaultyTerminal from "@/components/FaultyTerminal";
 import ScrollStack from "@/components/ScrollStack";
+import AnimatedContent from "@/components/AnimatedContent";
+import Beams from "@/components/Beams";
 import { listExecutions } from "@/lib/store";
 import { shieldCounts } from "@/lib/shield";
 import { stageStates } from "@/lib/stages";
@@ -123,7 +125,8 @@ export default async function HomePage() {
   return (
     <div>
       <section id="hero" className="ledger-lines relative overflow-hidden pt-24 pb-20 sm:pt-32 sm:pb-24">
-        <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
+        <Beams className="absolute inset-0" />
+        <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
           <p className="mb-6 flex items-center gap-3 font-mono text-sm font-semibold uppercase tracking-widest text-text">
             <span className="stamp stamp-red !p-0.5 !px-2 !text-[0.625rem]">LIVE</span>
             <ShinyText text="Eterna LeadCare" />
@@ -156,15 +159,18 @@ export default async function HomePage() {
           tools. This site is my application for the Lead Automation &amp; Web Engineer role at
           Eterna Indonesia; the live pipeline below is the evidence.
         </p>
-        <div className="mt-10 grid grid-cols-2 gap-px border border-border bg-border lg:grid-cols-4">
-          {roleFacts.map(([label, value]) => (
-            <div key={label} className="relative bg-surface p-6">
-              <p className="font-mono text-xs uppercase tracking-widest text-muted">{label}</p>
-              <p className="mt-2 font-semibold text-text">{value}</p>
-            </div>
-          ))}
-        </div>
-        <div className="mt-6 grid gap-6 md:grid-cols-3">
+        <AnimatedContent distance={16} duration={0.6}>
+          <div className="mt-10 grid grid-cols-2 gap-px border border-border bg-border lg:grid-cols-4">
+            {roleFacts.map(([label, value]) => (
+              <div key={label} className="relative bg-surface p-6">
+                <p className="font-mono text-xs uppercase tracking-widest text-muted">{label}</p>
+                <p className="mt-2 font-semibold text-text">{value}</p>
+              </div>
+            ))}
+          </div>
+        </AnimatedContent>
+        <AnimatedContent distance={16} duration={0.6}>
+          <div className="mt-6 grid gap-6 md:grid-cols-3">
           {skillCards.map(([num, module, title, text]) => (
             <article key={module} className="relative border border-border bg-surface p-8">
               {cornerPositions.map((pos) => (
@@ -178,7 +184,8 @@ export default async function HomePage() {
               <p className="mt-3 text-sm leading-relaxed text-muted">{text}</p>
             </article>
           ))}
-        </div>
+          </div>
+        </AnimatedContent>
         <div className="mt-8 flex flex-wrap items-center gap-4">
           <Magnet className="inline-flex" padding={10} activeStrength={2}>
             <a href={officialUrl} target="_blank" rel="noreferrer" className="stamp stamp-red press text-sm">
@@ -193,7 +200,8 @@ export default async function HomePage() {
 
       <section id="about" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="WHAT LEADCARE DOES" title="How it works" />
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
+        <AnimatedContent distance={16} duration={0.6}>
+          <div className="mt-8 grid gap-6 md:grid-cols-3">
           {aboutCards.map(([num, module, title, text]) => (
             <article key={module} className="relative border border-border bg-surface p-8">
               {cornerPositions.map((pos) => (
@@ -207,14 +215,16 @@ export default async function HomePage() {
               <p className="mt-3 text-sm leading-relaxed text-muted">{text}</p>
             </article>
           ))}
-        </div>
+          </div>
+        </AnimatedContent>
       </section>
 
       <LiveTicker />
 
       <section id="totals" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="REAL FIGURES" title="Live figures" />
-        <div className="grid grid-cols-2 gap-px border border-border bg-border lg:grid-cols-4">
+        <AnimatedContent distance={16} duration={0.6}>
+          <div className="grid grid-cols-2 gap-px border border-border bg-border lg:grid-cols-4">
           {statCells.map((cell, i) => (
             <div key={cell.label} className="relative bg-surface p-6 md:p-8">
               <p className="font-mono text-xs uppercase tracking-widest text-muted">{cell.label}</p>
@@ -231,14 +241,17 @@ export default async function HomePage() {
               )}
             </div>
           ))}
-        </div>
-        <div className="mt-2 flex flex-col gap-2 border border-border bg-surface px-5 py-4 font-mono text-xs tabular-nums text-muted sm:flex-row sm:items-center sm:justify-between">
+          </div>
+        </AnimatedContent>
+        <AnimatedContent distance={16} duration={0.6}>
+          <div className="mt-2 flex flex-col gap-2 border border-border bg-surface px-5 py-4 font-mono text-xs tabular-nums text-muted sm:flex-row sm:items-center sm:justify-between">
           <span>
             <span className="text-text">SHIELD</span> — honeypot: {shield.honeypot} · malformed:{" "}
             {shield.intake_400} · signed-dispatch rejected: {shield.n8n_rejected}
           </span>
           <span className="stamp stamp-red" aria-hidden="true">BLOCKED, COUNTED</span>
         </div>
+        </AnimatedContent>
         <p className="mt-3 font-mono text-xs text-muted">
           RETAINED RING (LAST 100) — counts of retained rows only, not all-time · every figure store-derived.
         </p>
@@ -246,7 +259,8 @@ export default async function HomePage() {
 
       <section id="stages" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="THE FIVE STAGES" title="The five stages, honestly" />
-        <div className="border border-border bg-surface">
+        <AnimatedContent distance={16} duration={0.6}>
+          <div className="border border-border bg-surface">
           <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
             <span className="led-live" aria-hidden="true" />
             <span>STATUS — LIVE</span>
@@ -264,7 +278,8 @@ export default async function HomePage() {
               </li>
             ))}
           </ul>
-        </div>
+          </div>
+        </AnimatedContent>
         <p className="mt-3 font-mono text-xs leading-relaxed text-muted">
           STATE VOCABULARY — PENDING awaiting an action · N/R no reading available · CONFIGURED env
           present, never live-verified · DEGRADED the log leg answers 200-degraded while APPS_SCRIPT_URL is empty.
@@ -273,7 +288,8 @@ export default async function HomePage() {
 
       <section id="fit" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="WHY THE FIT" title="Why I&apos;m a strong fit" />
-        <div className="grid gap-4 md:grid-cols-2">
+        <AnimatedContent distance={16} duration={0.6}>
+          <div className="grid gap-4 md:grid-cols-2">
           {fitItems.map(([ask, mine]) => (
             <article key={ask} className="relative border border-border bg-surface p-8">
               {cornerPositions.map((pos) => (
@@ -286,12 +302,14 @@ export default async function HomePage() {
               <p className="mt-3 text-sm leading-relaxed text-muted">{mine}</p>
             </article>
           ))}
-        </div>
+          </div>
+        </AnimatedContent>
       </section>
 
       <section id="trust" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading eyebrow="WHY IT CAN BE TRUSTED" title="Stamped, not claimed" />
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
+        <AnimatedContent distance={16} duration={0.6}>
+          <div className="mt-8 grid gap-6 md:grid-cols-3">
           {trustItems.map(([title, text, seal, sealTone]) => (
             <article key={title} className="relative border border-border bg-surface p-8">
               {cornerPositions.map((pos) => (
@@ -304,7 +322,8 @@ export default async function HomePage() {
               <span className={`stamp mt-6 ${sealTone}`} aria-hidden="true">{seal}</span>
             </article>
           ))}
-        </div>
+          </div>
+        </AnimatedContent>
       </section>
 
       <section id="pipeline" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
@@ -341,6 +360,7 @@ export default async function HomePage() {
         </div>
         <div className="relative">
           <SectionHeading eyebrow="TRY IT" title="Send a test lead" />
+          <AnimatedContent distance={16} duration={0.6}>
           <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start">
           <div>
             <p className="measure text-sm leading-relaxed text-muted">
@@ -371,6 +391,7 @@ export default async function HomePage() {
             </p>
           </div>
         </div>
+          </AnimatedContent>
         </div>
       </section>
     </div>
