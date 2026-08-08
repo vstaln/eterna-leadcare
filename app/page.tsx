@@ -202,11 +202,11 @@ export default async function HomePage() {
       </section>
 
       <section id="dashboard" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <SectionHeading eyebrow="SIGNAL // pipeline status" title="Is it real?" />
+        <SectionHeading eyebrow="SIGNAL" title="Pipeline status" />
         <div className="border border-border bg-surface">
           <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
             <span className="led-ok" aria-hidden="true" />
-            <span>$ ./status</span>
+            <span>PIPELINE STATUS</span>
             <span className="caret" aria-hidden="true" />
           </div>
           <ul className="divide-y divide-border">
@@ -231,7 +231,7 @@ export default async function HomePage() {
         </div>
 
         <div className="mt-10">
-          <SectionHeading eyebrow="TRAFFIC // executions per day" title="What actually came in?" />
+          <SectionHeading eyebrow="TRAFFIC" title="Executions per day" />
           <OpsChart series={series} total={totals.n} />
           <p className="mt-3 font-mono text-xs text-muted tabular-nums">
             RETAINED RING (LAST 100) — per day, by status · zero-filled days
@@ -240,7 +240,7 @@ export default async function HomePage() {
         </div>
 
         <div className="mt-10">
-          <SectionHeading eyebrow="SHIELD LOG // rejected attempts" title="What the shield blocked" />
+          <SectionHeading eyebrow="SHIELD LOG" title="Blocked attempts" />
           <p className="mb-4 border border-border bg-surface px-4 py-3 font-mono text-xs leading-relaxed text-muted tabular-nums">
             <span className="text-text">TOTALS</span> — bots blocked: {shield.honeypot} · bad
             requests: {shield.intake_400} · rejected by workflow: {shield.n8n_rejected}
@@ -248,7 +248,7 @@ export default async function HomePage() {
           <div className="border border-border bg-surface">
             <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
               <span className="led-warn" aria-hidden="true" />
-              <span>$ ./shield --log</span>
+              <span>SHIELD LOG</span>
               <span className="caret" aria-hidden="true" />
             </div>
             {shieldRows.length === 0 ? (

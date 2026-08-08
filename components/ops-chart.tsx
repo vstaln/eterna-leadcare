@@ -42,7 +42,7 @@ export default function OpsChart({
     <div className="border border-border bg-surface">
       <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
         <span className="led-ok" aria-hidden="true" />
-        <span>$ ./report --by-day</span>
+        <span>EXECUTIONS / DAY</span>
         <span className="caret" aria-hidden="true" />
       </div>
       {total === 0 ? (

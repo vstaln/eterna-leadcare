@@ -1,4 +1,4 @@
-// live-log.tsx — the "What did it actually do?" table, updating live.
+// live-log.tsx — the "Last 10 leads" table, updating live.
 //
 // The server renders the initial snapshot (no blank flash on load), then
 // this client component polls the PII-stripped public mirror every 5s so
@@ -81,7 +81,7 @@ export default function LiveLog({ initial }: { initial: LiveLogPayload }) {
 
   return (
     <section id="log" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-      <SectionHeading eyebrow="LOG // last 10 executions" title="What did it actually do?" />
+      <SectionHeading eyebrow="LOG" title="Last 10 leads" />
       <p className="mb-4 border border-border bg-surface px-4 py-3 font-mono text-xs leading-relaxed text-muted tabular-nums sm:text-sm">
         <span className="text-text">TOTALS</span> — {statsLine} — retained
         ring (last 100, rotated); counts of retained rows only, not all-time.
@@ -89,7 +89,6 @@ export default function LiveLog({ initial }: { initial: LiveLogPayload }) {
       <div className="border border-border bg-surface">
         <div className="flex items-center gap-2 border-b border-border px-4 py-2 font-mono text-xs text-muted">
           <span className={live ? "led-live" : "led-warn"} aria-hidden="true" />
-          <span>$ ./log --tail 10</span>
           <span className="caret" aria-hidden="true" />
         </div>
         {executions.length === 0 ? (
@@ -102,6 +101,7 @@ export default function LiveLog({ initial }: { initial: LiveLogPayload }) {
             <table className="w-full min-w-[640px] text-left font-mono text-xs tabular-nums sm:text-sm">
               <thead className="border-b border-border text-muted">
                 <tr>
+                  <th scope="col" className="px-4 py-2 font-medium">ID</th>
                   <th scope="col" className="px-4 py-2 font-medium">TRACKING</th>
                   <th scope="col" className="px-4 py-2 font-medium">STATE</th>
                   <th scope="col" className="px-4 py-2 font-medium">STAGE</th>
