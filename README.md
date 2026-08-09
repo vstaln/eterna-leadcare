@@ -63,7 +63,7 @@ These five names are **lockstep** across the dashboard, the ASCII art, and the W
   <img src="public/built-with/zed.png" width="64" alt="Zed">
 </p>
 
-Next.js 16 (App Router) · React 19 · TypeScript · Tailwind v4 · GSAP + React Bits · Recharts · DialKit · N8N (self-hosted) · Google Apps Script + Sheets · RDAP · Docker · GitHub Actions + gitleaks · GCP Cloud Run · Oracle Cloud · Webflow (one-pager template). Full mapping table in `ARCHITECTURE.md`.
+Next.js 16 (App Router) · React 19 · TypeScript · Tailwind v4 · GSAP + React Bits · Recharts · DialKit · N8N (self-hosted) · Google Apps Script + Sheets · RDAP · Docker Compose · GitHub Actions + gitleaks · Oracle Cloud · nginx + Let’s Encrypt · Webflow (one-pager template). Full mapping table in `ARCHITECTURE.md`.
 
 ## Quickstart
 

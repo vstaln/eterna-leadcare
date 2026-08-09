@@ -38,7 +38,7 @@ Callbacks, Postgres, and Telegram are P5.
 
 ## Deploy
 
-GitHub Actions → multi-arch Docker (GHCR) → GCP Cloud Run → eterna.vstal.in. (CI gates every PR today: lint + typecheck + build + gitleaks — see `.github/workflows/ci.yml`.)
+GitHub Actions gates every PR (lint + typecheck + build + gitleaks — see `.github/workflows/ci.yml`); deploy is Docker Compose on the Oracle Cloud box (`deploy/app-compose.yml`, image `eterna-app:latest`) behind nginx + Let’s Encrypt → eterna.vstal.in.
 
 ## P5 migration note
 
