@@ -336,7 +336,7 @@ export default async function HomePage() {
               rel="noreferrer"
               className="flex items-center gap-2.5 text-text transition hover:text-muted"
             >
-              <img src="/built-with/codex.svg" alt="" aria-hidden="true" className="h-5 w-auto" />
+              <img src="/built-with/blossom.svg" alt="" aria-hidden="true" className="h-5 w-auto" />
               <span className="font-mono text-sm">Codex</span>
             </a>
             <a
