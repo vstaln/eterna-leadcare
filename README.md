@@ -58,7 +58,7 @@ These five names are **lockstep** across the dashboard, the ASCII art, and the W
 ## Stack proven
 
 <p align="center">
-  <img src="public/built-with/blossom.svg" width="48" alt="OpenAI">&nbsp;&nbsp;
+  <img src="public/built-with/blossom.svg" width="56" alt="OpenAI">&nbsp;&nbsp;
   <img src="public/built-with/opencode.svg" width="64" alt="OpenCode">&nbsp;&nbsp;
   <img src="public/built-with/zed.png" width="64" alt="Zed">
 </p>

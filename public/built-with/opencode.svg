@@ -1,1 +1,16 @@
-<svg width='234' height='42' viewBox='0 0 234 42' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M18 30H6V18H18V30Z' fill='#CFCECD'/><path d='M18 12H6V30H18V12ZM24 36H0V6H24V36Z' fill='#656363'/><path d='M48 30H36V18H48V30Z' fill='#CFCECD'/><path d='M36 30H48V12H36V30ZM54 36H36V42H30V6H54V36Z' fill='#656363'/><path d='M84 24V30H66V24H84Z' fill='#CFCECD'/><path d='M84 24H66V30H84V36H60V6H84V24ZM66 18H78V12H66V18Z' fill='#656363'/><path d='M108 36H96V18H108V36Z' fill='#CFCECD'/><path d='M108 12H96V36H90V6H108V12ZM114 36H108V12H114V36Z' fill='#656363'/><path d='M144 30H126V18H144V30Z' fill='#CFCECD'/><path d='M144 12H126V30H144V36H120V6H144V12Z' fill='#211E1E'/><path d='M168 30H156V18H168V30Z' fill='#CFCECD'/><path d='M168 12H156V30H168V12ZM174 36H150V6H174V36Z' fill='#211E1E'/><path d='M198 30H186V18H198V30Z' fill='#CFCECD'/><path d='M198 12H186V30H198V12ZM204 36H180V6H198V0H204V36Z' fill='#211E1E'/><path d='M234 24V30H216V24H234Z' fill='#CFCECD'/><path d='M216 12V18H228V12H216ZM234 24H216V30H234V36H210V6H234V24Z' fill='#211E1E'/></svg>
+<svg width="240" height="300" viewBox="0 0 240 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_1401_86274)">
+<mask id="mask0_1401_86274" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="240" height="300">
+<path d="M240 0H0V300H240V0Z" fill="white"/>
+</mask>
+<g mask="url(#mask0_1401_86274)">
+<path d="M180 240H60V120H180V240Z" fill="#CFCECD"/>
+<path d="M180 60H60V240H180V60ZM240 300H0V0H240V300Z" fill="#211E1E"/>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_1401_86274">
+<rect width="240" height="300" fill="white"/>
+</clipPath>
+</defs>
+</svg>
