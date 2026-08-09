@@ -36,7 +36,7 @@ These five names are **lockstep** across the dashboard, the ASCII art, and the W
 - Main app: **https://eterna.vstal.in**
 - Live dashboard (real executions, on the home page): **https://eterna.vstal.in/#dashboard**
 - Lead tracking lookup: **https://eterna.vstal.in/live** — enter `ELC-2026-XXXXX` and see the lead's state
-- Webflow one-pager: `webflow/one-pager.html` (template; designer build is a user-gated browser step — see `docs/webflow-migration.md`)
+- Webflow one-pager: `webflow/one-pager.html` (template; final designer build lives in Webflow — see `docs/webflow-migration.md`)
 
 ## What it proves
 
@@ -51,7 +51,7 @@ These five names are **lockstep** across the dashboard, the ASCII art, and the W
 
 - **Intake** — `/api/lead` validates, honeypot-traps (hidden `website` field → 200 decoy with a fake UUID, never a store row), signs the dispatch (HMAC-SHA256 over `executionId.nonce.ts`, 5-min freshness window), and records rejections in the shield sidecar.
 - **Dispatch** — self-hosted N8N (1.123.69 on the Oracle box) verifies the signature, enriches the domain via RDAP, answers 200 through Respond-to-Webhook nodes. A 401 from N8N is recorded as `n8n_rejected`, never collapsed into "unreachable".
-- **Receipt** — Apps Script logs every execution to a Google Sheet via the token-gated endpoint in `docs/apps-script-setup.md` (user-gated deploy).
+- **Receipt** — Apps Script logs every execution to a Google Sheet via the token-gated endpoint in `docs/apps-script-setup.md`.
 - **Ops dashboard** — the report card: SIGNAL (stages + live probes), TRAFFIC (Recharts per-day bars), SHIELD LOG, LOG (last 10 executions + totals), LEGEND (state vocabulary).
 - **Live probes** — the RESEARCHED and LOGGED stages probe N8N's `/healthz` and the executions API on every render; probes fail soft (N/R), never a fake green light.
 
@@ -83,7 +83,7 @@ N8N on the box: `docker compose up -d` (see `compose.yml`). CI gates every PR: l
 - `docs/leadcare-hr-script.md` — the 60-second pitch + objection handling (HR-safe)
 - `docs/design-tokens.md` — design tokens (only `led-live` pulses; ok/warn/err LEDs are static)
 - `docs/n8n-workflow.md` + `docs/n8n-workflow.json` — the workflow definition
-- `docs/apps-script-setup.md` — Apps Script deploy (user-gated)
+- `docs/apps-script-setup.md` — Apps Script deploy
 - `docs/webflow-migration.md` — Webflow one-pager build plan
 - `AI_LOG.md` — the full build story, session by session
 

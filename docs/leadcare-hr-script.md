@@ -77,5 +77,5 @@ truth for the pitch — the home page copy mirrors it.
 
 - Live dashboard: **https://eterna.vstal.in/ops** — real store rows, named stages, shield log
 - Tracking numbers on every accepted lead (ELC-2026-XXXXX)
-- Source + build log: github.com/vstaln/eterna-ops-command-center
+- Source + build log: github.com/vstaln/eterna-leadcare
 - Built from a phone, in 48 hours, at $0/month

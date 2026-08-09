@@ -2,7 +2,7 @@
 
 ## Status
 
-**Eterna LeadCare (rebrand of ET-48).** The real pipeline ships: web form → `/api/lead` (honeypot shield + signed dispatch) → self-hosted N8N on the Oracle box (`oracle-old`, x86_64, Ubuntu 24.04, Docker Compose, sqlite) → RDAP enrichment → Apps Script log → `[DEMO]` Sheets audit trail → live ops dashboard. Telegram notify, stage callbacks, Postgres, and public deploy are LATER phases (P5).
+**Eterna LeadCare (rebrand of ET-48).** The real pipeline ships: web form → `/api/lead` (honeypot shield + signed dispatch) → self-hosted N8N on the Oracle box (`oracle-old`, x86_64, Ubuntu 24.04, Docker Compose, sqlite) → RDAP enrichment → Apps Script log → `[DEMO]` Sheets audit trail → live ops dashboard.
 
 ## Product framing
 
@@ -24,9 +24,6 @@ Browser → Next.js API (/api/lead: honeypot trap → validate → sign HMAC-SHA
         → frontend reads the execution store (authed `/api/executions` + `/api/executions/public`
         PII-stripped mirror) and the public `/api/shield` counts
 ```
-
-Callbacks, Postgres, and Telegram are P5.
-
 ## Security
 
 - Honeypot trap on `/api/lead` (hidden `website` field → 200 decoy with fake UUID, recorded in the shield sidecar — fire-and-forget so the decoy is never slower than the real path).
@@ -34,19 +31,12 @@ Callbacks, Postgres, and Telegram are P5.
 - `/api/executions` is bearer-gated (`EXECUTIONS_AUTH_TOKEN`); the public mirror exposes only id prefix, tracking, status, stage, created_at — no PII.
 - `/api/shield` is public by design: it returns only counts + reason codes, never payload data.
 - Apps Script endpoint is token-gated (`APPS_SCRIPT_TOKEN` in Script Properties); the "anyone with link" deployment is bounded by that token, which never lives in the repo.
-- n8n is HTTPS-only behind nginx (`https://eterna.vstal.in/n8n`): its port 443 is published only to private interfaces (`127.0.0.1` + docker0 for app dispatch) — the old public `:5678` is closed, the OCI security-list rule stays closed. 5432 stays closed (Postgres is P5).
+- n8n is HTTPS-only behind nginx (`https://eterna.vstal.in/n8n`): its port 443 is published only to private interfaces (`127.0.0.1` + docker0 for app dispatch) — the old public `:5678` is closed, the OCI security-list rule stays closed. 5432 stays closed.
 
 ## Deploy
 
 GitHub Actions gates every PR (lint + typecheck + build + gitleaks — see `.github/workflows/ci.yml`); deploy is Docker Compose on the Oracle Cloud box (`deploy/app-compose.yml`, image `eterna-app:latest`) behind nginx + Let’s Encrypt → eterna.vstal.in.
 
-## P5 migration note
-
-Public hosting migrates the box to Postgres (replacing sqlite + the JSON store) and lands stage callbacks; n8n's 5678 exposure gets Cloudflare proxy + IP allowlisting.
-
-## Job-requirement mapping table
-
-Lands here when the build reaches the packet phase (maps the JD's six priorities to concrete artifacts).
 
 ## Plans & design
 
