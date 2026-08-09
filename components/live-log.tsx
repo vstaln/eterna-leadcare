@@ -41,6 +41,7 @@ const POLL_MS = 5000;
 export default function LiveLog({ initial }: { initial: LiveLogPayload }) {
   const [data, setData] = useState<LiveLogPayload>(initial);
   const [live, setLive] = useState(true);
+  const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
     let cancelled = false;
@@ -56,6 +57,7 @@ export default function LiveLog({ initial }: { initial: LiveLogPayload }) {
         if (!cancelled) {
           setData(json);
           setLive(true);
+          setNow(Date.now());
         }
       } catch {
         setLive(false); // keep last good data, just drop the live LED
@@ -77,7 +79,6 @@ export default function LiveLog({ initial }: { initial: LiveLogPayload }) {
       : `N=${totals.n} received=${totals.received} dispatched=${totals.dispatched} failed=${totals.failed} since ${
           firstAt ? shortIso(firstAt) : "—"
         }`;
-  const now = Date.now();
 
   return (
     <section id="log" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
