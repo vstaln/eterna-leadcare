@@ -34,7 +34,7 @@ Callbacks, Postgres, and Telegram are P5.
 - `/api/executions` is bearer-gated (`EXECUTIONS_AUTH_TOKEN`); the public mirror exposes only id prefix, tracking, status, stage, created_at — no PII.
 - `/api/shield` is public by design: it returns only counts + reason codes, never payload data.
 - Apps Script endpoint is token-gated (`APPS_SCRIPT_TOKEN` in Script Properties); the "anyone with link" deployment is bounded by that token, which never lives in the repo.
-- Only TCP 5678 is intended for exposure and is currently bound to localhost on the box; opening the OCI security-list rule is a user-gated step. 5432 stays closed. P5 hardening: Cloudflare proxy + IP allowlisting.
+- n8n is HTTPS-only behind nginx (`https://eterna.vstal.in/n8n`): its port 443 is published only to private interfaces (`127.0.0.1` + docker0 for app dispatch) — the old public `:5678` is closed, the OCI security-list rule stays closed. 5432 stays closed (Postgres is P5).
 
 ## Deploy
 
