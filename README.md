@@ -15,10 +15,6 @@ Automatic lead handling for client websites: **block the spam, save who they are
 
 Built in 48 hours, **$0/month free tier**, from a phone, with AI pair-programming. Every step's story is in `AI_LOG.md`.
 
-<p align="center">
-  <img src="public/eterna-silhouette.svg" alt="" width="220">
-</p>
-
 ## The pipeline (one vocabulary everywhere)
 
 ```
@@ -62,7 +58,7 @@ These five names are **lockstep** across the dashboard, the ASCII art, and the W
 ## Stack proven
 
 <p align="center">
-  <img src="public/built-with/codex.svg" width="64" alt="Codex">&nbsp;&nbsp;
+  <img src="public/built-with/blossom.svg" width="48" alt="OpenAI">&nbsp;&nbsp;
   <img src="public/built-with/opencode.svg" width="64" alt="OpenCode">&nbsp;&nbsp;
   <img src="public/built-with/zed.png" width="64" alt="Zed">
 </p>
@@ -94,7 +90,5 @@ N8N on the box: `docker compose up -d` (see `compose.yml`). CI gates every PR: l
 ---
 
 <p align="center">
-  <img src="public/eterna-silhouette.svg" alt="" width="120">
-  <br>
   <a href="https://eterna.vstal.in">eterna.vstal.in</a> · built in 48 hours · $0/month
 </p>
